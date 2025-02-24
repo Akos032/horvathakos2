@@ -1,30 +1,35 @@
 import './App.css'
-import React, {useEffect,useState,Component} from "react"
+import React, {useEffect,useState} from "react"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import axois from "axios"
 
 function App() {
 
   const [data,setData] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:3000/egy')
-        .then(res => res.json())
-        .then(data => setData(data))
+        axois.get('http://localhost:3000/osszes')
+        .then(data => setData(data.data))
         .catch(err => console.log(err));
         
     }, [])  
   return (
     <>
-      <div>
-        {data.map((d, i) => (
-            <div key={i}>
+
+      <table>
+        <tbody>
+          {data.map((d) =>
+              <tr key={data.Receptek_id}>
                 <img src={d.kep}/>
-                <h1>{d.Receptek_neve}</h1>
-                <p>{d.Keszites}</p>
-            </div>
-        ))} 
-      </div>
+                <th>{d.Receptek_neve}</th>
+                <td>{d.Keszites}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      
+
     </>
   )
 }

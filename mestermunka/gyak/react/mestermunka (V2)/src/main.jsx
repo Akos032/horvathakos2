@@ -6,15 +6,6 @@ import { BrowserRouter } from 'react-router-dom'
 import Nav from './nav.jsx'
 
 
-createRoot(document.getElementById('navbar')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Nav/>
-    </BrowserRouter>
-  </StrictMode>
-  
-)
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
       <App/>
@@ -22,3 +13,10 @@ createRoot(document.getElementById('root')).render(
 
 )
 
+createRoot(document.getElementById('navbar')).render(
+  <StrictMode>
+    <BrowserRouter>
+      <Nav/>
+    </BrowserRouter>
+  </StrictMode>
+)
