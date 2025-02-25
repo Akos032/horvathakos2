@@ -1,0 +1,15 @@
+#Box{
+    border: solid black;
+    padding: 5px;
+    margin: auto;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 1px;
+    border: 1px solid #ddd;
+    margin: 5px;
+}

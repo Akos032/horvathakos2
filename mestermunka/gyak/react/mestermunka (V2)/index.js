@@ -9,7 +9,7 @@ app.use(cors());
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -41,8 +41,8 @@ app.get("/Keszities" , (req,res) => {
     })
 }) 
 
-app.listen(3000, () => {
-    console.log("Server is running ob port 3000");
+app.listen(3001, () => {
+    console.log("Server is running on port 3001");
 })
 
 function toggleFilters() {
