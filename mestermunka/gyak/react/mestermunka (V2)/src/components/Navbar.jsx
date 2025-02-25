@@ -6,18 +6,26 @@ import "./Navbar.css"
 const NavBar = (() => {
     const [menuOpen,setMenuOpen] = useState(false)
     return(
-        <div>
-            <nav>
-                <Link to = '/'>Receptek</Link>
+        <nav>
+            <div>
+           
+                <Link to = '/' className="title">Receptek</Link>
                 <div className="menu" onClick={() =>
-            setMenuOpen(!menuOpen)
-            }>
-            <span></span>
-            <span></span>
-            <span></span>
+                setMenuOpen(!menuOpen)
+                }>
+                <span></span>
+                <span></span>
+                <span></span>
+                </div>
+            
             </div>
-            </nav>
-        </div>
+            <ul className={menuOpen ? "open" : ""}>
+            <li>
+                <NavLink to = "/">Bejeletkezés</NavLink>
+            </li>
+
+            </ul>
+        </nav>
 
     )
 })
