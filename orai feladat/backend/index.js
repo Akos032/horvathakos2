@@ -18,13 +18,13 @@ app.get("/" , (req,res) => {
     res.send("Fut a backend");
 })
 
-app.get("/szobak", (req,res =>{
+app.get("/szobak", (req,res) =>{
     const sql = "SELECT szobak.sznev, szobak.agy FROM `szobak`";
     db.query(sql, (err,result) =>{
         if(err) return res.json(err);
         return res.json(result)
     })
-}))
+})
 
 app.listen(3001, () =>{
     console.log("Server is running on port 3001");

@@ -2,11 +2,12 @@ import React ,{ useState,useEffect } from 'react'
 import './Home.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import axios from 'axios'
+import Table from "react-bootstrap/Table"
 
 export const Home = () => {
   const [data,setData] = useState([])
   useEffect(() =>{
-    axios.get('https//localhost:3001/szobak')
+    axios.get('http://localhost:3001/szobak')
     .then(data => setData(data.data))
     .catch(err => console.log(err));
   }, [])
@@ -21,7 +22,7 @@ export const Home = () => {
         </div>
         <div className='col-sm-4'>
         <h1>A hét törpe fogadó</h1>
-        <table>
+        <Table striped bordered hover>
           {data.map((d) =>
           <tbody>
             <tr key={d.szazon}>
@@ -30,7 +31,7 @@ export const Home = () => {
             </tr>
           </tbody>
           )}
-        </table>
+        </Table>
         </div>
 
       </div>

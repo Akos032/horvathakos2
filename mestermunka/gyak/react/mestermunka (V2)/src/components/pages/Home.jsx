@@ -7,6 +7,7 @@ import './Home.css'
 export const Home =() => {
     const showELement = true;
     const [data,setData] = useState([])
+    const [input,setInput] = useState("");
     function submint(e){
         e.showELement = false
     }
@@ -24,7 +25,7 @@ export const Home =() => {
 
     <div className="row">
         <div className="col-sm-3">
-            <input type="text" id="ingredients" placeholder="Írja be a recept nevét..."/>
+            <input type="text" id="ingredients" placeholder="Írja be a recept nevét..." value={input} onChange={(e) => setInput(e.target.value)}/>
             <input type="text" id="ingredients" placeholder="Írja be a hozzávalót..."/>
         </div>
         <div className="col-sm-6">
