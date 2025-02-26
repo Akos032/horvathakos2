@@ -13,12 +13,15 @@
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
+    "devextreme-react": "^24.2.5",
     "express": "^4.21.2",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
+    "react-native": "^0.78.0",
+    "react-native-safe-area-context": "^5.2.0",
     "react-router-dom": "^7.2.0"
   },
   "devDependencies": {

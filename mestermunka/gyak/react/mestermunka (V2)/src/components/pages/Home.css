@@ -12,3 +12,12 @@ input[type="text"] {
     border: 1px solid #ddd;
     margin: 5px;
 }
+#recept{
+    font-size: 15px;
+    margin: 5px;
+}
+
+#name{
+    margin: 5px;
+    font-size: 20px;
+}
