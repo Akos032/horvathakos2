@@ -21,7 +21,7 @@ const NavBar = (() => {
             </div>
             <ul className={menuOpen ? "open" : ""}>
             <li>
-                <NavLink to = "/">Bejeletkezés</NavLink>
+                <NavLink to = "/Login">Bejeletkezés</NavLink>
             </li>
 
             </ul>

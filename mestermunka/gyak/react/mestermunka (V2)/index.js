@@ -5,11 +5,12 @@ const mysql = require("mysql");
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json())
 
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -40,6 +41,19 @@ app.get("/Keszities" , (req,res) => {
         return res.json(result)
     })
 }) 
+
+app.post('/login', (req,res) =>{
+    const sql = "Select * from regisztracio WHERE Felhasznalonev = ? and Email = ? and Jelszo = ?"
+    db.query(sql, [req.body.username,req.body.email,req.body.password], (err, data) => {
+        if(err) return res.json("Hiba")
+        if(data.length > 0){
+            return res.json("A bejeletkezés sikeres volt");
+        } else{
+            return res.json("Hibás bejeletkezés")
+        }
+        
+    })
+})
 
 app.listen(3001, () => {
     console.log("Server is running on port 3001");

@@ -22,7 +22,7 @@ export const Home =() => {
 
     <div className="row">
         <div className="col-sm-4">
-            <input type="text" id="ingredients" placeholder="Írja be a recept nevét..." value={input} onChange={(e) => setInput(e.target.value)}/>
+            <input type="text" id="ingredients" placeholder="Írja be a recept nevét..." />
             <input type="text" id="ingredients" placeholder="Írja be a hozzávalót..."/>
         </div>
         <div className="col-sm-4">
