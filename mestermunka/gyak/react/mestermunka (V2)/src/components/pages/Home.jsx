@@ -7,7 +7,7 @@ import './Home.css'
 export const Home =() => {
     const showELement = true;
     const [data,setData] = useState([])
-    const [input,setInput] = useState("");
+    const [kereses, setKereses] = useState("");
 
 
     useEffect(() => {
@@ -22,8 +22,7 @@ export const Home =() => {
 
     <div className="row">
         <div className="col-sm-4">
-            <input type="text" id="ingredients" placeholder="Írja be a recept nevét..." />
-            <input type="text" id="ingredients" placeholder="Írja be a hozzávalót..."/>
+        <input type="text" placeholder="Keresés..." value={kereses} onChange={(e) => setKereses(e.target.value)}/>
         </div>
         <div className="col-sm-4">
                 {data.map((d) =>

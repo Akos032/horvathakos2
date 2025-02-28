@@ -55,6 +55,20 @@ app.post('/login', (req,res) =>{
     })
 })
 
+app.get("/api/hozzavalok", (req, res) => {
+    const { keres } = req.query;
+    let sql = "SELECT * FROM hozzavalok";
+    
+    if (keres) {
+      sql += ` WHERE Hozzavalok_neve LIKE ?`;
+    }
+  
+    db.query(sql, keres ? [`%${keres}%`, `%${keres}%`] : [], (err, results) => {
+      if (err) return res.status(500).json(err);
+      res.json(results);
+    });
+});
+
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
 })

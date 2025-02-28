@@ -9,7 +9,7 @@ app.use(cors())
 const db = mysql.createConnection({
     user:"root",
     host: "127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "fogado",
 })
@@ -34,7 +34,7 @@ app.get("/vendegek", (req,res) =>{
     })
 })
 
-app.get("/vendegek/:id", (req,res) =>{
+app.get("/vendege/:id", (req,res) =>{
     const sql = "SELECT vendegek.vnev, foglalasok.erk, foglalasok.tav FROM szobak inner join foglalasok on szobak.szazon = foglalasok.szoba inner join vendegek on foglalasok.vendeg = vendegek.vsorsz WHERE szobak.szazon = ?;";
     db.query(sql, [req.params.id], (err,result) =>{
         if(err) return res.json(err);
