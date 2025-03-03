@@ -54,6 +54,13 @@ app.post('/login', (req,res) =>{
         
     })
 })
+app.get('/profil', (req,res)=>{
+    const sql = "Select * from regisztracio";
+    db.query(sql, (err, result) =>{
+        if(err) return res.json(err)
+        return res.json(result)
+    })
+})
 
 app.get("/api/hozzavalok", (req, res) => {
     const { keres } = req.query;
