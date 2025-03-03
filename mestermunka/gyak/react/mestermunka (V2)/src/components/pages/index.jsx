@@ -1,4 +1,4 @@
 export * from "./Home"
-export * from "./Login"
+export * from "./LoginRegister"
 export * from "./Recept"
 export * from "./Profile"
