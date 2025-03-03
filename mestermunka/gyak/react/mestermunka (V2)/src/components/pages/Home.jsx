@@ -5,17 +5,24 @@ import axios from "axios"
 import './Home.css'
 
 export const Home =() => {
-    const showELement = true;
-    const [data,setData] = useState([])
     const [kereses, setKereses] = useState("");
+    const [osszes, setOsszes] = useState([]);
+    const [isOpen, setIsOpen] = useState(false)
+    const paragraph = 
+        {
+            WebkitLineClamp:4, 
+            WebkitBoxOrient: "vertical", 
+            overflow:'hidden',
+            display:'-webkit-box'
+        }
 
 
     useEffect(() => {
-        axios.get('http://localhost:3001/osszes')
-        .then(data => setData(data.data))
+        axios.get(`http://localhost:3001/api/osszes?keres=${kereses}`)
+        .then(data => setOsszes(data.data))
         .catch(err => console.log(err));
         
-    }, [])
+    }, [kereses])
 
   return (
     <>
@@ -25,17 +32,19 @@ export const Home =() => {
         <input type="text" placeholder="Keresés..." value={kereses} onChange={(e) => setKereses(e.target.value)}/>
         </div>
         <div className="col-sm-4">
-                {data.map((d) =>
+                {osszes.map((ossze) =>
                    <div className="card mb-3" style={{maxWidth: "800px",height:"auto"}}>
-                        <div className="row g-0" key={d.Receptek_id}>
+                        <div className="row g-0" key={ossze.Receptek_id}>
                             <div className="col-md-4">
-                                <img src={d.kep} className="img-fluid rounded-start" style={{ margin:"5px"}}/>
+                                <img src={ossze.kep} className="img-fluid rounded-start" style={{ margin:"5px"}}/>
                             </div>
                         <div className="col-md-8">
                             <div className="card-body">
-                                <h5 className="card-title">{d.Receptek_neve}</h5>
-                                <p className="card-text">{d.Keszites.substring(0,200)}</p>
-                                <button type="button">Több</button>
+                                <h5 className="card-title">{ossze.Receptek_neve}</h5>
+                                <p style={ isOpen ? null : paragraph} className="card-text">
+                                        {ossze.Keszites}
+                                </p>
+                                <button type="button" onClick={() => setIsOpen(!isOpen)}>{isOpen ?'Kevesebb' : 'Több'}</button>
                             </div>
                         </div>
                         </div>
