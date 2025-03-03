@@ -26,7 +26,22 @@ app.get("/osszes" , (req,res) => {
         if(err) return res.json(err)
         return res.json(result)
     })
-}) 
+})
+
+app.get("/api/osszes", (req, res) => {
+    const { keres } = req.query;
+    let sql = "SELECT * FROM receptek";
+    
+    if (keres) {
+      sql += ` WHERE Receptek_neve LIKE ?`;
+    }
+  
+    db.query(sql, keres ? [`%${keres}%`, `%${keres}%`] : [], (err, results) => {
+      if (err) return res.status(500).json(err);
+      res.json(results);
+    });
+});
+
 app.get("/egy" , (req,res) => {
     const sql = "SELECT * FROM `receptek` WHERE Receptek_id = 1";
     db.query(sql, (err, result) =>{
