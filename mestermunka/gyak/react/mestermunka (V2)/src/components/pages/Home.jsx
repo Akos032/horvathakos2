@@ -8,9 +8,15 @@ export const Home =() => {
     const [kereses, setKereses] = useState("");
     const [osszes, setOsszes] = useState([]);
     const [TobbId, setTobbId] = useState(null);
+    const [showTable, setShowTable] = useState(false);
+    const [description, setDescription] = useState([])
 
     const handle = (id) => {
         setTobbId(TobbId === id ? null : id);
+    };
+
+    const toggleTable = (id) => {
+        setShowTable(showTable === id ? null : id);
     };
 
     useEffect(() => {
@@ -18,6 +24,10 @@ export const Home =() => {
         .then(data => setOsszes(data.data))
         .catch(err => console.log(err));
         
+        axios.get(`http://localhost:3001/leiras`)
+        .then(data => setDescription(data.data))
+        .catch(err => console.log(err))
+
     }, [kereses])
 
   return (
@@ -41,7 +51,35 @@ export const Home =() => {
                                     {TobbId === ossze.Receptek_id ? ossze.Keszites : `${ossze.Keszites.substring(0,200)}...`}
                                 </p>
                                 <button onClick={() => handle(ossze.Receptek_id)} className="text-blue-600 hover:underline"> {TobbId === ossze.Receptek_id ? "Kevesebb" : "Több"}</button>
+                                <button onClick={() => toggleTable(ossze.Receptek_id)} className="text-blue-600 hover:underline" style={{margin:"5px"}}>
+                                    {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bőveb informácio'}
+                                </button>
+                                {showTable === ossze.Receptek_id && (
+                                    <table border="1" style={{ marginTop: '10px', width: '100%' }}>
+                                        <thead>
+                                            <tr>
+                                                <th>Hozzávalok neve</th>
+                                                <th>Mennyiség</th>
+                                                <th>Mértékegység</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {description
+                                                .filter(leiras => leiras.Receptek_id === ossze.Receptek_id) 
+                                                    .map((leiras) => (
+                                                        <tr key={leiras.id}>
+                                                            <td>{leiras.Hozzavalok_neve}</td>
+                                                            <td>{leiras.mennyiseg}</td>
+                                                            <td>{leiras.mértékegység}</td>
+                                                        </tr>
+                                                    ))
+                                            }
+                                        </tbody>
+                                    </table>
+                                ) 
+                                }
                             </div>
+                            
                         </div>
                         </div>
                     </div>

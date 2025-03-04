@@ -30,17 +30,42 @@ app.get("/osszes" , (req,res) => {
 
 app.get("/api/osszes", (req, res) => {
     const { keres } = req.query;
-    let sql = "SELECT * FROM receptek";
-    
+    let sql = `
+      SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
+             GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+             napszak.idoszak, konyha.nemzetiseg, receptek.kep
+      FROM osszekoto 
+      INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
+      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+      INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
+      INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
+      INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
+      INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
+      INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
+    `;
+  
     if (keres) {
-      sql += ` WHERE Receptek_neve LIKE ?`;
+      sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
   
-    db.query(sql, keres ? [`%${keres}%`, `%${keres}%`] : [], (err, results) => {
-      if (err) return res.status(500).json(err);
+    sql += ` GROUP BY receptek.Receptek_id`;
+  
+    db.query(sql, keres ? [`%${keres}%`] : [], (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: "Hiba a lekérdezés során", error: err });
+      }
       res.json(results);
     });
 });
+
+app.get("/leiras", (req,res) => {
+    const sql= "SELECT  receptek.Receptek_id, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység FROM `osszekoto` inner join hozzavalok on osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id inner join mertekegyseg on osszekoto.mertekegyseg_id = mertekegyseg.id inner join receptek on osszekoto.receptek_id = receptek.Receptek_id;"
+    db.query(sql, (err,result) => {
+        if(err) return res.json(err)
+        return res.json(result)
+    })
+})
 
 app.get("/egy" , (req,res) => {
     const sql = "SELECT * FROM `receptek` WHERE Receptek_id = 1";
