@@ -55,12 +55,12 @@ export const Home =() => {
                                     {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bőveb informácio'}
                                 </button>
                                 {showTable === ossze.Receptek_id && (
-                                    <table border="1" style={{ marginTop: '10px', width: '100%' }}>
-                                        <thead>
+                                    <table border="1" className="table table-striped" style={{ marginTop: '10px', width: '100%' }}>
+                                        <thead className="thead-dark">
                                             <tr>
-                                                <th>Hozzávalok neve</th>
-                                                <th>Mennyiség</th>
-                                                <th>Mértékegység</th>
+                                                <th scope="col">Hozzávalok neve</th>
+                                                <th scope="col">Mennyiség</th>
+                                                <th scope="col">Mértékegység</th>
                                             </tr>
                                         </thead>
                                         <tbody>
