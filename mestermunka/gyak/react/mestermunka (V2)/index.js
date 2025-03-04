@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -49,7 +49,7 @@ app.get("/api/osszes", (req, res) => {
       sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
   
-    sql += ` GROUP BY receptek.Receptek_id`;
+    sql += ` GROUP BY receptek.Receptek_id desc`;
   
     db.query(sql, keres ? [`%${keres}%`] : [], (err, results) => {
       if (err) {
