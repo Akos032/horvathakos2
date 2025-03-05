@@ -76,12 +76,15 @@ app.post('/login', (req,res) =>{
         
     })
 })
-const valami = 5;
 app.post('/register', (req,res)=>{
-    const sql = "Insert into regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) Values (?)";
-    bycrypt.hash(req.body.password.toString(),valami,(err,hash)=>{
+    const sql = "Insert into regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) Values (?,?,?)";
+    bycrypt.hash(req.body.password.toString(),(err,hash)=>{
         if(err) return res.json("Hiba")
-            const values = [req.body.username,req.body.email,hash]
+            const values = values.map((values) => [
+                values.Felhasznalonev,
+                values.Email,
+                values.bycrypt
+            ]);
         db.query(sql,[values],(err,result)=>{
             if(err) console.log(err);
             else return res.json(result)
