@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -66,6 +66,77 @@ app.get("/leiras", (req,res) => {
         return res.json(result)
     })
 })
+
+app.post('/api/recipes', (req, res) => {
+    const { recipeName, description, nationality, dayTime, preferences, sensitivity, ingredients } = req.body;
+  
+    // Insert the recipe
+    const recipeQuery = 'INSERT INTO recipes (recipeName, description, nationality, dayTime, preferences, sensitivity) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(
+      recipeQuery,
+      [recipeName, description, nationality, dayTime, preferences, sensitivity],
+      (err, result) => {
+        if (err) {
+          return res.status(500).json({ message: 'Error inserting recipe', error: err });
+        }
+  
+        const recipeId = result.insertId; // Get the ID of the inserted recipe
+  
+        // Insert ingredients and their amounts into the recipe_ingredients table
+        const insertIngredients = ingredients.map((ingredient) => [
+          recipeId,
+          ingredient.ingredientId,
+          ingredient.amountId,
+          ingredient.amountTypeId,
+        ]);
+  
+        const ingredientQuery = 'INSERT INTO recipe_ingredients (ingredientId, amountId, amountTypeId) VALUES ?';
+        db.query(ingredientQuery, [insertIngredients], (err) => {
+          if (err) {
+            return res.status(500).json({ message: 'Error inserting ingredients', error: err });
+          }
+  
+          res.status(200).json({ message: 'Recipe added successfully!' });
+        });
+      }
+    );
+  });
+  
+  app.get('/api/nationalities', (req, res) => {
+    db.query('SELECT * FROM konyha', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error fetching nationalities', error: err });
+      res.json(results);
+    });
+  });
+  
+  app.get('/api/dayTimes', (req, res) => {
+    db.query('SELECT * FROM napszak', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error fetching day times', error: err });
+      res.json(results);
+    });
+  });
+  
+  app.get('/api/sensitivities', (req, res) => {
+    db.query('SELECT * FROM erzekenysegek', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error fetching sensitivities', error: err });
+      res.json(results);
+    });
+  });
+
+  app.get('/api/ingredients', (req, res) => {
+    db.query('SELECT * FROM hozzavalok', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error fetching ingredients', error: err });
+      res.json(results);
+    });
+  });
+
+    app.get('/api/preferences', (req, res) => {
+    db.query('SELECT * FROM preferencia', (err, results) => {
+      if (err) return res.status(500).json({ message: 'Error fetching preferences', error: err });
+      res.json(results);
+    });
+  });
+  
 
 app.get("/egy" , (req,res) => {
     const sql = "SELECT * FROM `receptek` WHERE Receptek_id = 1";
