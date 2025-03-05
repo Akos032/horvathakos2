@@ -66,7 +66,7 @@ const Recept = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/recipes', recipeData);
+      const response = await axios.post('http://localhost:3001/api/recipes', recipeData);
       if (response.status === 200) {
         alert('Recipe added successfully!');
       }
