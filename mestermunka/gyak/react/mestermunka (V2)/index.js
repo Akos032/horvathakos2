@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -62,11 +62,30 @@ app.post('/login', (req,res) =>{
     db.query(sql, [req.body.username,req.body.email,req.body.password], (err, data) => {
         if(err) return res.json("Hiba")
         if(data.length > 0){
-            return res.json("A bejeletkezés sikeres volt");
+            bycrypt.compare(req.body.password.toString(),result[0].password,(err,response)=>{
+                if(err) return res.json({Error:"Hiba"})
+                    if(response) return res.json({Status: "Sikeres"})
+                        else return res.json({Error:"Hibás jelszó"})
+            
+            }
+               
+            )
         } else{
-            return res.json("Hibás bejeletkezés")
+            return res.json({Error:"Nem létezik az email"})
         }
         
+    })
+})
+const valami = 5;
+app.post('/register', (req,res)=>{
+    const sql = "Insert into regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) Values (?)";
+    bycrypt.hash(req.body.password.toString(),valami,(err,hash)=>{
+        if(err) return res.json("Hiba")
+            const values = [req.body.username,req.body.email,hash]
+        db.query(sql,[values],(err,result)=>{
+            if(err) console.log(err);
+            else return res.json(result)
+        })
     })
 })
 app.get('/profil', (req,res)=>{

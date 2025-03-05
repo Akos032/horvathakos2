@@ -1,78 +1,132 @@
-<div className={`wrapper${action === 'login' ? '' : ' active'}`}>
-  <div className="form-box login">
-    <form onSubmit={handleSubmit}>
-      <h1>Bejelentkezés</h1>
-      <div className="input-box">
-        <input
-          type="text"
-          placeholder="Felhasználónév"
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <FaUser className="Ikon" />
-      </div>
-      <div className="input-box">
-        <input
-          type="email"
-          placeholder="E-mail cím"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <MdOutlineAlternateEmail className="Ikon" />
-      </div>
-      <div className="input-box">
-        <input
-          type="password"
-          placeholder="Jelszó"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <FaLock className="Ikon" />
-      </div>
-      <button type="submit">Bejelentkezés</button>
-      <div className="register-link">
-        <p>Nincs még fiókod? <a href="#" onClick={toggleAction}>Regisztráció</a></p>
-      </div>
-    </form>
-  </div>
-  <div className="form-box register">
-    <form onSubmit={handleSubmit}>
-      <h1>Regisztráció</h1>
-      <div className="input-box">
-        <input
-          type="text"
-          placeholder="Felhasználónév"
-          required
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <FaUser className="Ikon" />
-      </div>
-      <div className="input-box">
-        <input
-          type="email"
-          placeholder="E-mail cím"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <MdOutlineAlternateEmail className="Ikon" />
-      </div>
-      <div className="input-box">
-        <input
-          type="password"
-          placeholder="Jelszó"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <FaLock className="Ikon" />
-      </div>
-      <div className="remember-forgot">
-        <label><input type="checkbox" /> Elfogadom a feltételeket</label>
-      </div>
-      <button type="submit">Regisztráció</button>
-      <div className="register-link">
-        <p>Van már fiókod? <a href="#" onClick={toggleAction}>Bejelentkezés</a></p>
-      </div>
-    </form>
-  </div>
-</div>
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './LoginRegister.css'; // CSS fájl importálása
 
+export const Login = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false); // Alapértelmezetten bejelentkezés
+  const navigate = useNavigate();
+
+  const values ={
+    username,
+    email,
+    password
+  }
+
+  // Regisztráció kezelése
+  const register = (event) => {
+    event.preventDefault();
+    axios
+      .post("http://localhost:3001/register", { username, email, password })
+      .then((res) => {
+        console.log(res);
+        navigate("/Home");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // Bejelentkezés kezelése
+  const login = (event) => {
+    event.preventDefault();
+    axios
+      .post("http://localhost:3001/login", values)
+      .then((res) => {
+        if (res.data.Status === "Sikeres") {
+          navigate("/Home");
+        } else {
+          alert(res.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  return (
+    <div className="login-register-container">
+      <div className="form-container">
+        {/* Regisztrációs blokk */}
+        <div className={`form-box ${isRegistering ? 'active' : ''}`}>
+          <h1>Regisztráció</h1>
+          <form onSubmit={register}>
+            <div className="input-group">
+              <input
+                type="text"
+                placeholder="Felhasználónév"
+                className="form-control"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <input
+                type="email"
+                placeholder="Email"
+                className="form-control"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <input
+                type="password"
+                placeholder="Jelszó"
+                className="form-control"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">Regisztráció</button>
+          </form>
+        </div>
+
+        {/* Bejelentkezési blokk */}
+        <div className={`form-box ${!isRegistering ? 'active' : ''}`}>
+          <h1>Bejelentkezés</h1>
+          <form onSubmit={login}>
+            <div className="input-group">
+              <input
+                type="text"
+                placeholder="Felhasználónév"
+                className="form-control"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <input
+                type="email"
+                placeholder="Email"
+                className="form-control"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <input
+                type="password"
+                placeholder="Jelszó"
+                className="form-control"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">Bejelentkezés</button>
+          </form>
+        </div>
+      </div>
+
+      {/* Regisztráció / Bejelentkezés közötti váltás */}
+      <div className="toggle-box">
+        <button
+          className="btn btn-link"
+          onClick={() => setIsRegistering(!isRegistering)}
+        >
+          {isRegistering ? "Már van fiókod? Bejelentkezés" : "Nincs fiókod? Regisztráció"}
+        </button>
+      </div>
+    </div>
+  );
+};

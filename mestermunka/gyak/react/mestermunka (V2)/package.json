@@ -2,6 +2,7 @@
   "name": "mestermunka--v2-",
   "private": true,
   "version": "0.0.0",
+
   "scripts": {
     "dev": "vite",
     "start": "nodemon index.js",
