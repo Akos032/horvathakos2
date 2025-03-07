@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -71,27 +71,45 @@ app.post('/api/recipes', (req, res) => {
     const { recipeName, description, nationality, dayTime, preferences, sensitivity, ingredients } = req.body;
   
     // Insert the recipe
-    const recipeQuery = 'INSERT INTO recipes (recipeName, description, nationality, dayTime, preferences, sensitivity) VALUES (?, ?, ?, ?, ?, ?)';
+    const recipeQuery = 'INSERT INTO recipes (recipeName, description) VALUES (?, ?,)';
+    const recipeQuery2 = 'INSERT INTO recipes (nationality) VALUES (?)';
+    const recipeQuery3 = 'INSERT INTO recipes (dayTime) VALUES (?)';
+    const recipeQuery4 = 'INSERT INTO recipes (preferences) VALUES (?)';
+    const recipeQuery5 = 'INSERT INTO recipes (sensitivity) VALUES (?)';
     db.query(
-      recipeQuery,
+      recipeQuery,recipeQuery2, recipeQuery3, recipeQuery4,recipeQuery5,
       [recipeName, description, nationality, dayTime, preferences, sensitivity],
       (err, result) => {
         if (err) {
           return res.status(500).json({ message: 'Error inserting recipe', error: err });
         }
+        
+        
   
         const recipeId = result.insertId; // Get the ID of the inserted recipe
   
         // Insert ingredients and their amounts into the recipe_ingredients table
         const insertIngredients = ingredients.map((ingredient) => [
           recipeId,
-          ingredient.ingredientId,
-          ingredient.amountId,
-          ingredient.amountTypeId,
+          ingredient.Hozzavalok_id,
+        ]);
+        const insertIngredients2 = ingredients.map((ingredient) => [
+          recipeId,
+          ingredient.mennyiseg,
+          ingredient.mértékegység,
         ]);
   
-        const ingredientQuery = 'INSERT INTO recipe_ingredients (ingredientId, amountId, amountTypeId) VALUES ?';
+        const ingredientQuery = 'INSERT INTO hozzavalok (Hozzavalok_id) VALUES ?';
+        const ingredientQuery2 = 'INSERT INTO mennyiseg (mennyiseg, mértékegység) VALUES ?';
         db.query(ingredientQuery, [insertIngredients], (err) => {
+          if (err) {
+            return res.status(500).json({ message: 'Error inserting ingredients', error: err });
+          }
+  
+          res.status(200).json({ message: 'Recipe added successfully!' });
+        });
+
+        db.query(ingredientQuery2, [insertIngredients2], (err) => {
           if (err) {
             return res.status(500).json({ message: 'Error inserting ingredients', error: err });
           }

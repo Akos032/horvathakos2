@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select'
 
 const Recept = () => {
   const [recipeName, setRecipeName] = useState('');
@@ -28,7 +29,10 @@ const Recept = () => {
       const sensitivitiesResponse = await axios.get('http://localhost:3001/api/sensitivities');
       const preferencesResponse = await axios.get('http://localhost:3001/api/preferences');
 
-      setIngredientOptions(ingredientsResponse.data);
+      setIngredientOptions(ingredientsResponse.data.map(ingredient => ({
+        value: ingredient.hozzavalok_ID,
+        label: ingredient.Hozzavalok_neve
+      })));
       setNationalityOptions(nationalitiesResponse.data);
       setDayTimeOptions(dayTimesResponse.data);
       setSensitivityOptions(sensitivitiesResponse.data);
@@ -90,32 +94,27 @@ const Recept = () => {
         </div>
 
         <div>
-          <label>Ingredients:</label>
+        <label>Ingredients:</label>
           {ingredients.map((ingredient, index) => (
             <div key={index}>
-              <select
-                value={ingredient.ingredientId}
-                onChange={(e) => handleIngredientChange(index, 'ingredientId', e.target.value)}
+              <Select
+                options={ingredientOptions}
+                onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
+                placeholder="Search Ingredient..."
+                isSearchable
                 required
-              >
-                <option value="">Select Ingredient</option>
-                {ingredientOptions.map((ingredientOption) => (
-                  <option key={ingredientOption.hozzavalok_ID} value={ingredientOption.hozzavalok_ID}>
-                    {ingredientOption.Hozzavalok_neve}
-                  </option>
-                ))}
-              </select>
+              />
               <input
                 type="number"
                 placeholder="Amount"
-                value={ingredient.amount}
+                value={ingredient.mennyiseg}
                 onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
                 required
               />
               <input
                 type="text"
                 placeholder="Amount Type (e.g., grams, cups)"
-                value={ingredient.amountType}
+                value={ingredient.mértékegység}
                 onChange={(e) => handleIngredientChange(index, 'amountType', e.target.value)}
                 required
               />
