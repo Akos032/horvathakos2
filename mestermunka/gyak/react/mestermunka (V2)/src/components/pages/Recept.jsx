@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Select from 'react-select'
+import Select from 'react-select';
 
 const Recept = () => {
   const [recipeName, setRecipeName] = useState('');
@@ -42,7 +42,13 @@ const Recept = () => {
     fetchOptions();
   }, []);
 
-  const handleIngredientChange = (index, field, value) => {
+  const handleIngredientChange = (index, selectedOption) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : '';
+    setIngredients(updatedIngredients);
+  };
+
+  const handleInputChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
@@ -66,7 +72,11 @@ const Recept = () => {
       dayTimeId: selectedDayTime,
       preferences,
       sensitivityId: selectedSensitivity,
-      ingredients
+      ingredients: ingredients.map((ingredient) => ({
+        Hozzavalok_id: ingredient.ingredientId,
+        mennyiseg: ingredient.amount,
+        mértékegység: ingredient.amountType
+      }))
     };
 
     try {
@@ -94,7 +104,7 @@ const Recept = () => {
         </div>
 
         <div>
-        <label>Ingredients:</label>
+          <label>Ingredients:</label>
           {ingredients.map((ingredient, index) => (
             <div key={index}>
               <Select
@@ -107,15 +117,15 @@ const Recept = () => {
               <input
                 type="number"
                 placeholder="Amount"
-                value={ingredient.mennyiseg}
-                onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
+                value={ingredient.amount}
+                onChange={(e) => handleInputChange(index, 'amount', e.target.value)}
                 required
               />
               <input
                 type="text"
                 placeholder="Amount Type (e.g., grams, cups)"
-                value={ingredient.mértékegység}
-                onChange={(e) => handleIngredientChange(index, 'amountType', e.target.value)}
+                value={ingredient.amountType}
+                onChange={(e) => handleInputChange(index, 'amountType', e.target.value)}
                 required
               />
               <button type="button" onClick={() => removeIngredient(index)}>Remove Ingredient</button>
