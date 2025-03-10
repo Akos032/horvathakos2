@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json())
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
     port: 3306,
@@ -70,23 +70,23 @@ app.get("/leiras", (req, res) => {
 app.post('/api/recipes', (req, res) => {
     const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients } = req.body;
 
-    db.getConnection((err, connection) => {
+    db.getConnection((err, db) => {
         if (err) {
-            return res.status(500).json({ message: 'Database connection error', error: err });
+            return res.status(500).json({ message: 'Database db error', error: err });
         }
 
-        connection.beginTransaction((err) => {
+        db.beginTransaction((err) => {
             if (err) {
-                connection.release();
+                db.release();
                 return res.status(500).json({ message: 'Transaction error', error: err });
             }
 
             // 🔹 Insert recipe with nationality and dayTime into 'receptek'
-            const recipeQuery = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_osszekoto, napszak_oszekoto) VALUES (?, ?, ?, ?)';
-            connection.query(recipeQuery, [recipeName, description, nationalityId, dayTimeId], (err, result) => {
+            const recipeQuery = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto) VALUES (?, ?, ?, ?)';
+            db.query(recipeQuery, [recipeName, description, nationalityId, dayTimeId], (err, result) => {
                 if (err) {
-                    return connection.rollback(() => {
-                        connection.release();
+                    return db.rollback(() => {
+                        db.release();
                         res.status(500).json({ message: 'Error inserting recipe', error: err });
                     });
                 }
@@ -95,10 +95,10 @@ app.post('/api/recipes', (req, res) => {
 
                 // 🔹 Insert preferences and sensitivity into 'osszekoto'
                 const detailsQuery = 'INSERT INTO osszekoto (receptek_id, preferencia_id, etrend_id,ervenyes) VALUES (?, ?, ?, 1)';
-                connection.query(detailsQuery, [recipeId, preferences, sensitivity], (err) => {
+                db.query(detailsQuery, [recipeId, preferences, sensitivity], (err) => {
                     if (err) {
-                        return connection.rollback(() => {
-                            connection.release();
+                        return db.rollback(() => {
+                            db.release();
                             res.status(500).json({ message: 'Error inserting preferences/sensitivity', error: err });
                         });
                     }
@@ -108,7 +108,7 @@ app.post('/api/recipes', (req, res) => {
                         return new Promise((resolve, reject) => {
                             // Insert amount and unit into the 'mertekegyseg' table first
                             const mertekegysegQuery = 'INSERT INTO mertekegyseg (mennyiseg, mértékegység) VALUES (?,?)';
-                            connection.query(mertekegysegQuery, [ingredient.mennyiseg,ingredient.mértékegység], (err, mertekegysegResult) => {
+                            db.query(mertekegysegQuery, [ingredient.mennyiseg,ingredient.mértékegység], (err, mertekegysegResult) => {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -116,7 +116,7 @@ app.post('/api/recipes', (req, res) => {
 
                                     // Now insert into the 'osszekoto' table
                                     const ingredientQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id,mertekegyseg_id) VALUES (?, ?, ?)';
-                                    connection.query(ingredientQuery, [recipeId, ingredient.hozzavalok_id, mertekegysegId], (err) => {
+                                    db.query(ingredientQuery, [recipeId, ingredient.hozzavalok_id, mertekegysegId], (err) => {
                                         if (err) {
                                             reject(err);
                                         } else {
@@ -130,20 +130,20 @@ app.post('/api/recipes', (req, res) => {
 
                     Promise.all(ingredientPromises)
                         .then(() => {
-                            connection.commit((err) => {
+                            db.commit((err) => {
                                 if (err) {
-                                    return connection.rollback(() => {
-                                        connection.release();
+                                    return db.rollback(() => {
+                                        db.release();
                                         res.status(500).json({ message: 'Transaction commit error', error: err });
                                     });
                                 }
-                                connection.release();
+                                db.release();
                                 res.status(200).json({ message: 'Recipe added successfully!' });
                             });
                         })
                         .catch((err) => {
-                            connection.rollback(() => {
-                                connection.release();
+                            db.rollback(() => {
+                                db.release();
                                 res.status(500).json({ message: 'Error inserting ingredients and units', error: err });
                             });
                         });
