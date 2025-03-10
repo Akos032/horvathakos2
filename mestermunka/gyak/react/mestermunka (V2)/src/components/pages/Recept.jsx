@@ -4,39 +4,39 @@ import Select from 'react-select';
 
 const Recept = () => {
   const [recipeName, setRecipeName] = useState('');
-  const [ingredients, setIngredients] = useState([{ ingredientId: '', amount: '', amountType: '' }]);
   const [description, setDescription] = useState('');
   const [preferences, setPreferences] = useState('');
+  const [sensitivity, setSensitivity] = useState('');
+  const [ingredients, setIngredients] = useState([{ ingredientId: '', amount: '', unit: '' }]);
 
-  // Predefined lists (fetched from backend)
+  // Dropdown options
   const [ingredientOptions, setIngredientOptions] = useState([]);
   const [nationalityOptions, setNationalityOptions] = useState([]);
   const [dayTimeOptions, setDayTimeOptions] = useState([]);
   const [sensitivityOptions, setSensitivityOptions] = useState([]);
   const [preferenceOptions, setPreferenceOptions] = useState([]);
 
-  // State for selected foreign key values
+  // Selected dropdown values
   const [selectedNationality, setSelectedNationality] = useState('');
   const [selectedDayTime, setSelectedDayTime] = useState('');
-  const [selectedSensitivity, setSelectedSensitivity] = useState('');
 
   useEffect(() => {
     async function fetchOptions() {
-      // Fetch available predefined options from the backend
-      const ingredientsResponse = await axios.get('http://localhost:3001/api/ingredients');
-      const nationalitiesResponse = await axios.get('http://localhost:3001/api/nationalities');
-      const dayTimesResponse = await axios.get('http://localhost:3001/api/dayTimes');
-      const sensitivitiesResponse = await axios.get('http://localhost:3001/api/sensitivities');
-      const preferencesResponse = await axios.get('http://localhost:3001/api/preferences');
+      try {
+        const ingredientsRes = await axios.get('http://localhost:3001/api/ingredients');
+        const nationalitiesRes = await axios.get('http://localhost:3001/api/nationalities');
+        const dayTimesRes = await axios.get('http://localhost:3001/api/dayTimes');
+        const sensitivitiesRes = await axios.get('http://localhost:3001/api/sensitivities');
+        const preferencesRes = await axios.get('http://localhost:3001/api/preferences');
 
-      setIngredientOptions(ingredientsResponse.data.map(ingredient => ({
-        value: ingredient.hozzavalok_ID,
-        label: ingredient.Hozzavalok_neve
-      })));
-      setNationalityOptions(nationalitiesResponse.data);
-      setDayTimeOptions(dayTimesResponse.data);
-      setSensitivityOptions(sensitivitiesResponse.data);
-      setPreferenceOptions(preferencesResponse.data);
+        setIngredientOptions(ingredientsRes.data.map(ing => ({ value: ing.hozzavalok_ID, label: ing.Hozzavalok_neve })));
+        setNationalityOptions(nationalitiesRes.data);
+        setDayTimeOptions(dayTimesRes.data);
+        setSensitivityOptions(sensitivitiesRes.data);
+        setPreferenceOptions(preferencesRes.data);
+      } catch (error) {
+        console.error('Error fetching options:', error);
+      }
     }
 
     fetchOptions();
@@ -55,7 +55,7 @@ const Recept = () => {
   };
 
   const addIngredient = () => {
-    setIngredients([...ingredients, { ingredientId: '', amount: '', amountType: '' }]);
+    setIngredients([...ingredients, { ingredientId: '', amount: '', unit: '' }]);
   };
 
   const removeIngredient = (index) => {
@@ -71,11 +71,11 @@ const Recept = () => {
       nationalityId: selectedNationality,
       dayTimeId: selectedDayTime,
       preferences,
-      sensitivityId: selectedSensitivity,
-      ingredients: ingredients.map((ingredient) => ({
-        Hozzavalok_id: ingredient.ingredientId,
-        mennyiseg: ingredient.amount,
-        mértékegység: ingredient.amountType
+      sensitivity,
+      ingredients: ingredients.map((ing) => ({
+        Hozzavalok_id: ing.ingredientId,
+        mennyiseg: ing.amount,
+        mertekegyseg: ing.unit
       }))
     };
 
@@ -95,12 +95,7 @@ const Recept = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Recipe Name:</label>
-          <input
-            type="text"
-            value={recipeName}
-            onChange={(e) => setRecipeName(e.target.value)}
-            required
-          />
+          <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
 
         <div>
@@ -110,7 +105,7 @@ const Recept = () => {
               <Select
                 options={ingredientOptions}
                 onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-                placeholder="Search Ingredient..."
+                placeholder="Select Ingredient..."
                 isSearchable
                 required
               />
@@ -123,12 +118,12 @@ const Recept = () => {
               />
               <input
                 type="text"
-                placeholder="Amount Type (e.g., grams, cups)"
-                value={ingredient.amountType}
-                onChange={(e) => handleInputChange(index, 'amountType', e.target.value)}
+                placeholder="Unit (e.g., grams, cups)"
+                value={ingredient.unit}
+                onChange={(e) => handleInputChange(index, 'unit', e.target.value)}
                 required
               />
-              <button type="button" onClick={() => removeIngredient(index)}>Remove Ingredient</button>
+              <button type="button" onClick={() => removeIngredient(index)}>Remove</button>
             </div>
           ))}
           <button type="button" onClick={addIngredient}>Add Ingredient</button>
@@ -136,73 +131,45 @@ const Recept = () => {
 
         <div>
           <label>Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
         </div>
 
         <div>
           <label>Nationality:</label>
-          <select
-            value={selectedNationality}
-            onChange={(e) => setSelectedNationality(e.target.value)}
-            required
-          >
+          <select value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} required>
             <option value="">Select Nationality</option>
-            {nationalityOptions.map((nationality) => (
-              <option key={nationality.konyha_id} value={nationality.konyha_id}>
-                {nationality.nemzetiseg}
-              </option>
+            {nationalityOptions.map(nat => (
+              <option key={nat.konyha_id} value={nat.konyha_id}>{nat.nemzetiseg}</option>
             ))}
           </select>
         </div>
 
         <div>
           <label>Day Time:</label>
-          <select
-            value={selectedDayTime}
-            onChange={(e) => setSelectedDayTime(e.target.value)}
-            required
-          >
+          <select value={selectedDayTime} onChange={(e) => setSelectedDayTime(e.target.value)} required>
             <option value="">Select Day Time</option>
-            {dayTimeOptions.map((dayTime) => (
-              <option key={dayTime.napszak_id} value={dayTime.napszak_id}>
-                {dayTime.idoszak}
-              </option>
+            {dayTimeOptions.map(dt => (
+              <option key={dt.napszak_id} value={dt.napszak_id}>{dt.idoszak}</option>
             ))}
           </select>
         </div>
 
         <div>
           <label>Sensitivity:</label>
-          <select
-            value={selectedSensitivity}
-            onChange={(e) => setSelectedSensitivity(e.target.value)}
-            required
-          >
+          <select value={sensitivity} onChange={(e) => setSensitivity(e.target.value)} required>
             <option value="">Select Sensitivity</option>
-            {sensitivityOptions.map((sensitivity) => (
-              <option key={sensitivity.erzekenyseg_id} value={sensitivity.erzekenyseg_id}>
-                {sensitivity.erzekenyseg}
-              </option>
+            {sensitivityOptions.map(sen => (
+              <option key={sen.erzekenyseg_id} value={sen.erzekenyseg_id}>{sen.erzekenyseg}</option>
             ))}
           </select>
         </div>
 
         <div>
           <label>Preferences:</label>
-          <select
-            value={preferences}
-            onChange={(e) => setPreferences(e.target.value)}
-            required
-          >
-            <option value="">Select Preferences</option>
-            {preferenceOptions.map((preference) => (
-              <option key={preference.etkezes_id} value={preference.etkezes_id}>
-                {preference.etkezes}
-              </option>
+          <select value={preferences} onChange={(e) => setPreferences(e.target.value)} required>
+            <option value="">Select Preference</option>
+            {preferenceOptions.map(pref => (
+              <option key={pref.etkezes_id} value={pref.etkezes_id}>{pref.etkezes}</option>
             ))}
           </select>
         </div>
