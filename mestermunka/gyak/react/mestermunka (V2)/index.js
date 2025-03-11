@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -72,7 +72,7 @@ app.post('/api/recipes', (req, res) => {
 
     db.getConnection((err, db) => {
         if (err) {
-            return res.status(500).json({ message: 'Database db error', error: err });
+            return res.status(500).json({ message: 'Database connection error', error: err });
         }
 
         db.beginTransaction((err) => {
@@ -81,8 +81,8 @@ app.post('/api/recipes', (req, res) => {
                 return res.status(500).json({ message: 'Transaction error', error: err });
             }
 
-            // 🔹 Insert recipe with nationality and dayTime into 'receptek'
-            const recipeQuery = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto) VALUES (?, ?, ?, ?)';
+            // 🔹 Insert recipe into 'receptek'
+            const recipeQuery = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto, kep) VALUES (?, ?, ?, ?, NULL)';
             db.query(recipeQuery, [recipeName, description, nationalityId, dayTimeId], (err, result) => {
                 if (err) {
                     return db.rollback(() => {
@@ -94,8 +94,8 @@ app.post('/api/recipes', (req, res) => {
                 const recipeId = result.insertId; // Get the inserted recipe ID
 
                 // 🔹 Insert preferences and sensitivity into 'osszekoto'
-                const detailsQuery = 'INSERT INTO osszekoto (receptek_id, preferencia_id, etrend_id,ervenyes) VALUES (?, ?, ?, 1)';
-                db.query(detailsQuery, [recipeId, preferences, sensitivity], (err) => {
+                const detailsQuery = 'INSERT INTO osszekoto (receptek_id, preferencia_id, etrend_id, ervenyes) VALUES (?, ?, ?, 1)';
+                db.query(detailsQuery, [recipeId, preferences || null, sensitivity || null], (err) => {
                     if (err) {
                         return db.rollback(() => {
                             db.release();
@@ -103,30 +103,41 @@ app.post('/api/recipes', (req, res) => {
                         });
                     }
 
-                    // 🔹 Insert ingredients and their amount/unit into 'mertekegyseg' and connect to recipe in 'osszekoto'
-                    const ingredientPromises = ingredients.map(ingredient => {
+                    // 🔹 Insert ingredients and measurement units into 'mertekegyseg'
+                    const ingredientPromises = ingredients.map((ingredient) => {
                         return new Promise((resolve, reject) => {
-                            // Insert amount and unit into the 'mertekegyseg' table first
-                            const mertekegysegQuery = 'INSERT INTO mertekegyseg (mennyiseg, mértékegység) VALUES (?,?)';
-                            db.query(mertekegysegQuery, [ingredient.mennyiseg,ingredient.mértékegység], (err, mertekegysegResult) => {
+                            // Ensure the ingredient exists before inserting
+                            const checkIngredientQuery = 'SELECT COUNT(*) AS count FROM hozzavalok WHERE Hozzavalok_id = ?';
+                            db.query(checkIngredientQuery, [ingredient.hozzavalok_id], (err, result) => {
                                 if (err) {
                                     reject(err);
+                                } else if (result[0].count === 0) {
+                                    reject(new Error(`Invalid hozzavalok_id: ${ingredient.hozzavalok_id}`));
                                 } else {
-                                    const mertekegysegId = mertekegysegResult.insertId; // Get the inserted unit ID
-
-                                    // Now insert into the 'osszekoto' table
-                                    const ingredientQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id,mertekegyseg_id) VALUES (?, ?, ?)';
-                                    db.query(ingredientQuery, [recipeId, ingredient.hozzavalok_id, mertekegysegId], (err) => {
+                                    // Insert into 'mertekegyseg' first
+                                    const mertekegysegQuery = 'INSERT INTO mertekegyseg (mennyiseg, mértékegység) VALUES (?,?)';
+                                    db.query(mertekegysegQuery, [ingredient.mennyiseg, ingredient.mertekegyseg], (err, mertekegysegResult) => {
                                         if (err) {
                                             reject(err);
                                         } else {
-                                            resolve();
+                                            const mertekegysegId = mertekegysegResult.insertId;
+
+                                            // Now insert into 'osszekoto'
+                                            const ingredientQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES (?, ?, ?, 1, ?, ?)';
+                                            db.query(ingredientQuery, [recipeId, ingredient.hozzavalok_id, mertekegysegId, sensitivity, preferencia], (err) => {
+                                                if (err) {
+                                                    reject(err);
+                                                } else {
+                                                    resolve();
+                                                }
+                                            });
                                         }
                                     });
                                 }
                             });
                         });
                     });
+
 
                     Promise.all(ingredientPromises)
                         .then(() => {
@@ -152,6 +163,7 @@ app.post('/api/recipes', (req, res) => {
         });
     });
 });
+
 
 
 

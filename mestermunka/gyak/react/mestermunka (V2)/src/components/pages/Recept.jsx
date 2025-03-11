@@ -73,7 +73,7 @@ const Recept = () => {
       preferences,
       sensitivity,
       ingredients: ingredients.map((ing) => ({
-        Hozzavalok_id: ing.ingredientId,
+        hozzavalok_id: ing.ingredientId,
         mennyiseg: ing.amount,
         mertekegyseg: ing.unit
       }))
