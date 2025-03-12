@@ -6,20 +6,15 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json())
-const bcrypt = require("bcrypt");
 
 const db = mysql.createConnection({
     user: "root",
     host:"127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
 })
-app.use((err, req, res, next) => {
-    console.error(err.stack); // Kiírja a konzolra a hibát
-    res.status(500).json({ error: err.message || "Szerverhiba történt" });
-  });
 
 app.get("/", (req,res) => {
     res.send("Fut a backend");
@@ -62,50 +57,56 @@ app.get("/Keszities" , (req,res) => {
     })
 }) 
 
+const bcrypt = require('bcrypt'); // A bcrypt használata
+
 app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM regisztracio WHERE Felhasznalonev = ? AND Email = ? AND Jelszo = ?";
+    const sql = "SELECT * FROM regisztracio WHERE Felhasznalonev = ? AND Email = ?";
     
-    db.query(sql, [req.body.username, req.body.email, req.body.password], (err, data) => {
-        if (err) {
-            console.error("SQL hiba:", err);  // Hibakereséshez
-            return res.json({Error: "Hiba a lekérdezés során"});
-        }
-        console.log(req.body.password)
+    db.query(sql, [req.body.username, req.body.email], (err, data) => {
+        if (err) return res.json({ Error: "Hiba az adatbázis lekérdezésénél." });
+
         if (data.length > 0) {
-            bcrypt.compare(req.body.password.toString(), data[0].Jelszo, (err, response) => {
-                if (err) {
-                    console.error("Bcrypt hiba:", err);  // Hibakereséshez
-                    return res.json({Error: "Hiba a jelszó ellenőrzésekor"});
-                }
+            // Itt összehasonlítjuk a hashelt jelszót a megadott jelszóval
+            bcrypt.compare(req.body.password, data[0].Jelszo, (err, response) => {
+                if (err) return res.json({ Error: "Hiba a jelszó ellenőrzésekor." });
+
                 if (response) {
-                    return res.json({Status: "Sikeres"});
+                    return res.json({ Status: "Sikeres bejelentkezés" });
                 } else {
-                    return res.json({Error: "Hibás jelszó"});
+                    return res.json({ Error: "Hibás jelszó" });
                 }
             });
         } else {
-            return res.json({Error: "Nem létezik ilyen felhasználó"});
+            return res.json({ Error: "Nem létezik ilyen felhasználó vagy email" });
         }
     });
 });
 
 
-app.post('/register', (req,res)=>{
-    const sql = "Insert into regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) Values (?,?,?)";
-    bcrypt.hash(req.body.password.toString(), 10,(err,hash)=>{
-        if(err) return res.json({Error:"Hiba a jelszó hashelésénél"})
-            const values = [req.body.username, req.body.email, hash]
-        db.query(sql,values,(err,result)=>{
-            if(err){ console.log(err);
-            return res.status(500).json({Error: "Adatbázis hiba"});
+app.post('/register', (req, res) => {
+    const sql = "INSERT INTO regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) VALUES (?, ?, ?)";
+
+    // A jelszó hashelése
+    bcrypt.hash(req.body.password, 10, (err, hash) => { // 10 az a saltRounds értéke
+        if (err) return res.json({ error: "Hiba a jelszó hashelésekor." });
+
+        // Az insert értékek, amik a requestből jönnek
+        const values = [
+            req.body.Felhasznalonev, // Felhasználónév
+            req.body.Email, // Email
+            hash // A hashelt jelszó
+        ];
+
+        // SQL query végrehajtása
+        db.query(sql, values, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.json({ error: "Hiba az adatbázis művelet végrehajtásakor." });
             }
-            else {
-                return res.json({Status: "Sikeres"})
-            }
-           
-        })
-    })
-})
+            return res.json({ success: "Sikeres regisztráció", result: result });
+        });
+    });
+});
 app.get('/profil', (req,res)=>{
     const sql = "Select * from regisztracio";
     db.query(sql, (err, result) =>{

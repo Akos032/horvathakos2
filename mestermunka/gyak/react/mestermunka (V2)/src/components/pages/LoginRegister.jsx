@@ -17,31 +17,44 @@ export const Login = () => {
     password
   }
 
-  // Regisztráció kezelése
   const register = (event) => {
     event.preventDefault();
+    
+    // Az adatokat küldjük a szerverre
     axios
       .post("http://localhost:3001/register", { username, email, password })
       .then((res) => {
         console.log(res);
+        // Ha sikeres a regisztráció, navigáljunk a /Home oldalra
         navigate("/Home");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // Hibakezelés: itt célszerű a hibát pontosabban kezelni
+        console.log(err);
+        alert("Hiba történt a regisztráció során.");
+      });
   };
 
-  // Bejelentkezés kezelése
   const login = (event) => {
     event.preventDefault();
+
+    // POST kérés az adatbázisba
     axios
       .post("http://localhost:3001/login", values)
       .then((res) => {
         if (res.data.Status === "Sikeres") {
+          // Ha sikeres a bejelentkezés, navigáljunk a Home oldalra
           navigate("/Home");
         } else {
+          // Hibás bejelentkezés esetén jelenítsünk meg hibaüzenetet
           alert(res.data.Error);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // Hibaüzenet, ha valami probléma van a kéréssel
+        console.log(err);
+        alert("Hiba történt a bejelentkezés során.");
+      });
   };
 
   return (
