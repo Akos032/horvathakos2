@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json())
+const bcrypt = require("bcrypt");
 
 const db = mysql.createConnection({
     user: "root",
@@ -15,6 +16,10 @@ const db = mysql.createConnection({
     database: "finomsagok"
 
 })
+app.use((err, req, res, next) => {
+    console.error(err.stack); // Kiírja a konzolra a hibát
+    res.status(500).json({ error: err.message || "Szerverhiba történt" });
+  });
 
 app.get("/", (req,res) => {
     res.send("Fut a backend");
@@ -57,37 +62,47 @@ app.get("/Keszities" , (req,res) => {
     })
 }) 
 
-app.post('/login', (req,res) =>{
-    const sql = "Select * from regisztracio WHERE Felhasznalonev = ? and Email = ? and Jelszo = ?"
-    db.query(sql, [req.body.username,req.body.email,req.body.password], (err, data) => {
-        if(err) return res.json("Hiba")
-        if(data.length > 0){
-            bycrypt.compare(req.body.password.toString(),result[0].password,(err,response)=>{
-                if(err) return res.json({Error:"Hiba"})
-                    if(response) return res.json({Status: "Sikeres"})
-                        else return res.json({Error:"Hibás jelszó"})
-            
-            }
-               
-            )
-        } else{
-            return res.json({Error:"Nem létezik az email"})
+app.post('/login', (req, res) => {
+    const sql = "SELECT * FROM regisztracio WHERE Felhasznalonev = ? AND Email = ? AND Jelszo = ?";
+    
+    db.query(sql, [req.body.username, req.body.email, req.body.password], (err, data) => {
+        if (err) {
+            console.error("SQL hiba:", err);  // Hibakereséshez
+            return res.json({Error: "Hiba a lekérdezés során"});
         }
-        
-    })
-})
+        console.log(req.body.password)
+        if (data.length > 0) {
+            bcrypt.compare(req.body.password.toString(), data[0].Jelszo, (err, response) => {
+                if (err) {
+                    console.error("Bcrypt hiba:", err);  // Hibakereséshez
+                    return res.json({Error: "Hiba a jelszó ellenőrzésekor"});
+                }
+                if (response) {
+                    return res.json({Status: "Sikeres"});
+                } else {
+                    return res.json({Error: "Hibás jelszó"});
+                }
+            });
+        } else {
+            return res.json({Error: "Nem létezik ilyen felhasználó"});
+        }
+    });
+});
+
+
 app.post('/register', (req,res)=>{
     const sql = "Insert into regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) Values (?,?,?)";
-    bycrypt.hash(req.body.password.toString(),(err,hash)=>{
-        if(err) return res.json("Hiba")
-            const values = values.map((values) => [
-                values.Felhasznalonev,
-                values.Email,
-                values.bycrypt
-            ]);
-        db.query(sql,[values],(err,result)=>{
-            if(err) console.log(err);
-            else return res.json(result)
+    bcrypt.hash(req.body.password.toString(), 10,(err,hash)=>{
+        if(err) return res.json({Error:"Hiba a jelszó hashelésénél"})
+            const values = [req.body.username, req.body.email, hash]
+        db.query(sql,values,(err,result)=>{
+            if(err){ console.log(err);
+            return res.status(500).json({Error: "Adatbázis hiba"});
+            }
+            else {
+                return res.json({Status: "Sikeres"})
+            }
+           
         })
     })
 })
