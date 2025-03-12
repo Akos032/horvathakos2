@@ -69,7 +69,7 @@ app.get("/leiras", (req, res) => {
 
 app.post('/api/recipes', (req, res) => {
     const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients } = req.body;
-
+    
     db.getConnection((err, db) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection error', error: err });
@@ -181,7 +181,9 @@ function insertIngredient(db, recipeId, ingredient, preferences, sensitivity) {
                 });
             });
         });
+        
     });
+    
 }
 
 
