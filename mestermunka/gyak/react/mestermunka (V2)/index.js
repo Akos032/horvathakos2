@@ -10,7 +10,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -144,9 +144,11 @@ function insertIngredients(db, recipeId, ingredients, preferences, sensitivity) 
             return resolve(); // No ingredients to insert
         }
 
-        const ingredientPromises = ingredients.map((ingredient) => {
-            return insertIngredient(db, recipeId, ingredient, preferences, sensitivity);
+        const ingredientPromises = ingredients.map(async (ingredient) => {
+            console.log("Inserting Ingredient:", ingredient);
+            return await insertIngredient(db, recipeId, ingredient, preferences, sensitivity);
         });
+        
 
         Promise.all(ingredientPromises)
             .then(() => resolve())
@@ -167,7 +169,11 @@ function insertIngredient(db, recipeId, ingredient, preferences, sensitivity) {
             }
 
             // Step 1: Insert into 'mertekegyseg' table
-            const mertekegysegQuery = 'INSERT INTO mertekegyseg (mennyiseg, mértékegység) VALUES (?, ?)';
+            const mertekegysegQuery = `
+            INSERT INTO mertekegyseg (mennyiseg, mértékegység) 
+            VALUES (?, ?) 
+            ON DUPLICATE KEY UPDATE mennyiseg = VALUES(mennyiseg), mértékegység = VALUES(mértékegység)
+            `;
             db.query(mertekegysegQuery, [ingredient.mennyiseg, ingredient.mertekegyseg], (err, mertekegysegResult) => {
                 if (err) return reject(err);
 
