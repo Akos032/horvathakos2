@@ -19,43 +19,51 @@ export const Login = () => {
 
   const register = (event) => {
     event.preventDefault();
-    
-    // Az adatokat küldjük a szerverre
-    axios
-      .post("http://localhost:3001/register", { username, email, password })
-      .then((res) => {
-        console.log(res);
-        // Ha sikeres a regisztráció, navigáljunk a /Home oldalra
-        navigate("/Home");
-      })
-      .catch((err) => {
-        // Hibakezelés: itt célszerű a hibát pontosabban kezelni
-        console.log(err);
-        alert("Hiba történt a regisztráció során.");
-      });
-  };
 
-  const login = (event) => {
-    event.preventDefault();
+    const userData = {
+        Felhasznalonev: username.trim(), // 🔹 Eltávolítja az esetleges felesleges szóközöket
+        Email: email.trim(),
+        password: password.trim()
+    };
 
-    // POST kérés az adatbázisba
-    axios
-      .post("http://localhost:3001/login", values)
-      .then((res) => {
-        if (res.data.Status === "Sikeres") {
-          // Ha sikeres a bejelentkezés, navigáljunk a Home oldalra
-          navigate("/Home");
-        } else {
-          // Hibás bejelentkezés esetén jelenítsünk meg hibaüzenetet
-          alert(res.data.Error);
-        }
-      })
-      .catch((err) => {
-        // Hibaüzenet, ha valami probléma van a kéréssel
-        console.log(err);
-        alert("Hiba történt a bejelentkezés során.");
-      });
-  };
+    if (!userData.Felhasznalonev || !userData.Email || !userData.password) {
+        alert("Minden mezőt ki kell tölteni!");
+        return;
+    }
+
+    axios.post("http://localhost:3001/register", userData, {
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => {
+        console.log("Regisztráció sikeres:", response.data);
+        alert("Sikeres regisztráció!");
+    })
+    .catch(error => {
+        console.error("Hiba történt a regisztráció során:", error.response ? error.response.data : error.message);
+        alert(error.response?.data?.error || "Hiba történt a regisztráció során!");
+    });
+};
+
+
+
+const login = (event) => {
+  event.preventDefault();
+
+  axios.post("http://localhost:3001/login", {
+      Email: email,
+      password: password
+  }, {
+      headers: { "Content-Type": "application/json" }
+  })
+  .then(response => {
+      console.log("✅ Sikeres bejelentkezés:", response.data);
+      alert("Sikeres bejelentkezés!");
+  })
+  .catch(error => {
+      console.error("❌ Hiba történt a bejelentkezés során:", error.response ? error.response.data : error.message);
+      alert(error.response?.data?.error || "Hiba történt a bejelentkezés során!");
+  });
+};
 
   return (
     <div className="login-register-container">

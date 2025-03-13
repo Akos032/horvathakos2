@@ -3,9 +3,8 @@ const app = express();
 const cors = require("cors");
 const mysql = require("mysql");
 const bodyParser = require('body-parser');
-app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
 const db = mysql.createConnection({
     user: "root",
@@ -57,56 +56,94 @@ app.get("/Keszities" , (req,res) => {
     })
 }) 
 
-const bcrypt = require('bcrypt'); // A bcrypt használata
+const bcrypt = require('bcryptjs'); // A bcrypt használata
 
 app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM regisztracio WHERE Felhasznalonev = ? AND Email = ?";
+    console.log("📥 Beérkező adatok:", req.body);
+
+    const { Email, password } = req.body;
+
+    if (!Email || !password) {
+        console.log("❌ Hiányzó email vagy jelszó!");
+        return res.status(400).json({ error: "❌ Hiányzó email vagy jelszó!" });
+    }
+
+    const sql = "SELECT * FROM regisztracio WHERE Email = ?";
     
-    db.query(sql, [req.body.username, req.body.email], (err, data) => {
-        if (err) return res.json({ Error: "Hiba az adatbázis lekérdezésénél." });
-
-        if (data.length > 0) {
-            // Itt összehasonlítjuk a hashelt jelszót a megadott jelszóval
-            bcrypt.compare(req.body.password, data[0].Jelszo, (err, response) => {
-                if (err) return res.json({ Error: "Hiba a jelszó ellenőrzésekor." });
-
-                if (response) {
-                    return res.json({ Status: "Sikeres bejelentkezés" });
-                } else {
-                    return res.json({ Error: "Hibás jelszó" });
-                }
-            });
-        } else {
-            return res.json({ Error: "Nem létezik ilyen felhasználó vagy email" });
+    db.query(sql, [Email], (err, result) => {
+        if (err) {
+            console.error("❌ SQL Hiba:", err);
+            return res.status(500).json({ error: "Adatbázis hiba!" });
         }
+
+        console.log("🔍 SQL lekérdezés eredménye:", result);
+
+        if (result.length === 0) {
+            console.log("❌ Hibás email!");
+            return res.status(401).json({ error: "❌ Hibás email vagy nem létezik a felhasználó!" });
+        }
+
+        const hashedPassword = result[0].Jelszo;
+        console.log("🔐 Adatbázisból kapott hash:", hashedPassword);
+
+        bcrypt.compare(password, hashedPassword, (err, isMatch) => {
+            if (err) {
+                console.error("❌ Bcrypt hiba:", err);
+                return res.status(500).json({ error: "Hiba történt a jelszó ellenőrzésekor!" });
+            }
+
+            console.log("✅ Jelszó egyezés?", isMatch);
+
+            if (!isMatch) {
+                console.log("❌ Hibás jelszó!");
+                return res.status(401).json({ error: "❌ Hibás jelszó!" });
+            }
+
+            console.log("✅ Sikeres bejelentkezés:", result[0].Felhasznalonev);
+            return res.json({ success: "Sikeres bejelentkezés!", user: result[0] });
+        });
     });
 });
 
 
+
 app.post('/register', (req, res) => {
-    const sql = "INSERT INTO regisztracio (`Felhasznalonev`, `Email`, `Jelszo`) VALUES (?, ?, ?)";
+    console.log("📥 Beérkező adatok:", req.body);
 
-    // A jelszó hashelése
-    bcrypt.hash(req.body.password, 10, (err, hash) => { // 10 az a saltRounds értéke
-        if (err) return res.json({ error: "Hiba a jelszó hashelésekor." });
+    const { Felhasznalonev, Email, password } = req.body;
 
-        // Az insert értékek, amik a requestből jönnek
-        const values = [
-            req.body.Felhasznalonev, // Felhasználónév
-            req.body.Email, // Email
-            hash // A hashelt jelszó
-        ];
+    if (!Felhasznalonev || !Email || !password) {
+        return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
+    }
 
-        // SQL query végrehajtása
+    bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+            console.error("❌ Jelszó hash hiba:", err);
+            return res.status(500).json({ error: "Hiba a jelszó hashelésekor.", details: err.message });
+        }
+
+        console.log("🔑 Hash-elt jelszó:", hash);
+
+        const sql = "INSERT INTO regisztracio (Felhasznalonev, Email, Jelszo) VALUES (?, ?, ?)";
+        const values = [Felhasznalonev, Email, hash];
+
+        console.log("📝 SQL lekérdezés:", sql);
+        console.log("📊 Értékek:", values);
+
         db.query(sql, values, (err, result) => {
             if (err) {
-                console.log(err);
-                return res.json({ error: "Hiba az adatbázis művelet végrehajtásakor." });
+                console.error("❌ SQL Hiba:", err);
+                return res.status(500).json({ error: "Hiba az adatbázis művelet végrehajtásakor.", details: err.sqlMessage });
             }
+
+            console.log("✅ Sikeres regisztráció:", result);
             return res.json({ success: "Sikeres regisztráció", result: result });
         });
     });
 });
+
+
+
 app.get('/profil', (req,res)=>{
     const sql = "Select * from regisztracio";
     db.query(sql, (err, result) =>{

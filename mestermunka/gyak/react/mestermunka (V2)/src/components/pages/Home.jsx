@@ -35,8 +35,8 @@ export const Home =() => {
         </div>
         <div className="col-sm-4">
                 {osszes.map((ossze) =>
-                   <div className="card mb-3" style={{maxWidth: "800px",height:"auto"}}>
-                        <div className="row g-0" key={ossze.Receptek_id}>
+                   <div key={ossze.Receptek_id} className="card mb-3" style={{ maxWidth: "800px", height: "auto" }}>
+                   <div className="row g-0">
                             <div className="col-md-4">
                                 <img src={ossze.kep} className="img-fluid rounded-start" style={{ margin:"5px"}}/>
                             </div>
