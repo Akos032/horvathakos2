@@ -29,7 +29,7 @@ const Recept = () => {
         const sensitivitiesRes = await axios.get('http://localhost:3001/api/sensitivities');
         const preferencesRes = await axios.get('http://localhost:3001/api/preferences');
 
-        setIngredientOptions(ingredientsRes.data.map(ing => ({ value: ing.hozzavalok_ID, label: ing.Hozzavalok_neve })));
+        setIngredientOptions(ingredientsRes.data.map(ing => ({ value: ing.Hozzavalok_id, label: ing.Hozzavalok_neve })));
         setNationalityOptions(nationalitiesRes.data);
         setDayTimeOptions(dayTimesRes.data);
         setSensitivityOptions(sensitivitiesRes.data);
@@ -47,13 +47,12 @@ const Recept = () => {
     updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : '';
     setIngredients(updatedIngredients);
   };
-  
+
   const handleInputChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
-  
 
   const addIngredient = () => {
     setIngredients([...ingredients, { ingredientId: '', amount: '', unit: '' }]);
@@ -70,28 +69,14 @@ const Recept = () => {
     }
     return true;
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      recipeName,
-      description,
-      selectedNationality,
-      selectedDayTime,
-      preferences,
-      sensitivity,
-      ingredients.map(ingredient => ({
-        ingredientId: ingredient.ingredientId,
-        amount: ingredient.amount,
-        unit: ingredient.unit
-      }))
-    );
 
     if (!validateData()) {
       return; // Prevent submitting if data is invalid
     }
-    
-  
+
     const recipeData = {
       recipeName,
       description,
@@ -100,24 +85,21 @@ const Recept = () => {
       preferences,
       sensitivity,
       ingredients: ingredients.map((ing) => ({
-        hozzavalok_id: ing.ingredientId,
+        Hozzavalok_id: ing.ingredientId,
         mennyiseg: ing.amount,
         mertekegyseg: ing.unit
       }))
     };
-  
-    console.log('Sending recipe data:', recipeData);
-  
+
     try {
       const response = await axios.post('http://localhost:3001/api/recipes', recipeData);
       if (response.status === 200) {
         alert('Recipe added successfully!');
       }
     } catch (error) {
-      console.error('Error adding recipe:', error.response || error.message);
       alert('Error adding recipe: ' + (error.response ? error.response.data.message : error.message));
     }
-  };  
+  };
 
   return (
     <div>
