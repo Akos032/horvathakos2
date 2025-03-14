@@ -23,7 +23,7 @@ const NavBar = (() => {
             <li>
                 <NavLink to = "/LoginRegister">Bejeletkezés és Regisztráció</NavLink>
                 <NavLink to = "/Recept">Receptek</NavLink>
-                <NavLink to="/profile">Profil</NavLink>
+                <NavLink to="/Profile">Profil</NavLink>
             </li>
 
             </ul>
