@@ -85,8 +85,11 @@ app.post('/login', (req, res) => {
 
         const hashedPassword = result[0].Jelszo;
         console.log("🔐 Adatbázisból kapott hash:", hashedPassword);
+        console.log("📥 Beírt jelszó:", password);
 
-        bcrypt.compare(password, hashedPassword, (err, isMatch) => {
+       const beirtJelszo = password.trim();
+
+       bcrypt.compare(beirtJelszo, hashedPassword.trim(), (err, isMatch) => {
             if (err) {
                 console.error("❌ Bcrypt hiba:", err);
                 return res.status(500).json({ error: "Hiba történt a jelszó ellenőrzésekor!" });
@@ -141,6 +144,12 @@ app.post('/register', (req, res) => {
         });
     });
 });
+
+const hash = "$2a$10$V1Q6uMb3g.lTQGp9u0z2FeH1y0Q3OYsQHmtE.ZM9bfzZpFhvw6K/m"; // Cseréld ki a saját hash-edre
+const password = "tesztjelszo"; // Cseréld ki arra a jelszóra, amit regisztráltál
+
+bcrypt.compare(password, hash, (err, isMatch) => console.log(isMatch));
+
 
 
 
