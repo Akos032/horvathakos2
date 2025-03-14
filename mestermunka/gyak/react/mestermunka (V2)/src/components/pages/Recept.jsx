@@ -31,7 +31,7 @@ const Recept = () => {
 
         setIngredientOptions(
           ingredientsRes.data.map(ing => ({
-            value: ing.hozzavalok_id,  // Ensure Hozzavalok_id is being used
+            value: ing.Hozzavalok_id,  // Ensure Hozzavalok_id is being used
             label: ing.Hozzavalok_neve  // Ensure Hozzavalok_neve is being used
           }))
         );
@@ -90,7 +90,7 @@ const Recept = () => {
       preferences,
       sensitivity,
       ingredients: ingredients.map((ing) => ({
-        hozzavalok_id: ing.ingredientId, // This should now be correctly populated
+        Hozzavalok_id: ing.ingredientId, // This should now be correctly populated
         mennyiseg: ing.amount,
         mertekegyseg: ing.unit,
       })),

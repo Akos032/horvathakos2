@@ -160,7 +160,7 @@ function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sens
                 console.log("Inserting into osszekoto:", osszekotoValues);
 
                 // Insert into 'osszekoto' table in bulk
-                const insertQuery = 'INSERT INTO osszekoto (receptek_id, Hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
+                const insertQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
                 db.query(insertQuery, [osszekotoValues], (err, result) => {
                     if (err) {
                         console.error("Error inserting into osszekoto:", err);
