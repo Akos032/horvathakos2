@@ -183,3 +183,15 @@ function toggleFilters() {
     var filterPanel = document.getElementById('filterPanel');
     filterPanel.classList.toggle('open');
 }
+const user = {
+    username: "John Doe",
+    email: "john.doe@example.com",
+    joined: "2023-08-15",
+    profilePicture: "https://randomuser.me/api/portraits/men/1.jpg"
+  };
+  
+  // Végpont a profil adatokhoz
+  app.get("/profile", (req, res) => {
+    res.json(user);
+  });
+

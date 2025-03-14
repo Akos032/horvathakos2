@@ -17,6 +17,8 @@
     "cors": "^2.8.5",
     "devextreme-react": "^24.2.5",
     "express": "^4.21.2",
+    "framer-motion": "^12.5.0",
+    "motion": "^12.5.0",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",

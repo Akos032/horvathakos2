@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import {Home, Login} from './components/pages'
 import NavBar from './components/Navbar'
 import Recept from './components/pages/Recept'
+import Profile from './components/pages/Profile'
 
 
 
@@ -16,7 +17,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/LoginRegister' element ={<Login/>}/>
-          <Route path='/Recept' element = {<Recept/>}/>     
+          <Route path='/Recept' element = {<Recept/>}/>  
+          <Route path='/profile' element={<Profile/>}/>   
         </Routes>
       </div>
     </>
