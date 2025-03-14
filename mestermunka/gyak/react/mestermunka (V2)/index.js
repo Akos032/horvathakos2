@@ -132,7 +132,12 @@ function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sens
         // First insert into 'mertekegyseg' for all ingredients
         const mertekegysegPromises = ingredients.map(async (ingredient) => {
             console.log("Inserting mertekegyseg for:", ingredient);
-            return await insertMertekegyseg(db, ingredient.mennyiseg, ingredient.mertekegyseg);
+            try {
+                return await insertMertekegyseg(db, ingredient.mennyiseg, ingredient.mertekegyseg);
+            } catch (error) {
+                console.error("Error inserting mertekegyseg:", error);
+                throw error; // Re-throw the error to stop execution
+            }
         });
 
         Promise.all(mertekegysegPromises)
@@ -141,6 +146,7 @@ function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sens
 
                 // Prepare the bulk insert data for 'osszekoto'
                 const osszekotoValues = ingredients.map((ingredient, index) => {
+                    console.log("Inserting ingredient into osszekoto:", ingredient, mertekegysegResults[index]);
                     return [
                         recipeId,  // recipeId
                         ingredient.hozzavalok_id,  // Hozzavalok_id
@@ -154,9 +160,13 @@ function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sens
                 console.log("Inserting into osszekoto:", osszekotoValues);
 
                 // Insert into 'osszekoto' table in bulk
-                const insertQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
+                const insertQuery = 'INSERT INTO osszekoto (receptek_id, Hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
                 db.query(insertQuery, [osszekotoValues], (err, result) => {
-                    if (err) return reject(err);
+                    if (err) {
+                        console.error("Error inserting into osszekoto:", err);
+                        return reject(err);
+                    }
+                    console.log("Successfully inserted into osszekoto:", result);
                     resolve();
                 });
             })
@@ -176,6 +186,7 @@ function insertMertekegyseg(db, amount, unit) {
                 console.error("Error in inserting mertekegyseg:", err);
                 return reject(err);
             }
+            console.log("Mertekegyseg inserted successfully:", result);
             resolve(result);  // Return the result to get the insertId of 'mertekegyseg'
         });
     });

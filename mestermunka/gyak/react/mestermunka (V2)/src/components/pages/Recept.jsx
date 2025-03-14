@@ -29,7 +29,12 @@ const Recept = () => {
         const sensitivitiesRes = await axios.get('http://localhost:3001/api/sensitivities');
         const preferencesRes = await axios.get('http://localhost:3001/api/preferences');
 
-        setIngredientOptions(ingredientsRes.data.map(ing => ({ value: ing.Hozzavalok_id, label: ing.Hozzavalok_neve })));
+        setIngredientOptions(
+          ingredientsRes.data.map(ing => ({
+            value: ing.hozzavalok_id,  // Ensure Hozzavalok_id is being used
+            label: ing.Hozzavalok_neve  // Ensure Hozzavalok_neve is being used
+          }))
+        );
         setNationalityOptions(nationalitiesRes.data);
         setDayTimeOptions(dayTimesRes.data);
         setSensitivityOptions(sensitivitiesRes.data);
@@ -43,16 +48,19 @@ const Recept = () => {
   }, []);
 
   const handleIngredientChange = (index, selectedOption) => {
+    console.log("Selected Ingredient:", selectedOption); // Log to check the selectedOption
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : '';
+    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : ''; // Set ingredientId
     setIngredients(updatedIngredients);
   };
-
+    
+  
   const handleInputChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
+  
 
   const addIngredient = () => {
     setIngredients([...ingredients, { ingredientId: '', amount: '', unit: '' }]);
@@ -69,14 +77,11 @@ const Recept = () => {
     }
     return true;
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateData()) {
-      return; // Prevent submitting if data is invalid
-    }
-
+  
+    // Log the data before sending it to ensure everything looks correct
     const recipeData = {
       recipeName,
       description,
@@ -85,21 +90,33 @@ const Recept = () => {
       preferences,
       sensitivity,
       ingredients: ingredients.map((ing) => ({
-        Hozzavalok_id: ing.ingredientId,
+        hozzavalok_id: ing.ingredientId, // This should now be correctly populated
         mennyiseg: ing.amount,
-        mertekegyseg: ing.unit
-      }))
+        mertekegyseg: ing.unit,
+      })),
     };
+    
+  
+    console.log("Sending recipe data:", recipeData);
+    console.log("Ingredients:", ingredients);
 
+  
+    // If any required field is missing, alert and stop
+    if (!validateData()) {
+      return; // Prevent submitting if data is invalid
+    }
+  
     try {
       const response = await axios.post('http://localhost:3001/api/recipes', recipeData);
       if (response.status === 200) {
         alert('Recipe added successfully!');
       }
     } catch (error) {
+      console.error('Error adding recipe:', error.response || error.message);
       alert('Error adding recipe: ' + (error.response ? error.response.data.message : error.message));
     }
   };
+   
 
   return (
     <div>
@@ -115,11 +132,11 @@ const Recept = () => {
           {ingredients.map((ingredient, index) => (
             <div key={index}>
               <Select
-                options={ingredientOptions}
-                onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-                placeholder="Select Ingredient..."
-                isSearchable
-                required
+              options={ingredientOptions}
+              onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
+              placeholder="Select Ingredient..."
+              isSearchable
+              required
               />
               <input
                 type="number"
