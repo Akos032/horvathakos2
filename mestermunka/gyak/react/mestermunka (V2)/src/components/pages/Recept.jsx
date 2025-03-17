@@ -48,11 +48,14 @@ const Recept = () => {
   }, []);
 
   const handleIngredientChange = (index, selectedOption) => {
-    console.log("Selected Ingredient:", selectedOption); // Log to check the selectedOption
+    console.log("Selected Ingredient:", selectedOption); // Already correct
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : ''; // Set ingredientId
+    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : ''; 
     setIngredients(updatedIngredients);
-  };
+
+    console.log("Updated ingredients state:", updatedIngredients); // Check if stored correctly
+};
+
     
   
   const handleInputChange = (index, field, value) => {
@@ -80,6 +83,7 @@ const Recept = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
   
     // Log the data before sending it to ensure everything looks correct
     const recipeData = {
@@ -90,12 +94,13 @@ const Recept = () => {
       preferences,
       sensitivity,
       ingredients: ingredients.map((ing) => ({
-        Hozzavalok_id: ing.ingredientId, // This should now be correctly populated
+        hozzavalok_id: ing.ingredientId || ing.Hozzavalok_id, // Ensure correct key
         mennyiseg: ing.amount,
         mertekegyseg: ing.unit,
       })),
-    };
-    
+    };    
+    console.log("Final recipeData before sending:", JSON.stringify(recipeData, null, 2));
+
   
     console.log("Sending recipe data:", recipeData);
     console.log("Ingredients:", ingredients);
@@ -112,7 +117,7 @@ const Recept = () => {
         alert('Recipe added successfully!');
       }
     } catch (error) {
-      console.error('Error adding recipe:', error.response || error.message);
+      console.error('Error adding recipe:', error.response ? error.response.data : error.message);
       alert('Error adding recipe: ' + (error.response ? error.response.data.message : error.message));
     }
   };
@@ -133,11 +138,13 @@ const Recept = () => {
             <div key={index}>
               <Select
               options={ingredientOptions}
+              value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)} // Ensure selected value shows
               onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
               placeholder="Select Ingredient..."
               isSearchable
               required
               />
+
               <input
                 type="number"
                 placeholder="Amount"
