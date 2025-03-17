@@ -55,7 +55,7 @@ export const Home =() => {
                                     {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bőveb informácio'}
                                 </button>
                                 {showTable === ossze.Receptek_id && (
-                                    <table border="1" className="table table-striped" style={{ marginTop: '10px', width: '100%' }}>
+                                    <table border="1" className="table table-striped" style={{ marginTop: '10px', width: '100%', height:"auto" }}>
                                         <thead className="thead-dark">
                                             <tr>
                                                 <th scope="col">Hozzávalok neve</th>
