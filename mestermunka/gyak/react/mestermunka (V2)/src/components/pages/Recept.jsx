@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import styles from './Recept.module.css';  // Import the CSS module
 
 const Recept = () => {
   const [recipeName, setRecipeName] = useState('');
@@ -10,14 +11,12 @@ const Recept = () => {
   const [image, setImage] = useState(null);
   const [ingredients, setIngredients] = useState([{ ingredientId: '', amount: '', unit: '' }]);
 
-  // Dropdown options
   const [ingredientOptions, setIngredientOptions] = useState([]);
   const [nationalityOptions, setNationalityOptions] = useState([]);
   const [dayTimeOptions, setDayTimeOptions] = useState([]);
   const [sensitivityOptions, setSensitivityOptions] = useState([]);
   const [preferenceOptions, setPreferenceOptions] = useState([]);
 
-  // Selected dropdown values
   const [selectedNationality, setSelectedNationality] = useState('');
   const [selectedDayTime, setSelectedDayTime] = useState('');
 
@@ -32,8 +31,8 @@ const Recept = () => {
 
         setIngredientOptions(
           ingredientsRes.data.map(ing => ({
-            value: ing.Hozzavalok_id,  // Ensure Hozzavalok_id is being used
-            label: ing.Hozzavalok_neve  // Ensure Hozzavalok_neve is being used
+            value: ing.Hozzavalok_id, 
+            label: ing.Hozzavalok_neve
           }))
         );
         setNationalityOptions(nationalitiesRes.data);
@@ -49,16 +48,11 @@ const Recept = () => {
   }, []);
 
   const handleIngredientChange = (index, selectedOption) => {
-    console.log("Selected Ingredient:", selectedOption); // Already correct
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : ''; 
+    updatedIngredients[index].ingredientId = selectedOption ? selectedOption.value : '';
     setIngredients(updatedIngredients);
+  };
 
-    console.log("Updated ingredients state:", updatedIngredients); // Check if stored correctly
-};
-
-    
-  
   const handleInputChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
     updatedIngredients[index][field] = value;
@@ -68,7 +62,6 @@ const Recept = () => {
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
-  
 
   const addIngredient = () => {
     setIngredients([...ingredients, { ingredientId: '', amount: '', unit: '' }]);
@@ -85,7 +78,7 @@ const Recept = () => {
     }
     return true;
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -103,18 +96,11 @@ const Recept = () => {
       formData.append(`ingredients[${index}][mennyiseg]`, ingredient.amount);
       formData.append(`ingredients[${index}][mertekegyseg]`, ingredient.unit);
     });
-    console.log("Final recipeData before sending:", JSON.stringify(formData, null, 2));
 
-  
-    console.log("Sending recipe data:", formData);
-    console.log("Ingredients:", ingredients);
-
-  
-    // If any required field is missing, alert and stop
     if (!validateData()) {
-      return; // Prevent submitting if data is invalid
+      return;
     }
-  
+
     try {
       const response = await axios.post('http://localhost:3001/api/recipes', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -127,34 +113,33 @@ const Recept = () => {
       alert('Error adding recipe: ' + (error.response ? error.response.data.message : error.message));
     }
   };
-   
 
   return (
-    <div>
-      <h1>Add a Recipe</h1>
-      <form onSubmit={handleSubmit}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Add a Recipe</h1>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div>
-          <label>Recipe Name:</label>
-          <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
+          <label className={styles.label}>Recipe Name:</label>
+          <input className={styles.input} type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
         <div>
-          <label>Upload Image:</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} required />
+          <label className={styles.label}>Upload Image:</label>
+          <input className={styles.inputFile} type="file" accept="image/*" onChange={handleImageChange} required />
         </div>
         <div>
-          <label>Ingredients:</label>
+          <label className={styles.label}>Ingredients:</label>
           {ingredients.map((ingredient, index) => (
-            <div key={index}>
+            <div key={index} className={styles.ingredientSection}>
               <Select
-              options={ingredientOptions}
-              value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)} // Ensure selected value shows
-              onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-              placeholder="Select Ingredient..."
-              isSearchable
-              required
+                options={ingredientOptions}
+                value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)}
+                onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
+                placeholder="Select Ingredient..."
+                isSearchable
+                required
               />
-
               <input
+                className={styles.input}
                 type="number"
                 placeholder="Amount"
                 value={ingredient.amount}
@@ -162,64 +147,59 @@ const Recept = () => {
                 required
               />
               <input
+                className={styles.input}
                 type="text"
                 placeholder="Unit (e.g., grams, cups)"
                 value={ingredient.unit}
                 onChange={(e) => handleInputChange(index, 'unit', e.target.value)}
                 required
               />
-              <button type="button" onClick={() => removeIngredient(index)}>Remove</button>
+              <button className={styles.removeIngredientButton} type="button" onClick={() => removeIngredient(index)}>Remove</button>
             </div>
           ))}
-          <button type="button" onClick={addIngredient}>Add Ingredient</button>
+          <button className={styles.addIngredientButton} type="button" onClick={addIngredient}>Add Ingredient</button>
         </div>
-
         <div>
-          <label>Description:</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <label className={styles.label}>Description:</label>
+          <textarea className={styles.input} value={description} onChange={(e) => setDescription(e.target.value)} required />
         </div>
-
         <div>
-          <label>Nationality:</label>
-          <select value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} required>
+          <label className={styles.label}>Nationality:</label>
+          <select className={styles.input} value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} required>
             <option value="">Select Nationality</option>
             {nationalityOptions.map(nat => (
               <option key={nat.konyha_id} value={nat.konyha_id}>{nat.nemzetiseg}</option>
             ))}
           </select>
         </div>
-
         <div>
-          <label>Day Time:</label>
-          <select value={selectedDayTime} onChange={(e) => setSelectedDayTime(e.target.value)} required>
+          <label className={styles.label}>Day Time:</label>
+          <select className={styles.input} value={selectedDayTime} onChange={(e) => setSelectedDayTime(e.target.value)} required>
             <option value="">Select Day Time</option>
             {dayTimeOptions.map(dt => (
               <option key={dt.napszak_id} value={dt.napszak_id}>{dt.idoszak}</option>
             ))}
           </select>
         </div>
-
         <div>
-          <label>Sensitivity:</label>
-          <select value={sensitivity} onChange={(e) => setSensitivity(e.target.value)} required>
+          <label className={styles.label}>Sensitivity:</label>
+          <select className={styles.input} value={sensitivity} onChange={(e) => setSensitivity(e.target.value)} required>
             <option value="">Select Sensitivity</option>
             {sensitivityOptions.map(sen => (
               <option key={sen.erzekenyseg_id} value={sen.erzekenyseg_id}>{sen.erzekenyseg}</option>
             ))}
           </select>
         </div>
-
         <div>
-          <label>Preferences:</label>
-          <select value={preferences} onChange={(e) => setPreferences(e.target.value)} required>
+          <label className={styles.label}>Preferences:</label>
+          <select className={styles.input} value={preferences} onChange={(e) => setPreferences(e.target.value)} required>
             <option value="">Select Preference</option>
             {preferenceOptions.map(pref => (
               <option key={pref.etkezes_id} value={pref.etkezes_id}>{pref.etkezes}</option>
             ))}
           </select>
         </div>
-
-        <button type="submit">Submit Recipe</button>
+        <button className={styles.button} type="submit">Submit Recipe</button>
       </form>
     </div>
   );
