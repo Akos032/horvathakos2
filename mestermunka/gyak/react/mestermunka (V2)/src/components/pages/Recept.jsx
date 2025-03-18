@@ -116,32 +116,32 @@ const Recept = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Add a Recipe</h1>
+      <h1 className={styles.title}>Adj hozzá saját receptet</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
-          <label className={styles.label}>Recipe Name:</label>
+          <label className={styles.label}>A recepted neve:</label>
           <input className={styles.input} type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
         <div>
-          <label className={styles.label}>Upload Image:</label>
+          <label className={styles.label}>Kép feltöltése:</label>
           <input className={styles.inputFile} type="file" accept="image/*" onChange={handleImageChange} required />
         </div>
         <div>
-          <label className={styles.label}>Ingredients:</label>
+          <label className={styles.label}>Hozzávalok:</label>
           {ingredients.map((ingredient, index) => (
             <div key={index} className={styles.ingredientSection}>
               <Select
                 options={ingredientOptions}
                 value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)}
                 onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-                placeholder="Select Ingredient..."
+                placeholder="Válasz egy hozzávalot..."
                 isSearchable
                 required
               />
               <input
                 className={styles.input}
                 type="number"
-                placeholder="Amount"
+                placeholder="Mennyiség"
                 value={ingredient.amount}
                 onChange={(e) => handleInputChange(index, 'amount', e.target.value)}
                 required
@@ -149,57 +149,57 @@ const Recept = () => {
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Unit (e.g., grams, cups)"
+                placeholder="Mértékegység (Például: gram, csipet)"
                 value={ingredient.unit}
                 onChange={(e) => handleInputChange(index, 'unit', e.target.value)}
                 required
               />
-              <button className={styles.removeIngredientButton} type="button" onClick={() => removeIngredient(index)}>Remove</button>
+              <button className={styles.removeIngredientButton} type="button" onClick={() => removeIngredient(index)}>Törölni</button>
             </div>
           ))}
-          <button className={styles.addIngredientButton} type="button" onClick={addIngredient}>Add Ingredient</button>
+          <button className={styles.addIngredientButton} type="button" onClick={addIngredient}>Hozzáadni</button>
         </div>
         <div>
-          <label className={styles.label}>Description:</label>
+          <label className={styles.label}>Leírása:</label>
           <textarea className={styles.input} value={description} onChange={(e) => setDescription(e.target.value)} required />
         </div>
         <div>
-          <label className={styles.label}>Nationality:</label>
+          <label className={styles.label}>Konyha:</label>
           <select className={styles.input} value={selectedNationality} onChange={(e) => setSelectedNationality(e.target.value)} required>
-            <option value="">Select Nationality</option>
+            <option value="">Válasz konyhát</option>
             {nationalityOptions.map(nat => (
               <option key={nat.konyha_id} value={nat.konyha_id}>{nat.nemzetiseg}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className={styles.label}>Day Time:</label>
+          <label className={styles.label}>Napszak:</label>
           <select className={styles.input} value={selectedDayTime} onChange={(e) => setSelectedDayTime(e.target.value)} required>
-            <option value="">Select Day Time</option>
+            <option value="">Válasz napszakot</option>
             {dayTimeOptions.map(dt => (
               <option key={dt.napszak_id} value={dt.napszak_id}>{dt.idoszak}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className={styles.label}>Sensitivity:</label>
+          <label className={styles.label}>Érzékenység:</label>
           <select className={styles.input} value={sensitivity} onChange={(e) => setSensitivity(e.target.value)} required>
-            <option value="">Select Sensitivity</option>
+            <option value="">Válasz érzékenységet</option>
             {sensitivityOptions.map(sen => (
               <option key={sen.erzekenyseg_id} value={sen.erzekenyseg_id}>{sen.erzekenyseg}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className={styles.label}>Preferences:</label>
+          <label className={styles.label}>Preferencia:</label>
           <select className={styles.input} value={preferences} onChange={(e) => setPreferences(e.target.value)} required>
-            <option value="">Select Preference</option>
+            <option value="">Válasz preferenciát</option>
             {preferenceOptions.map(pref => (
               <option key={pref.etkezes_id} value={pref.etkezes_id}>{pref.etkezes}</option>
             ))}
           </select>
         </div>
-        <button className={styles.button} type="submit">Submit Recipe</button>
+        <button className={styles.button} type="submit">Recept feltöltése</button>
       </form>
     </div>
   );
