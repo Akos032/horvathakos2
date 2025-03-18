@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json())
@@ -70,7 +71,7 @@ app.get("/api/osszes", (req, res) => {
         sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
 
-    sql += `where osszekoto.ervenyes = 1`
+    sql += `where osszekoto.ervenyes = 0`
 
     sql += ` GROUP BY receptek.Receptek_id desc`;
 
@@ -216,6 +217,110 @@ function insertMertekegyseg(db, amount, unit) {
     });
 }
 
+
+
+app.post('/login', (req, res) => {
+    console.log("📥 Beérkező adatok:", req.body);
+
+    const { Email, password } = req.body;
+
+    if (!Email || !password) {
+        console.log("❌ Hiányzó email vagy jelszó!");
+        return res.status(400).json({ error: "❌ Hiányzó email vagy jelszó!" });
+    }
+
+    const sql = "SELECT * FROM regisztracio WHERE Email = ?";
+    
+    db.query(sql, [Email], (err, result) => {
+        if (err) {
+            console.error("❌ SQL Hiba:", err);
+            return res.status(500).json({ error: "Adatbázis hiba!" });
+        }
+
+        console.log("🔍 SQL lekérdezés eredménye:", result);
+
+        if (result.length === 0) {
+            console.log("❌ Hibás email!");
+            return res.status(401).json({ error: "❌ Hibás email vagy nem létezik a felhasználó!" });
+        }
+
+        const hashedPassword = result[0].Jelszo;
+        console.log("🔐 Adatbázisból kapott hash:", hashedPassword);
+        console.log("📥 Beírt jelszó:", password);
+
+       const beirtJelszo = password.trim();
+
+       bcrypt.compare(beirtJelszo, hashedPassword.trim(), (err, isMatch) => {
+            if (err) {
+                console.error("❌ Bcrypt hiba:", err);
+                return res.status(500).json({ error: "Hiba történt a jelszó ellenőrzésekor!" });
+            }
+
+            console.log("✅ Jelszó egyezés?", isMatch);
+
+            if (!isMatch) {
+                console.log("❌ Hibás jelszó!");
+                return res.status(401).json({ error: "❌ Hibás jelszó!" });
+            }
+
+            console.log("✅ Sikeres bejelentkezés:", result[0].Felhasznalonev);
+            return res.json({ success: "Sikeres bejelentkezés!", user: result[0] });
+        });
+    });
+});
+
+
+
+app.post('/register', (req, res) => {
+    console.log("📥 Beérkező adatok:", req.body);
+
+    const { Felhasznalonev, Email, password } = req.body;
+
+    if (!Felhasznalonev || !Email || !password) {
+        return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
+    }
+
+    bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+            console.error("❌ Jelszó hash hiba:", err);
+            return res.status(500).json({ error: "Hiba a jelszó hashelésekor.", details: err.message });
+        }
+
+        console.log("🔑 Hash-elt jelszó:", hash);
+
+        const sql = "INSERT INTO regisztracio (Felhasznalonev, Email, Jelszo) VALUES (?, ?, ?)";
+        const values = [Felhasznalonev, Email, hash];
+
+        console.log("📝 SQL lekérdezés:", sql);
+        console.log("📊 Értékek:", values);
+
+        db.query(sql, values, (err, result) => {
+            if (err) {
+                console.error("❌ SQL Hiba:", err);
+                return res.status(500).json({ error: "Hiba az adatbázis művelet végrehajtásakor.", details: err.sqlMessage });
+            }
+
+            console.log("✅ Sikeres regisztráció:", result);
+            return res.json({ success: "Sikeres regisztráció", result: result });
+        });
+    });
+});
+
+const hash = "$2a$10$V1Q6uMb3g.lTQGp9u0z2FeH1y0Q3OYsQHmtE.ZM9bfzZpFhvw6K/m"; // Cseréld ki a saját hash-edre
+const password = "tesztjelszo"; // Cseréld ki arra a jelszóra, amit regisztráltál
+
+bcrypt.compare(password, hash, (err, isMatch) => console.log(isMatch));
+
+
+
+
+app.get('/profil', (req,res)=>{
+    const sql = "Select * from regisztracio";
+    db.query(sql, (err, result) =>{
+        if(err) return res.json(err)
+        return res.json(result)
+    })
+})
 
 
 app.get('/api/nationalities', (req, res) => {
