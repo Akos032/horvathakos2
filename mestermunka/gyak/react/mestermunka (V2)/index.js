@@ -3,6 +3,9 @@ const app = express();
 const cors = require("cors");
 const mysql = require("mysql");
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json())
@@ -10,11 +13,29 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
 })
+
+const uploadDir = path.join(__dirname, 'public');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 app.get("/", (req, res) => {
     res.send("Fut a backend");
@@ -49,7 +70,7 @@ app.get("/api/osszes", (req, res) => {
         sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
 
-    sql += `where osszekoto.ervenyes = 0`
+    sql += `where osszekoto.ervenyes = 1`
 
     sql += ` GROUP BY receptek.Receptek_id desc`;
 
@@ -69,8 +90,9 @@ app.get("/leiras", (req, res) => {
     })
 })
 
-app.post('/api/recipes', (req, res) => {
+app.post('/api/recipes', upload.single('image'), (req, res) => {
     const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients } = req.body;
+    const imageName = req.file ? req.file.filename : null;
     
     db.getConnection((err, db) => {
         if (err) {
@@ -84,7 +106,7 @@ app.post('/api/recipes', (req, res) => {
             }
 
             // Step 1: Insert the recipe into 'receptek'
-            insertRecipe(db, recipeName, description, nationalityId, dayTimeId)
+            insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName)
                 .then((recipeId) => {
                     // Step 2: Insert preferences, sensitivity, and ingredients into 'osszekoto' with ingredients
                     return insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients);
@@ -114,10 +136,10 @@ app.post('/api/recipes', (req, res) => {
 });
 
 // Insert the recipe into the 'receptek' table
-function insertRecipe(db, recipeName, description, nationalityId, dayTimeId) {
+function insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto, kep) VALUES (?, ?, ?, ?, NULL)';
-        db.query(query, [recipeName, description, nationalityId, dayTimeId], (err, result) => {
+        const query = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto, kep) VALUES (?, ?, ?, ?, ?)';
+        db.query(query, [recipeName, description, nationalityId, dayTimeId,imageName], (err, result) => {
             if (err) return reject(err);
             resolve(result.insertId); // Return the inserted recipe ID
         });

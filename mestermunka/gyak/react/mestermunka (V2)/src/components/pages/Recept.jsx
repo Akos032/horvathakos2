@@ -7,6 +7,7 @@ const Recept = () => {
   const [description, setDescription] = useState('');
   const [preferences, setPreferences] = useState('');
   const [sensitivity, setSensitivity] = useState('');
+  const [image, setImage] = useState(null);
   const [ingredients, setIngredients] = useState([{ ingredientId: '', amount: '', unit: '' }]);
 
   // Dropdown options
@@ -63,6 +64,10 @@ const Recept = () => {
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
   
 
   const addIngredient = () => {
@@ -84,25 +89,24 @@ const Recept = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-  
-    // Log the data before sending it to ensure everything looks correct
-    const recipeData = {
-      recipeName,
-      description,
-      nationalityId: selectedNationality,
-      dayTimeId: selectedDayTime,
-      preferences,
-      sensitivity,
-      ingredients: ingredients.map((ing) => ({
-        hozzavalok_id: ing.ingredientId || ing.Hozzavalok_id, // Ensure correct key
-        mennyiseg: ing.amount,
-        mertekegyseg: ing.unit,
-      })),
-    };    
-    console.log("Final recipeData before sending:", JSON.stringify(recipeData, null, 2));
+    const formData = new FormData();
+    formData.append('recipeName', recipeName);
+    formData.append('description', description);
+    formData.append('nationalityId', selectedNationality);
+    formData.append('dayTimeId', selectedDayTime);
+    formData.append('preferences', preferences);
+    formData.append('sensitivity', sensitivity);
+    formData.append('image', image);
+
+    ingredients.forEach((ingredient, index) => {
+      formData.append(`ingredients[${index}][hozzavalok_id]`, ingredient.ingredientId);
+      formData.append(`ingredients[${index}][mennyiseg]`, ingredient.amount);
+      formData.append(`ingredients[${index}][mertekegyseg]`, ingredient.unit);
+    });
+    console.log("Final recipeData before sending:", JSON.stringify(formData, null, 2));
 
   
-    console.log("Sending recipe data:", recipeData);
+    console.log("Sending recipe data:", formData);
     console.log("Ingredients:", ingredients);
 
   
@@ -112,7 +116,9 @@ const Recept = () => {
     }
   
     try {
-      const response = await axios.post('http://localhost:3001/api/recipes', recipeData);
+      const response = await axios.post('http://localhost:3001/api/recipes', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       if (response.status === 200) {
         alert('Recipe added successfully!');
       }
@@ -131,7 +137,10 @@ const Recept = () => {
           <label>Recipe Name:</label>
           <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
-
+        <div>
+          <label>Upload Image:</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} required />
+        </div>
         <div>
           <label>Ingredients:</label>
           {ingredients.map((ingredient, index) => (
