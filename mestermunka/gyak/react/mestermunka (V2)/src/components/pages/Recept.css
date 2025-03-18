@@ -1,157 +1,95 @@
-/* General Styles */
+/* Alapbeállítások */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-  }
-  
-  h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #333;
-    margin-top: 20px;
-  }
-  
-  form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Input Fields */
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    transition: border-color 0.3s;
-  }
-  
-  input:focus,
-  select:focus,
-  textarea:focus {
-    border-color: #4CAF50;
-    outline: none;
-  }
-  
-  textarea {
-    resize: vertical;
-    height: 150px;
-  }
-  
-  /* Buttons */
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  button[type="button"] {
-    background-color: #f44336;
-    margin-top: 5px;
-  }
-  
-  button[type="button"]:hover {
-    background-color: #e53935;
-  }
-  
-  /* Labels */
-  label {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Ingredients Section */
-  #ingredients-section {
-    margin-top: 20px;
-  }
-  
-  #ingredients-section select,
-  #ingredients-section input {
-    display: inline-block;
-    width: auto;
-    margin-right: 10px;
-  }
-  
-  #ingredients-section .ingredient-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  #ingredients-section .ingredient-container button {
-    background-color: #f44336;
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-  
-  #ingredients-section .ingredient-container button:hover {
-    background-color: #e53935;
-  }
-  
-  /* Dropdowns */
-  select {
-    font-size: 1rem;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    form {
-      padding: 15px;
-    }
-  
-    input,
-    select,
-    textarea {
-      font-size: 0.9rem;
-    }
-  
-    button {
-      font-size: 1rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 2rem;
-    }
-  
-    form {
-      padding: 10px;
-    }
-    
-    label {
-      font-size: 1rem;
-    }
-  
-    input,
-    select,
-    textarea {
-      font-size: 0.8rem;
-    }
-  }
-  
+  background-color: #f8f8f8;
+  color: #333;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #f39c12;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+.submit-button {
+  background: #f39c12;
+  color: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button:hover {
+  background: #e67e22;
+  transform: scale(1.05);
+}
+
+.secondary-button {
+  background: #7f8c8d;
+  color: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-button:hover {
+  background: #95a5a6;
+  transform: scale(1.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background: #f39c12;
+  color: white;
+}

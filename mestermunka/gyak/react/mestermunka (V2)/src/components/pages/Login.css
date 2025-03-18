@@ -1,0 +1,63 @@
+/* Alap stílusok */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f0e1;
+    color: #5c4033;
+}
+
+/* Navigációs sáv */
+.navbar {
+    background-color: #8b5a2b !important;
+}
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+.nav-link:hover {
+    color: #d2b48c !important;
+}
+
+/* Kártya dizájn */
+.card {
+    background: #e6d5b8;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Gombok */
+.btn-primary {
+    background-color: #8b5a2b;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #5c4033;
+}
+.btn-danger {
+    background-color: #a52a2a;
+    border: none;
+}
+.btn-danger:hover {
+    background-color: #8b0000;
+}
+
+/* Form input mezők */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #8b5a2b;
+    background: #fdf8f3;
+    color: #5c4033;
+}
+.form-control:focus {
+    border-color: #a67b5b;
+    box-shadow: 0 0 5px rgba(139, 90, 43, 0.5);
+}
+
+/* Reszponzivitás */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+    .btn {
+        width: 100%;
+    }
+}
