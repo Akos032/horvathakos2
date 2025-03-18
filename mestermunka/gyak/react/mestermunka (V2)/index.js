@@ -71,7 +71,7 @@ app.get("/api/osszes", (req, res) => {
         sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
 
-    sql += `where osszekoto.ervenyes = 0`
+    sql += `and osszekoto.ervenyes = 0`
 
     sql += ` GROUP BY receptek.Receptek_id desc`;
 

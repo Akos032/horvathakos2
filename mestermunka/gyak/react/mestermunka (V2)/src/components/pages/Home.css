@@ -1,92 +1,95 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
+#search-container {
+    text-align: center;
+    margin: 20px;
 }
 
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
-.col-sm-4 {
-    flex: 1;
-    min-width: 300px;
-    margin: 10px;
-}
-
-input[type="text"] {
+#search-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.card {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+#recipes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.card:hover {
-    transform: scale(1.02);
+#recipe-card {
+    max-width: 800px;
+    width: 100%;
+    background: #333;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
 }
 
-.card img {
-    border-radius: 10px;
-    max-height: 200px;
+#recipe-card img {
+    width: 100%;
+    max-height: 150px; 
     object-fit: cover;
+    border-radius: 10px;
 }
 
-.card-body {
-    padding: 15px;
+
+#recipe-body {
+    padding: 10px;
 }
 
-.card-title {
-    font-size: 1.5rem;
+#recipe-title {
+    font-size: 20px;
     font-weight: bold;
-    color: #333;
 }
 
-.card-text {
-    font-size: 1rem;
-    color: #555;
+#recipe-text {
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-button {
-    background-color: transparent;
+#expand-button, #info-button {
+    background: none;
     border: none;
-    color: #007bff;
+    color: #00aaff;
     cursor: pointer;
-    font-size: 1rem;
-}
-
-button:hover {
+    font-size: 16px;
     text-decoration: underline;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+#expand-button:hover, #info-button:hover {
+    color: #ffcc00;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
+#info-table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    background: #222;
+}
+
+#info-table th, #info-table td {
+    border: 1px solid #fff;
+    padding: 8px;
     text-align: left;
 }
 
-th {
-    background-color: #007bff;
-    color: white;
+#about-section {
+    text-align: center;
+    margin: 20px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-h1 {
-    text-align: center;
-    margin: 20px 0;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #search-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    #recipe-card {
+        width: 90%;
+    }
 }
