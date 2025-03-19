@@ -3,25 +3,28 @@ import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import { div } from "framer-motion/client";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [username, setUsername] = useState("");
-  const [profileImage, setProfileImage] = useState("");
+  const [username, setUsername] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/profil")
-      .then(response => {
-        setUser(response.data);
-        setUsername(response.data.username);
-        setProfileImage(response.data.profileImage);
-      })
-      .catch(error => console.error("Hiba a felhasználói adatok lekérésekor", error));
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+    console.log(loggedInUser, "siker")
+
+    if (loggedInUser) {
+      setUsername(loggedInUser.Felhasznalonev);
+      setUser(loggedInUser);
+    } else {
+      alert("You are not logged in! Redirecting to login.");
+      window.location.href = "/login";  // Redirect to login page if no user is logged in
+    }
   }, []);
 
   const handleSave = () => {
-    axios.put("http://localhost:3001/profil", { username, profileImage })
+    axios.put("http://localhost:3001/profil", { username})
       .then(response => {
         setUser(response.data);
         setEditMode(false);
@@ -42,23 +45,11 @@ export default function Profile() {
 
   if (!user) return <p>Betöltés...</p>;
 
+  console.log(username)
   return (
     <div className="max-w-lg mx-auto mt-10 p-5 shadow-lg rounded-2xl bg-gradient-to-r from-black to-gray-900 text-white text-center">
       <div className="flex flex-col items-center">
-        <img 
-          src={profileImage || "https://via.placeholder.com/100"} 
-          alt="Profilkép" 
-          className="w-24 h-24 mb-4 rounded-full border-4 border-gray-700"
-        />
-        {editMode ? (
-          <input 
-            type="text" 
-            value={profileImage} 
-            onChange={(e) => setProfileImage(e.target.value)} 
-            placeholder="Profilkép URL" 
-            className="p-2 rounded bg-gray-800 text-white border border-gray-600"
-          />
-        ) : null}
+        <h1>{username}</h1>
 
         {editMode ? (
           <input 

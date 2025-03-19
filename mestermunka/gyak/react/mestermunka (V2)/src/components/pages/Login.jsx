@@ -31,12 +31,16 @@ export const Login = ({ setIsLoggedIn }) => {
     })
     .then(response => {
       alert(isRegister ? "Sikeres regisztráció!" : "Sikeres bejelentkezés!");
-      setIsLoggedIn(true); // Set the user as logged in
-      navigate("/"); // Redirect to the home page after successful login
+    
+      // Store the user data in localStorage after login
+      localStorage.setItem("user", JSON.stringify(response.data)); // assuming response.data contains user info
+      setIsLoggedIn(true);  // Set the logged-in state
+      navigate("/");  // Redirect to the profile page or home page
     })
     .catch(error => {
       alert(error.response?.data?.error || "Hiba történt!");
     });
+    
   };
 
   return (
