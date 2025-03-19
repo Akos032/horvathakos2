@@ -10,17 +10,22 @@ import Profile from './components/pages/Profile'
 
 function App() {
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Az autentikáció státuszának kezelése
+
   return (
     <>
-      <div className='App'>
-        <NavBar/>
-        <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/Login' element ={<Login/>}/>
-          <Route path='/Recept' element = {<Recept/>}/>
-          <Route path='/Profile' element = {<Profile/>}/>
-        </Routes>
-      </div>
+      <div className="App">
+      <NavBar isLoggedIn={isLoggedIn} />
+      <Routes>
+        {/* Home page is always accessible */}
+        <Route path="/" element={<Home />} /> 
+        {/* Login page is always accessible */}
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        {/* Conditional routing for Profile and Recept based on isLoggedIn state */}
+        <Route path="/profile" element={isLoggedIn ? <Profile /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/recept" element={isLoggedIn ? <Recept /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
+      </Routes>
+    </div>
     </>
   )
 }

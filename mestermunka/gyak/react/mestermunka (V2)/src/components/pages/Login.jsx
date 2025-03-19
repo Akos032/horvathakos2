@@ -5,11 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 import { motion } from "framer-motion";
 
-export const Login = () => {
+export const Login = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false); // Default: Login first
+  const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
 
   const handleAuth = (event, isRegister) => {
@@ -31,7 +31,8 @@ export const Login = () => {
     })
     .then(response => {
       alert(isRegister ? "Sikeres regisztráció!" : "Sikeres bejelentkezés!");
-      navigate("/");
+      setIsLoggedIn(true); // Set the user as logged in
+      navigate("/"); // Redirect to the home page after successful login
     })
     .catch(error => {
       alert(error.response?.data?.error || "Hiba történt!");
