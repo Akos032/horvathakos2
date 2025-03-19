@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from "axios";
 import './Home.css';
+import { AboutSection } from './Aboutus';
 
 export const Home = () => {
     const [kereses, setKereses] = useState("");
@@ -89,7 +90,11 @@ export const Home = () => {
                 ))}
             </div>
 
-            <div id="about-section">Rólunk</div>
+
+            <div id="container">
+                {/* Már létező tartalom */}
+                <AboutSection /> {/* Itt használjuk */}
+            </div>
         </div>
         </>
     );
