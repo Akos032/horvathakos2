@@ -3,151 +3,104 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
+import { motion } from "framer-motion";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false); // Alapértelmezetten bejelentkezés
+  const [isRegistering, setIsRegistering] = useState(false); // Default: Login first
   const navigate = useNavigate();
 
-  const values ={
-    username,
-    email,
-    password
-  }
-
-  const register = (event) => {
+  const handleAuth = (event, isRegister) => {
     event.preventDefault();
-
+    const endpoint = isRegister ? "register" : "login";
     const userData = {
-        Felhasznalonev: username.trim(), // 🔹 Eltávolítja az esetleges felesleges szóközöket
-        Email: email.trim(),
-        password: password.trim()
+      Felhasznalonev: username.trim(),
+      Email: email.trim(),
+      password: password.trim(),
     };
-
-    if (!userData.Felhasznalonev || !userData.Email || !userData.password) {
-        alert("Minden mezőt ki kell tölteni!");
-        return;
+    
+    if (!userData.Email || !userData.password || (isRegister && !userData.Felhasznalonev)) {
+      alert("Minden mezőt ki kell tölteni!");
+      return;
     }
 
-    axios.post("http://localhost:3001/register", userData, {
-        headers: { "Content-Type": "application/json" }
+    axios.post(`http://localhost:3001/${endpoint}`, userData, {
+      headers: { "Content-Type": "application/json" }
     })
     .then(response => {
-        console.log("Regisztráció sikeres:", response.data);
-        alert("Sikeres regisztráció!");
+      alert(isRegister ? "Sikeres regisztráció!" : "Sikeres bejelentkezés!");
+      navigate("/");
     })
     .catch(error => {
-        console.error("Hiba történt a regisztráció során:", error.response ? error.response.data : error.message);
-        alert(error.response?.data?.error || "Hiba történt a regisztráció során!");
+      alert(error.response?.data?.error || "Hiba történt!");
     });
-};
-
-
-
-const login = (event) => {
-  event.preventDefault();
-
-  axios.post("http://localhost:3001/login", {
-      Email: email,
-      password: password
-  }, {
-      headers: { "Content-Type": "application/json" }
-  })
-  .then(response => {
-      console.log("✅ Sikeres bejelentkezés:", response.data);
-      alert("Sikeres bejelentkezés!");
-  })
-  .catch(error => {
-      console.error("❌ Hiba történt a bejelentkezés során:", error.response ? error.response.data : error.message);
-      alert(error.response?.data?.error || "Hiba történt a bejelentkezés során!");
-  });
-};
+  };
 
   return (
-    <div className="login-register-container">
-      <div className="form-container">
-        {/* Regisztrációs blokk */}
-        <div className={`form-box ${isRegistering ? 'active' : ''}`}>
-          <h1>Regisztráció</h1>
-          <form onSubmit={register}>
+    <motion.div 
+      id="auth-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div 
+        id="auth-box"
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.3 }}
+        key={isRegistering ? "register" : "login"}
+      >
+        <h1>{isRegistering ? "Regisztráció" : "Bejelentkezés"}</h1>
+        <form onSubmit={(e) => handleAuth(e, isRegistering)}>
+          {isRegistering && (
             <div className="input-group">
               <input
                 type="text"
                 placeholder="Felhasználónév"
-                className="form-control"
+                id="username"
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
-            <div className="input-group">
-              <input
-                type="email"
-                placeholder="Email"
-                className="form-control"
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <input
-                type="password"
-                placeholder="Jelszó"
-                className="form-control"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">Regisztráció</button>
-          </form>
-        </div>
-
-        {/* Bejelentkezési blokk */}
-        <div className={`form-box ${!isRegistering ? 'active' : ''}`}>
-          <h1>Bejelentkezés</h1>
-          <form onSubmit={login}>
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="Felhasználónév"
-                className="form-control"
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <input
-                type="email"
-                placeholder="Email"
-                className="form-control"
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
-              <input
-                type="password"
-                placeholder="Jelszó"
-                className="form-control"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">Bejelentkezés</button>
-          </form>
-        </div>
-      </div>
-
-      {/* Regisztráció / Bejelentkezés közötti váltás */}
-      <div className="toggle-box">
-        <button
-          className="btn btn-link"
+          )}
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Email"
+              id="email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Jelszó"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <motion.button 
+            type="submit" 
+            id="auth-button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {isRegistering ? "Regisztráció" : "Bejelentkezés"}
+          </motion.button>
+        </form>
+        <motion.button 
+          id="toggle-auth" 
           onClick={() => setIsRegistering(!isRegistering)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           {isRegistering ? "Már van fiókod? Bejelentkezés" : "Nincs fiókod? Regisztráció"}
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 };

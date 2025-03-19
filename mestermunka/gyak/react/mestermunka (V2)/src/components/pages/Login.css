@@ -1,63 +1,60 @@
-/* Alap stílusok */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f0e1;
-    color: #5c4033;
+#auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #333;
 }
 
-/* Navigációs sáv */
-.navbar {
-    background-color: #8b5a2b !important;
-}
-.navbar-brand, .nav-link {
-    color: #fff !important;
-}
-.nav-link:hover {
-    color: #d2b48c !important;
-}
-
-/* Kártya dizájn */
-.card {
-    background: #e6d5b8;
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Gombok */
-.btn-primary {
-    background-color: #8b5a2b;
-    border: none;
-}
-.btn-primary:hover {
-    background-color: #5c4033;
-}
-.btn-danger {
-    background-color: #a52a2a;
-    border: none;
-}
-.btn-danger:hover {
-    background-color: #8b0000;
-}
-
-/* Form input mezők */
-.form-control {
+#auth-box {
+    background: #fff;
+    padding: 30px;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+
+#auth-box h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #8b5a2b;
+    border-radius: 5px;
     background: #fdf8f3;
     color: #5c4033;
 }
-.form-control:focus {
-    border-color: #a67b5b;
-    box-shadow: 0 0 5px rgba(139, 90, 43, 0.5);
+
+#auth-button {
+    width: 100%;
+    padding: 10px;
+    background: #8b5a2b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-/* Reszponzivitás */
-@media (max-width: 768px) {
-    .card {
-        margin-bottom: 20px;
-    }
-    .btn {
-        width: 100%;
-    }
+#auth-button:hover {
+    background: #5c4033;
+}
+
+#toggle-auth {
+    background: none;
+    border: none;
+    color: #8b5a2b;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#toggle-auth:hover {
+    color: #5c4033;
 }
