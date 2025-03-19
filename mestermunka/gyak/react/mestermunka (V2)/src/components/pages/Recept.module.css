@@ -4,12 +4,6 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #222; /* Dark background */
-  color: white;
-}
-
 .container {
   padding: 20px;
   max-width: 900px;
