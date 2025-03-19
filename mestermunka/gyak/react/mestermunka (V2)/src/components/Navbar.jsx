@@ -9,7 +9,7 @@ const NavBar = () => {
         <nav id="navbar">
             <div id="nav-header">
                 <div id="logo-title">
-                    <img src={"Média.png"} alt="Logo" id="nav-logo" />
+                    <img  src={"Média.png"} alt="Logo" id="nav-logo" />
                     <Link to='/' id="nav-title">Receptek</Link>
                 </div>
                 <div id="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>

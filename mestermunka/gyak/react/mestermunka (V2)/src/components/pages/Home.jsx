@@ -36,6 +36,7 @@ export const Home = () => {
 
     return (
         <>
+        <div id="container">
             <div id="search-container">
             <input 
             type="text" 
@@ -89,6 +90,7 @@ export const Home = () => {
             </div>
 
             <div id="about-section">Rólunk</div>
+        </div>
         </>
     );
 };
