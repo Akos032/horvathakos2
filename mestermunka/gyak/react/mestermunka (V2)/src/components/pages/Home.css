@@ -55,7 +55,7 @@ body {
     margin-bottom: 10px;
 }
 
-#expand-button, #info-button {
+#expand-button, #info-button, #save-button {
     margin: 5px;
     width: auto;
     height: 50px;

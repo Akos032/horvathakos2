@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, {useState,useEffect} from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
 
-const NavBar = ({ isLoggedIn }) => {
+const NavBar = ({ isLoggedIn, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ const NavBar = ({ isLoggedIn }) => {
         </div>
       </div>
       <ul id="nav-links" className={menuOpen ? "open" : ""}>
-        {/* Always show Login link */}
+        {/* Always show Login link if not logged in */}
         {!isLoggedIn && <li><NavLink to="/login">Bejelentkezés</NavLink></li>}
 
         {/* Only show Recept and Profile after login */}
@@ -27,6 +27,9 @@ const NavBar = ({ isLoggedIn }) => {
           <>
             <li><NavLink to="/recept">Receptek</NavLink></li>
             <li><NavLink to="/profile">Profil</NavLink></li>
+            <li>
+              <button onClick={onLogout}>Logout</button>
+            </li>
           </>
         )}
       </ul>

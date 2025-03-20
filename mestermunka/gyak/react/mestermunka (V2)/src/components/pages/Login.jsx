@@ -20,27 +20,34 @@ export const Login = ({ setIsLoggedIn }) => {
       Email: email.trim(),
       password: password.trim(),
     };
-    
+
+    // Check if fields are empty
     if (!userData.Email || !userData.password || (isRegister && !userData.Felhasznalonev)) {
       alert("Minden mezőt ki kell tölteni!");
       return;
     }
 
+    // Make API request to register or login
     axios.post(`http://localhost:3001/${endpoint}`, userData, {
       headers: { "Content-Type": "application/json" }
     })
     .then(response => {
+      // Success
       alert(isRegister ? "Sikeres regisztráció!" : "Sikeres bejelentkezés!");
-    
-      // Store the user data in localStorage after login
-      localStorage.setItem("user", JSON.stringify(response.data)); // assuming response.data contains user info
-      setIsLoggedIn(true);  // Set the logged-in state
-      navigate("/");  // Redirect to the profile page or home page
+
+      // Save user data to localStorage
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      // Automatically log the user in after registration
+      setIsLoggedIn(true);  // Update the logged-in state
+
+      // Navigate to the home page or protected route
+      navigate("/"); 
     })
     .catch(error => {
+      // Handle error
       alert(error.response?.data?.error || "Hiba történt!");
     });
-    
   };
 
   return (
@@ -59,6 +66,7 @@ export const Login = ({ setIsLoggedIn }) => {
       >
         <h1>{isRegistering ? "Regisztráció" : "Bejelentkezés"}</h1>
         <form onSubmit={(e) => handleAuth(e, isRegistering)}>
+          {/* Show username input only when registering */}
           {isRegistering && (
             <div className="input-group">
               <input

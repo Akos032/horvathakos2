@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -386,6 +386,60 @@ app.get("/api/hozzavalok", (req, res) => {
         res.json(results);
     });
 });
+
+app.post('/api/save-recipe', (req, res) => {
+    const { Profil, Receptek } = req.body;
+
+    if (!Profil || !Receptek) {
+        return res.status(400).json({ error: "Hiányzó adatok!" });
+    }
+
+    const sql = "INSERT INTO sajat_receptek (Profil, Receptek) VALUES (?, ?)";
+    
+    db.query(sql, [Profil, Receptek], (err) => {
+        if (err) {
+            console.error("❌ Hiba a mentéskor:", err);
+            return res.status(500).json({ error: "Adatbázis hiba!" });
+        }
+        res.json({ success: "Recept elmentve!" });
+    });
+});
+
+
+// Get saved recipes for a user
+app.get('/api/saved-recipes/:userId', (req, res) => {
+    const { userId } = req.params;
+
+    const sql = `
+    SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
+    GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+    preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+    napszak.idoszak, konyha.nemzetiseg, receptek.kep
+    FROM osszekoto 
+    INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
+    INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+    INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
+    INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
+    INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
+    INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
+    INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
+    inner join sajat_receptek on receptek.Receptek_id = sajat_receptek.Recept
+    inner join regisztracio on sajat_receptek.Profil = regisztracio.Felhasznalo_id
+    where sajat_receptek.Profil = ?;
+    `;
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error("❌ Hiba a mentett receptek lekérdezésekor:", err);
+            return res.status(500).json({ error: "Adatbázis hiba!" });
+        }
+        res.json(results);
+    });
+});
+
+
+
+
 
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
