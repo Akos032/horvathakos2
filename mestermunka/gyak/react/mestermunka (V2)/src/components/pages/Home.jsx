@@ -105,24 +105,28 @@ export const Home = () => {
                 {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
               </button>
               {showTable === ossze.Receptek_id && (
-                    <table border="1" style={{ marginTop: '10px', width: '100%' }}>
-                            <thead>
-                                <tr>
-                                    <th>Hozzávalo neve</th>
-                                    <th>Mennyiség</th>
-                                    <th>Mértékegység</th>
-                                </tr>
-                            </thead>
-                                <tbody>
-                                    <tr key={ossze.Receptek_id}>
-                                        <td>{ossze.Hozzavalok_neve}</td>
-                                        <td>{ossze.mennyiseg}</td>
-                                        <td>{ossze.mértékegység}</td>
-                                    </tr>
-                                </tbody>
-                        </table>
-                    ) 
-                }
+                                <table id="info-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Hozzávalók neve</th>
+                                            <th>Mennyiség</th>
+                                            <th>Mértékegység</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {description
+                                            .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
+                                            .map((leiras) => (
+                                                <tr key={leiras.id}>
+                                                    <td>{leiras.Hozzavalok_neve}</td>
+                                                    <td>{leiras.mennyiseg}</td>
+                                                    <td>{leiras.mértékegység}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            )}
               {user && (
                 <button 
                   id="save-button" 
