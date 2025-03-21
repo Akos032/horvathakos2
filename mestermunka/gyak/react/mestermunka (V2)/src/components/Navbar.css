@@ -164,3 +164,80 @@
         padding: 10px 0;
     }
 }
+/* btn-logout gomb alapstílusa - Neon piros */
+.btn-logout {
+    background-color: #ff0000; /* Tiszta neon piros szín */
+    color: white; /* Fehér szöveg */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Finom animáció */
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background-color: #e60000; 
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(255, 0, 0, 0.7); 
+}
+
+
+.btn-logout:active {
+    background-color: #ff0000; 
+    transform: translateY(2px);
+    box-shadow: none; 
+}
+
+
+.navbar-dark .btn-logout {
+    color: white;
+    text-decoration: none;
+}
+
+
+
+.navbar-dark .btn-logout {
+    color: white;
+    text-decoration: none;
+}
+/* btn alapstílusa - Fehér gomb fekete szöveggel */
+.btn {
+    background-color: white; /* Fehér háttér */
+    color: black; /* Fekete szöveg */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Finom animáció */
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* Hover effektus a gombon */
+.btn:hover {
+    background-color: #f0f0f0; /* Halvány szürke háttér hover állapotban */
+    transform: scale(1.05); /* Kisebb mértékű nagyítás */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Finom fekete árnyék */
+}
+
+/* Aktív állapot a gombnál */
+.btn:active {
+    background-color: white; /* Alap fehér háttér */
+    transform: translateY(2px); /* Finom lejjebb nyomás */
+    box-shadow: none; /* Árnyék eltüntetése aktív állapotban */
+}
+
+/* Gomb a fekete háttéren */
+.navbar-dark .btn {
+    color: black; /* Fekete szöveg a navbar-dark témában */
+    text-decoration: none;
+}
+
