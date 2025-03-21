@@ -30,7 +30,7 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
             {/* Always show Login link if not logged in */}
             {!isLoggedIn && (
               <li className="nav-item">
-                <NavLink to="/login" className="btn-rounded btn-nav">Bejelentkezés</NavLink>
+                <NavLink to="/login" className="btn-login">Bejelentkezés</NavLink>
               </li>
             )}
 
