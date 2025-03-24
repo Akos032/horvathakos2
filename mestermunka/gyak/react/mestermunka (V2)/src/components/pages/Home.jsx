@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from "axios";
-import { AboutSection } from './Aboutus';
 import './Home.css';
-
-
+import { AboutSection } from './Aboutus';
+import Profile from "./Profile";
 
 export const Home = () => {
   const [kereses, setKereses] = useState("");

@@ -240,32 +240,4 @@
     color: black; /* Fekete szöveg a navbar-dark témában */
     text-decoration: none;
 }
-.btn-login {
-    display: inline-block;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    background-color: white; /* Fehér háttér */
-    color: #333; /* Sötétszürke szöveg */
-    border: 2px solid #333; /* Fekete szegély */
-    border-radius: 30px; /* Kerekített sarkak */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Finom árnyék */
-  }
-  
-  .btn-login:hover {
-    background-color: #333; /* Sötétszürke háttér hover esetén */
-    color: white; /* Fehér szöveg hover esetén */
-    border-color: #222; /* Még sötétebb fekete szegély */
-    transform: translateY(-3px); /* Kicsit felugrik a gomb */
-  }
-  
-  .btn-login:active {
-    background-color: #222; /* Még sötétebb szürke, amikor rákattintanak */
-    color: white; /* Fehér szöveg */
-    border-color: #111; /* Még sötétebb fekete szegély */
-    transform: translateY(1px); /* Kicsit lejjebb megy kattintáskor */
-  }
-  
+

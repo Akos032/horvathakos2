@@ -1,13 +1,5 @@
-/* Általános betűtípusok beállítása az oldalra */
-body {
-    font-family: 'Arial', sans-serif; /* Vagy bármely más sans-serif betűtípus */
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  /* Közös stílusok a gombokhoz és a dobozokhoz */
-  .about-box {
+/* Közös stílusok a gombokhoz és a dobozokhoz */
+.about-box {
     background-color: white; /* Fehér háttér a dobozoknak */
     color: black; /* Fekete szöveg */
     padding: 20px;
@@ -21,141 +13,94 @@ body {
     align-items: center; /* Középre igazítjuk a tartalmat */
     height: auto;
     text-align: center; /* Középre igazított szöveg */
-  }
-  
-  .about-title,
-  .contact-title,
-  .advertisement-title {
+}
+
+/* Hover effektus a dobozokhoz */
+.about-box:hover {
+    transform: translateY(-5px); /* Kicsit felugrik */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Erősebb árnyék */
+}
+
+/* Szövegek stílusa */
+.about-title,
+.contact-title,
+.advertisement-title {
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #333; /* Fekete szöveg */
     margin-bottom: 15px; /* Csökkentett térköz */
-  }
-  
-  /* Rólunk cím */
-  .about-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333; /* Sötétszürke szín */
-    margin-bottom: 15px; /* Térköz a cím és a szöveg között */
-  }
-  
-  /* Általános szöveg */
-  .about-box p {
-    font-size: 16px;
-    color: #555; /* Világosabb szürke */
-    line-height: 1.6;
-    margin-bottom: 15px;
-  }
-  
-  /* Linkek a dobozban */
-  .about-box a {
-    color: #007bff; /* Bootstrap kék */
-    text-decoration: none;
-    font-weight: 600;
-  }
-  
-  .about-box a:hover {
-    color: #0056b3; /* Sötétebb kék hover esetén */
-    text-decoration: underline;
-  }
-  
-  /* Kontakt lista */
-  .contact-list {
+}
+
+/* Kontakt lista */
+.contact-list {
     list-style: none;
     padding: 0;
     margin: 0; /* Nincs extra térköz */
-  }
-  
-  .contact-list li {
+}
+
+.contact-list li {
     margin-bottom: 10px;
     font-size: 1rem; /* Kisebb betűméret */
-  }
-  
-  .contact-list a {
+}
+
+.contact-list a {
     color: #1abc9c; /* Zöldes árnyalat */
     text-decoration: none;
     transition: color 0.3s ease;
-  }
-  
-  .contact-list a:hover {
+}
+
+.contact-list a:hover {
     color: #16a085; /* Sötétebb zöld hover */
-  }
-  
-  /* Alap stílus az advertisement-btn gombhoz */
-  .advertisement-btn {
-    display: inline-block;
+}
+
+/* Hírlevél gomb */
+.advertisement-btn {
+    background: #66FCF1; /* Azonos szín, mint a gombok */
+    color: black;
     padding: 12px 25px;
-    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
     font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    background-color: white; /* Fehér háttér */
-    color: black; /* Fekete szöveg */
-    border: 2px solid black; /* Fekete szegély */
-    border-radius: 30px; /* Kerekített sarkak */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Finom árnyék */
-  }
-  
-  .advertisement-btn:hover {
-    background-color: black; /* Fekete háttér hover esetén */
-    color: white; /* Fehér szöveg hover esetén */
-    border-color: white; /* Fehér szegély */
-    transform: translateY(-3px); /* Kicsit felugrik a gomb */
-  }
-  
-  .advertisement-btn:active {
-    background-color: black; /* Fekete háttér, amikor rákattintanak */
-    color: white; /* Fehér szöveg */
-    border-color: white; /* Fehér szegély */
-    transform: translateY(1px); /* Kicsit lejjebb megy kattintáskor */
-  }
-  
-  /* Flexbox beállítás a szekciók számára */
-  .about-section {
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-top: 15px; /* Térköz a gomb körül */
+}
+
+.advertisement-btn:hover {
+    background: #58c8d4; /* Sötétebb kékes árnyalat hover */
+    transform: translateY(-3px);
+}
+
+/* Flexbox beállítás a szekciók számára */
+.about-section {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     flex-wrap: wrap;
-  }
-  
-  .about-box {
+}
+
+.about-box {
     flex: 1 1 30%;
     margin: 10px;
-  }
-  
-  /* Reszponzivitás */
-  @media (max-width: 768px) {
+}
+
+/* Reszponzivitás */
+@media (max-width: 768px) {
     .about-box {
-      flex: 1 1 45%;
-      margin: 15px 0;
+        flex: 1 1 45%;
+        margin: 15px 0;
     }
-  }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .about-box {
-      flex: 1 1 100%;
+        flex: 1 1 100%;
     }
-  
+
     .about-title,
     .contact-title,
     .advertisement-title {
-      font-size: 1.4rem;
+        font-size: 1.4rem;
     }
-  }
-  
-  /* Elérhetőségek részhez képet hozzáadunk */
-  .contact-box img {
-    width: 100%;
-    max-width: 300px; /* Max. szélesség */
-    margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Betűtípus beállítások az egész oldalra */
-  body {
-    font-family: 'Arial', sans-serif;
-  }
-  
+}

@@ -25,7 +25,7 @@ body {
 #recipe-card {
     max-width: 800px;
     width: 100%;
-    background: black;
+    background: #333;
     color: white;
     margin-bottom: 15px;
     border-radius: 10px;
@@ -54,42 +54,36 @@ body {
     font-size: 16px;
     margin-bottom: 10px;
 }
-/* Alap stílus mindhárom gombhoz */
+
 #expand-button, #info-button, #save-button {
+    margin: 5px;
+    width: auto;
+    height: 50px;
     display: inline-block;
-    padding: 12px 25px;
-    font-size: 16px;
+    outline: 0;
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 3px;
+    color: #fff;
+    background: #000;
+    font-size: 20px;
     font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    background-color: white; /* Fehér háttér */
-    color: black; /* Fekete szöveg */
-    border: 2px solid black; /* Fekete szegély */
-    border-radius: 30px; /* Kerekített sarkak */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Finom árnyék */
-  }
-  
-  #expand-button:hover, #info-button:hover, #save-button:hover {
-    background-color: black; /* Fekete háttér hover esetén */
-    color: white; /* Fehér szöveg hover esetén */
-    border-color: white; /* Fehér szegély */
-    transform: translateY(-3px); /* Kicsit felugrik a gomb */
-  }
-  
-  #expand-button:active, #info-button:active, #save-button:active {
-    background-color: black; /* Fekete háttér, amikor rákattintanak */
-    color: white; /* Fehér szöveg */
-    border-color: white; /* Fehér szegély */
-    transform: translateY(1px); /* Kicsit lejjebb megy kattintáskor */
-  }
-  
-  
+    line-height: 28px;
+    padding: 12px 20px;
+    text-align:center;
+    transition-duration: .15s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    :hover{
+        color: #000;
+        background: rgb(255, 218, 87);
+    }
+    
+}
 
-  
- 
-  
-
+#expand-button:hover, #info-button:hover {
+    color: #ffcc00;
+}
 
 #info-table {
     width: 100%;
@@ -122,4 +116,3 @@ body {
         width: 90%;
     }
 }
-
