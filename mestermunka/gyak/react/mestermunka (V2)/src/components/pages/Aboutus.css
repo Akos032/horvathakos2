@@ -1,62 +1,57 @@
-/* Közös stílusok a gombokhoz és a dobozokhoz */
+/* Alap stílusok */
 .about-box {
-    background-color: white; /* Fehér háttér a dobozoknak */
-    color: black; /* Fekete szöveg */
-    padding: 20px;
+    background: linear-gradient(135deg, #1e3a8a, #000000); /* Sötétkék és fekete átmenet */
+    color: white;
+    padding: 20px; /* Csökkentett padding */
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Finom árnyék */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 40px;
+    margin-bottom: 40px; /* Több térköz a szekciók között */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Középre igazítjuk a tartalmat */
-    align-items: center; /* Középre igazítjuk a tartalmat */
-    height: auto;
-    text-align: center; /* Középre igazított szöveg */
+    justify-content: space-between;
+    height: auto; /* A magasságot automatikusan szabjuk, hogy ne legyen túl mély */
 }
 
 /* Hover effektus a dobozokhoz */
 .about-box:hover {
-    transform: translateY(-5px); /* Kicsit felugrik */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Erősebb árnyék */
+    transform: translateY(-5px); /* Hover effektus: kicsit felugrik */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Szövegek stílusa */
+/* Szövegek */
 .about-title,
 .contact-title,
 .advertisement-title {
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #333; /* Fekete szöveg */
-    margin-bottom: 15px; /* Csökkentett térköz */
+    color: #fff;
 }
 
 /* Kontakt lista */
 .contact-list {
     list-style: none;
     padding: 0;
-    margin: 0; /* Nincs extra térköz */
 }
 
 .contact-list li {
     margin-bottom: 10px;
-    font-size: 1rem; /* Kisebb betűméret */
 }
 
 .contact-list a {
-    color: #1abc9c; /* Zöldes árnyalat */
+    color: #1abc9c;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .contact-list a:hover {
-    color: #16a085; /* Sötétebb zöld hover */
+    color: #16a085;
 }
 
 /* Hírlevél gomb */
 .advertisement-btn {
-    background: #66FCF1; /* Azonos szín, mint a gombok */
-    color: black;
+    background: #3498db;
+    color: #fff;
     padding: 12px 25px;
     border: none;
     border-radius: 30px;
@@ -64,11 +59,10 @@
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
-    margin-top: 15px; /* Térköz a gomb körül */
 }
 
 .advertisement-btn:hover {
-    background: #58c8d4; /* Sötétebb kékes árnyalat hover */
+    background: #2980b9;
     transform: translateY(-3px);
 }
 
@@ -81,26 +75,26 @@
 }
 
 .about-box {
-    flex: 1 1 30%;
-    margin: 10px;
+    flex: 1 1 30%; /* Alapértelmezett szélesség: 30% (a három szekció egymás mellett) */
+    margin: 10px; /* Kis térköz a szekciók között */
 }
 
 /* Reszponzivitás */
 @media (max-width: 768px) {
     .about-box {
-        flex: 1 1 45%;
+        flex: 1 1 45%; /* Két szekció egymás mellett */
         margin: 15px 0;
     }
 }
 
 @media (max-width: 480px) {
     .about-box {
-        flex: 1 1 100%;
+        flex: 1 1 100%; /* Mobilon minden szekció teljes szélességet foglal el */
     }
 
     .about-title,
     .contact-title,
     .advertisement-title {
-        font-size: 1.4rem;
+        font-size: 1.4rem; /* Kis képernyőn kisebb betűméret */
     }
 }

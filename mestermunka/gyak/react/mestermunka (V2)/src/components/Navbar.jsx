@@ -11,7 +11,7 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
       <div className="container-fluid">
         <div id="logo-title" className="d-flex align-items-center gap-2">
           <img src={"Média.png"} alt="Logo" id="nav-logo" />
-          <Link to="/" id="nav-title" className="navbar-brand">Finomságok</Link>
+          <Link to="/" id="nav-title" className="navbar-brand">Receptek</Link>
         </div>
         <button
           className="navbar-toggler"
@@ -38,16 +38,16 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
             {isLoggedIn && (
               <>
                 <li className="nav-item">
-                  <NavLink to="/recept" className="btn">Receptek</NavLink>
+                  <NavLink to="/recept" className="f6 grow no-underline br-pill ph3 pv2 mb2 dib white bg-black">Receptek</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to="/profile" className="btn">Profil</NavLink>
+                  <NavLink to="/profile" className="f6 grow no-underline br-pill ph3 pv2 mb2 dib white bg-near-black">Profil</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to="/finomsagok" className="btn">Finomságok</NavLink>
+                  <NavLink to="/finomsagok" className="f6 grow no-underline br-pill ph3 pv2 mb2 dib white bg-near-black">Finomságok</NavLink>
                 </li>
                 <li className="nav-item">
-                  <button className='btn-logout' onClick={onLogout}>Kilépés</button>
+                  <button className='f6 grow no-underline br-pill ph3 pv2 mb2 dib white bg-near-black' onClick={onLogout}>Kilépés</button>
                 </li>
               </>
             )}
