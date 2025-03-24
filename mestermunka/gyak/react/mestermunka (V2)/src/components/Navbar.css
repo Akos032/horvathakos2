@@ -1,53 +1,54 @@
-/* Alapstílusok */
 #navbar {
-    background: #222;
+    background: #333;
     color: white;
-    padding: 12px 20px;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+}
+
+#nav-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
 }
 
 #logo-title {
     display: flex;
     align-items: center;
-    gap: 10px;
 }
 
 #nav-logo {
     width: 50px;
     height: 50px;
+    margin-right: 10px;
 }
 
 #nav-title {
     font-size: 24px;
     text-decoration: none;
     color: white;
-    font-weight: bold;
 }
 
-/* Menü ikon (mobil nézetben) */
 #menu-icon {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    gap: 5px;
 }
 
 #menu-icon span {
     background: white;
     height: 3px;
-    width: 28px;
-    border-radius: 2px;
-    transition: 0.3s;
+    width: 25px;
+    margin: 4px;
+    display: block;
 }
 
-/* Navigációs linkek */
 #nav-links {
     list-style: none;
     display: flex;
-    gap: 15px; /* kisebb távolság */
+    gap: 15px;
     padding: 0;
     margin-left: auto;
 }
@@ -57,87 +58,10 @@
 }
 
 #nav-links a {
-    text-decoration: none; /* eltávolítva az aláhúzást */
-    color: white;
-    font-size: 16px; /* kisebb betűméret */
-    font-weight: bold;
-    transition: all 0.3s ease-in-out; /* finomabb átmenet */
-}
-
-/* Hover effektusok */
-#nav-links a:hover {
-    transform: scale(1.05); /* finom nagyítás hover hatásra */
-    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5); /* fehér árnyék a hover hatásra */
-}
-
-/* Gombok egységes stílusa */
-.f6 {
-    font-size: 16px;
-}
-
-.grow {
-    transition: transform 0.3s ease;
-}
-
-.no-underline {
     text-decoration: none;
-}
-
-.br-pill {
-    border-radius: 25px;
-}
-
-.ph3 {
-    padding-left: 16px;
-    padding-right: 16px;
-}
-
-.pv2 {
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
-.mb2 {
-    margin-bottom: 8px;
-}
-
-.dib {
-    display: inline-block;
-}
-
-.white {
     color: white;
 }
 
-.bg-black {
-    background-color: black;
-}
-
-.bg-near-black {
-    background-color: #1a1a1a;
-}
-
-/* Piros "Kilépés" gomb */
-.bg-red {
-    background-color: #e60000; /* Élénk piros */
-}
-
-/* Gombok hover effektusai */
-.bg-black:hover, .bg-near-black:hover, .bg-red:hover {
-    transform: translateY(-3px); /* finom emelkedés */
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* erősebb árnyék */
-}
-
-.bg-black:active, .bg-near-black:active, .bg-red:active {
-    transform: translateY(0);
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
-}
-
-.bg-red:hover {
-    transform: scale(1.1); /* A piros gomb nagyobb lesz hover effektusra */
-}
-
-/* Reszponzív dizájn */
 @media (max-width: 768px) {
     #menu-icon {
         display: flex;
@@ -147,12 +71,11 @@
         display: none;
         flex-direction: column;
         position: absolute;
-        background: #222;
+        background: #333;
         width: 100%;
-        top: 100%;
+        top: 60px;
         right: 0;
         padding: 10px 0;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     #nav-links.open {
