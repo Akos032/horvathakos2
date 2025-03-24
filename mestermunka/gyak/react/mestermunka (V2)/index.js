@@ -394,14 +394,44 @@ app.post('/api/save-recipe', (req, res) => {
         return res.status(400).json({ error: "Hiányzó adatok!" });
     }
 
-    const sql = "INSERT INTO sajat_receptek (Profil, Receptek) VALUES (?, ?)";
-    
-    db.query(sql, [Profil, Receptek], (err) => {
+    // Check if the recipe is already saved
+    const checkSql = "SELECT * FROM sajat_receptek WHERE Profil = ? AND Recept = ?";
+    db.query(checkSql, [Profil, Receptek], (err, results) => {
         if (err) {
-            console.error("❌ Hiba a mentéskor:", err);
+            console.error("❌ Hiba a kereséskor:", err);
             return res.status(500).json({ error: "Adatbázis hiba!" });
         }
-        res.json({ success: "Recept elmentve!" });
+        if (results.length > 0) {
+            return res.status(400).json({ error: "Ezt a receptet már elmentetted!" });
+        }
+
+        // Insert new saved recipe
+        const insertSql = "INSERT INTO sajat_receptek (Profil, Recept) VALUES (?, ?)";
+        db.query(insertSql, [Profil, Receptek], (err) => {
+            if (err) {
+                console.error("❌ Hiba a mentéskor:", err);
+                return res.status(500).json({ error: "Adatbázis hiba!" });
+            }
+            res.json({ success: "Recept elmentve!" });
+        });
+    });
+});
+
+app.post('/api/unsave-recipe', (req, res) => {
+    const { Profil, Receptek } = req.body;
+
+    if (!Profil || !Receptek) {
+        return res.status(400).json({ error: "Hiányzó adatok!" });
+    }
+
+    // Delete the saved recipe from the database
+    const deleteSql = "DELETE FROM sajat_receptek WHERE Profil = ? AND Recept = ?";
+    db.query(deleteSql, [Profil, Receptek], (err) => {
+        if (err) {
+            console.error("❌ Hiba a törléskor:", err);
+            return res.status(500).json({ error: "Adatbázis hiba!" });
+        }
+        res.json({ success: "Recept eltávolítva!" });
     });
 });
 

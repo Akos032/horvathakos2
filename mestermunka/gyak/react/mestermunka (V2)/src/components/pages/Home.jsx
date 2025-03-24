@@ -18,7 +18,7 @@ export const Home = () => {
   useEffect(() => {
     // Get logged-in user from localStorage
     const loggedInUser = localStorage.getItem("user");
-    
+
     if (loggedInUser) {
       try {
         // Parse user data only if it's a valid JSON string
@@ -41,7 +41,12 @@ export const Home = () => {
 
   const loadSavedRecipes = (userId) => {
     axios.get(`http://localhost:3001/api/saved-recipes/${userId}`)
-      .then(response => setSavedRecipes(response.data.map(r => r.Receptek)))
+      .then(response => {
+        // Ensure we are working with an array of recipes
+        const validRecipes = Array.isArray(response.data) ? response.data : [];
+        // Store only the Receptek_id values for simplicity
+        setSavedRecipes(validRecipes.map(r => r.Receptek_id));
+      })
       .catch(error => console.error("Hiba a mentett receptek lekérdezésekor", error));
   };
 
@@ -50,42 +55,42 @@ export const Home = () => {
       alert("Be kell jelentkezned a mentéshez!");
       return;
     }
-  
+
     if (!user.Felhasznalo_id || !recipeId) {
       alert("Hibás adat: Nincs felhasználó vagy recept ID.");
       return;
     }
-  
-    axios.post("http://localhost:3001/api/save-recipe", {
-      Profil: user.Felhasznalo_id,   // Insert into Profil column
-      Receptek: recipeId             // Insert into Receptek column
-    })
-    .then(() => {
-      alert("Recept elmentve!");
-      setSavedRecipes([...savedRecipes, recipeId]); // Update saved recipes state
-    })
 
-    .catch(error => {
-      console.error("Hiba a mentéskor:", error);
-      // If there's a response error, log the detailed message
-      if (error.response) {
-        console.error("Response error data:", error.response.data);
-        alert(error.response.data.error || "Hiba történt a mentéskor!");
-      } else {
-        alert("Hálózati hiba történt.");
-      }
-    });
+    axios.post("http://localhost:3001/api/save-recipe", {
+      Profil: user.Felhasznalo_id,   // Ensure correct column names
+      Receptek: recipeId
+    })
+      .then(() => {
+        alert("Recept elmentve!");
+
+        // Update savedRecipes state by adding the new saved recipe
+        setSavedRecipes(prevState => [...prevState, recipeId]);
+      })
+      .catch(error => {
+        console.error("Hiba a mentéskor:", error);
+
+        if (error.response) {
+          console.error("Response error data:", error.response.data);
+          alert(error.response.data.error || "Hiba történt a mentéskor!");
+        } else {
+          alert("Hálózati hiba történt.");
+        }
+      });
   };
-  
 
   return (
     <div id="container">
       <div id="search-container">
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Keresés..." 
-          value={kereses} 
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Keresés..."
+          value={kereses}
           onChange={(e) => setKereses(e.target.value)}
         />
       </div>
@@ -105,35 +110,34 @@ export const Home = () => {
                 {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
               </button>
               {showTable === ossze.Receptek_id && (
-                                <table id="info-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Hozzávalók neve</th>
-                                            <th>Mennyiség</th>
-                                            <th>Mértékegység</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {description
-                                            .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
-                                            .map((leiras) => (
-                                                <tr key={leiras.id}>
-                                                    <td>{leiras.Hozzavalok_neve}</td>
-                                                    <td>{leiras.mennyiseg}</td>
-                                                    <td>{leiras.mértékegység}</td>
-                                                </tr>
-                                            ))
-                                        }
-                                    </tbody>
-                                </table>
-                            )}
+                <table id="info-table">
+                  <thead>
+                    <tr>
+                      <th>Hozzávalók neve</th>
+                      <th>Mennyiség</th>
+                      <th>Mértékegység</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {description
+                      .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
+                      .map((leiras) => (
+                        <tr key={leiras.id}>
+                          <td>{leiras.Hozzavalok_neve}</td>
+                          <td>{leiras.mennyiseg}</td>
+                          <td>{leiras.mértékegység}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
               {user && (
-                <button 
-                  id="save-button" 
-                  onClick={() => saveRecipe(ossze.Receptek_id)}
-                  disabled={savedRecipes.includes(ossze.Receptek_id)}
+                <button
+                  id="save-button"
+                  onClick={() => saveRecipe(ossze?.Receptek_id)}
+                  disabled={savedRecipes.includes(ossze?.Receptek_id)} // Check if recipe is saved using the Receptek_id
                 >
-                  {savedRecipes.includes(ossze.Receptek_id) ? "✅ Mentve" : "❤️ Mentés"}
+                  {savedRecipes.includes(ossze?.Receptek_id) ? "✅ Mentve" : "❤️ Mentés"}
                 </button>
               )}
             </div>
