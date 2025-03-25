@@ -488,7 +488,9 @@ app.get('/api/saved-recipes/:userId', (req, res) => {
     const sql = `
     SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
     GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
-    preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+    preferencia.etkezes, 
+    GROUP_CONCAT(DISTINCT erzekenysegek.erzekenyseg SEPARATOR ', ') AS erzekenyseg, 
+    GROUP_CONCAT(DISTINCT mertekegyseg.mennyiseg, ' ', mertekegyseg.mértékegység SEPARATOR ', ') AS mennyiseg,
     napszak.idoszak, konyha.nemzetiseg, receptek.kep
     FROM osszekoto 
     INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
@@ -498,9 +500,11 @@ app.get('/api/saved-recipes/:userId', (req, res) => {
     INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
     INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
     INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
-    inner join sajat_receptek on receptek.Receptek_id = sajat_receptek.Recept
-    inner join regisztracio on sajat_receptek.Profil = regisztracio.Felhasznalo_id
-    where sajat_receptek.Profil = ?;
+    INNER JOIN sajat_receptek ON receptek.Receptek_id = sajat_receptek.Recept
+    INNER JOIN regisztracio ON sajat_receptek.Profil = regisztracio.Felhasznalo_id
+    WHERE sajat_receptek.Profil = ?
+    GROUP BY receptek.Receptek_id;
+
     `;
 
     db.query(sql, [userId], (err, results) => {
