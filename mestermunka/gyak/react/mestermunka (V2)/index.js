@@ -14,11 +14,28 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
 })
+
+const jwt = require('jsonwebtoken');
+
+
+const checkAdmin = (req, res, next) => {
+    const user = req.user;
+  
+    if (!user || user.Admin !== 1) {
+      return res.status(403).json({ error: 'You do not have admin rights!' });
+    }
+  
+    next();
+  };
+
+  app.get('/api/admin', checkAdmin, (req, res) => {
+    res.json({ message: 'Welcome to the Admin page!' });
+});
 
 const uploadDir = path.join(__dirname, 'public');
 
@@ -217,8 +234,6 @@ function insertMertekegyseg(db, amount, unit) {
     });
 }
 
-
-
 app.post('/login', (req, res) => {
     console.log("📥 Beérkező adatok:", req.body);
 
@@ -230,7 +245,7 @@ app.post('/login', (req, res) => {
     }
 
     const sql = "SELECT * FROM regisztracio WHERE Email = ?";
-    
+
     db.query(sql, [Email], (err, result) => {
         if (err) {
             console.error("❌ SQL Hiba:", err);
@@ -248,9 +263,9 @@ app.post('/login', (req, res) => {
         console.log("🔐 Adatbázisból kapott hash:", hashedPassword);
         console.log("📥 Beírt jelszó:", password);
 
-       const beirtJelszo = password.trim();
+        const beirtJelszo = password.trim();
 
-       bcrypt.compare(beirtJelszo, hashedPassword.trim(), (err, isMatch) => {
+        bcrypt.compare(beirtJelszo, hashedPassword.trim(), (err, isMatch) => {
             if (err) {
                 console.error("❌ Bcrypt hiba:", err);
                 return res.status(500).json({ error: "Hiba történt a jelszó ellenőrzésekor!" });
@@ -263,11 +278,28 @@ app.post('/login', (req, res) => {
                 return res.status(401).json({ error: "❌ Hibás jelszó!" });
             }
 
-            console.log("✅ Sikeres bejelentkezés:", result[0].Felhasznalonev);
-            return res.json({ success: "Sikeres bejelentkezés!", user: result[0] });
+            // Create the JWT token without modifying the user object
+            const user = result[0];
+            const token = jwt.sign({
+                id: user.Felhasznalo_id,
+                username: user.Felhasznalonev,
+                email: user.Email, // Email in the token for identification
+            }, 'your-secret-key', { expiresIn: '1h' });
+
+            console.log("✅ Sikeres bejelentkezés:", user.Felhasznalonev);
+
+            // Send the token and user data back to the frontend without modifying user object
+            return res.json({
+                success: "Sikeres bejelentkezés!",
+                token: token, // Send the token back to the frontend
+                user: user,  // Send the user object without modification
+                admin: user.Admin // Send the admin status separately without changing the user object
+            });
         });
     });
 });
+
+
 
 
 
@@ -311,7 +343,20 @@ const password = "tesztjelszo"; // Cseréld ki arra a jelszóra, amit regisztrá
 
 bcrypt.compare(password, hash, (err, isMatch) => console.log(isMatch));
 
-
+app.get('/api/admin/check-admin/:username', (req, res) => {
+    const { username } = req.params;
+    const query = 'SELECT Admin FROM regisztracio WHERE Felhasznalonev = ?';
+  
+    db.query(query, [username], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+  
+      if (result.length > 0 && result[0].Admin === 1) {
+        res.json({ isAdmin: true });
+      } else {
+        res.json({ isAdmin: false });
+      }
+    });
+  });
 
 
 app.get('/profil', (req,res)=>{

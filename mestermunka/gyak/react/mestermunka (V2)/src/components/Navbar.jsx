@@ -1,9 +1,13 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 const NavBar = ({ isLoggedIn, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Retrieve user data and admin status from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+  const adminStatus = JSON.parse(localStorage.getItem("admin")); // Fetch admin status separately
 
   return (
     <nav id="navbar">
@@ -22,9 +26,11 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
         {/* Always show Login link if not logged in */}
         {!isLoggedIn && <li><NavLink to="/login">Bejelentkezés</NavLink></li>}
 
-        {/* Only show Recept and Profile after login */}
+        {/* Only show Recept, Profile, and Admin after login */}
         {isLoggedIn && (
           <>
+            {/* Conditionally render Admin link based on admin status */}
+            {adminStatus === 1 && <li><NavLink to="/admin">Admin</NavLink></li>}
             <li><NavLink to="/recept">Receptek</NavLink></li>
             <li><NavLink to="/profile">Profil</NavLink></li>
             <li>
