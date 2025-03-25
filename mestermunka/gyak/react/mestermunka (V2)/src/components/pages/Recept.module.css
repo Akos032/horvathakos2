@@ -36,9 +36,6 @@
   color: #f8f9fa;
 }
 
-.input,::placeholder{
-  color:black
-}
 
 .input,
 textarea,
