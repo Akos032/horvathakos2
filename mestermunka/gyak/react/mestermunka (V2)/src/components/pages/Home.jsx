@@ -51,37 +51,32 @@ export const Home = () => {
   };
 
   const saveRecipe = (recipeId) => {
-    if (!user) {
-      alert("Be kell jelentkezned a mentéshez!");
-      return;
-    }
+  if (!user) {
+    alert("Be kell jeletkezned mentéshez!");
+    return;
+  }
 
-    if (!user.Felhasznalo_id || !recipeId) {
-      alert("Hibás adat: Nincs felhasználó vagy recept ID.");
-      return;
-    }
+  if (!user.Felhasznalo_id || !recipeId) {
+    alert("Invalid data: No user or recipe ID.");
+    return;
+  }
 
-    axios.post("http://localhost:3001/api/save-recipe", {
-      Profil: user.Felhasznalo_id,   // Ensure correct column names
-      Receptek: recipeId
-    })
-      .then(() => {
-        alert("Recept elmentve!");
-
-        // Update savedRecipes state by adding the new saved recipe
-        setSavedRecipes(prevState => [...prevState, recipeId]);
-      })
-      .catch(error => {
-        console.error("Hiba a mentéskor:", error);
-
-        if (error.response) {
-          console.error("Response error data:", error.response.data);
-          alert(error.response.data.error || "Hiba történt a mentéskor!");
-        } else {
-          alert("Hálózati hiba történt.");
-        }
-      });
-  };
+  axios.post("http://localhost:3001/api/save-recipe", {
+    Profil: user.Felhasznalo_id,
+    Receptek: recipeId
+  })
+  .then(() => {
+    alert("Recept elmentve!");
+    setSavedRecipes(prevState => {
+      // Add the new recipe ID to the saved list
+      return [...prevState, recipeId];
+    });
+  })
+  .catch(error => {
+    console.error("Error saving recipe:", error);
+    alert("An error occurred while saving the recipe.");
+  });
+};
 
   return (
     <div id="container">

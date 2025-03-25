@@ -20,13 +20,13 @@ export const Login = ({ setIsLoggedIn }) => {
       Email: email.trim(),
       password: password.trim(),
     };
-
+  
     // Check if fields are empty
     if (!userData.Email || !userData.password || (isRegister && !userData.Felhasznalonev)) {
       alert("Minden mezőt ki kell tölteni!");
       return;
     }
-
+  
     // Make API request to register or login
     axios.post(`http://localhost:3001/${endpoint}`, userData, {
       headers: { "Content-Type": "application/json" }
@@ -35,12 +35,17 @@ export const Login = ({ setIsLoggedIn }) => {
       // Success
       alert(isRegister ? "Sikeres regisztráció!" : "Sikeres bejelentkezés!");
 
-      // Save user data to localStorage
+      // Save user data (including admin status) to localStorage
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      
+      localStorage.setItem("admin", JSON.stringify(response.data.admin));
+
+      // Log the saved user data to verify it contains the `admin` property
+      console.log("Logged in user:", response.data.user);
+      console.log("Admin status:", response.data.admin);
+  
       // Automatically log the user in after registration
       setIsLoggedIn(true);  // Update the logged-in state
-
+  
       // Navigate to the home page or protected route
       navigate("/"); 
     })
