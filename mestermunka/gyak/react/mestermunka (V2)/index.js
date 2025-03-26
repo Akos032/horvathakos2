@@ -364,30 +364,32 @@ app.post('/register', (req, res) => {
             }
 
             console.log("✅ Sikeres regisztráció:", result);
-            return res.json({ success: "Sikeres regisztráció", result: result });
+
+            // 🔹 Fetch the newly registered user
+            const fetchUserQuery = "SELECT Felhasznalonev, Email, Admin FROM regisztracio WHERE Email = ?";
+            db.query(fetchUserQuery, [Email], (err, userResult) => {
+                if (err) {
+                    console.error("❌ Hiba a felhasználó lekérdezésekor:", err);
+                    return res.status(500).json({ error: "Hiba a felhasználó lekérdezésekor." });
+                }
+
+                if (userResult.length > 0) {
+                    const user = {
+                        Felhasznalonev: userResult[0].Felhasznalonev,
+                        Email: userResult[0].Email,
+                        admin: userResult[0].Admin === 1 // Convert to boolean
+                    };
+
+                    // 🔹 Return user data to frontend
+                    return res.json({ user });
+                } else {
+                    return res.status(500).json({ error: "Nem sikerült lekérdezni a felhasználót." });
+                }
+            });
         });
     });
 });
 
-const hash = "$2a$10$V1Q6uMb3g.lTQGp9u0z2FeH1y0Q3OYsQHmtE.ZM9bfzZpFhvw6K/m"; // Cseréld ki a saját hash-edre
-const password = "tesztjelszo"; // Cseréld ki arra a jelszóra, amit regisztráltál
-
-bcrypt.compare(password, hash, (err, isMatch) => console.log(isMatch));
-
-app.get('/api/admin/check-admin/:username', (req, res) => {
-    const { username } = req.params;
-    const query = 'SELECT Admin FROM regisztracio WHERE Felhasznalonev = ?';
-  
-    db.query(query, [username], (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-  
-      if (result.length > 0 && result[0].Admin === 1) {
-        res.json({ isAdmin: true });
-      } else {
-        res.json({ isAdmin: false });
-      }
-    });
-  });
 
 
 app.get('/profil', (req,res)=>{

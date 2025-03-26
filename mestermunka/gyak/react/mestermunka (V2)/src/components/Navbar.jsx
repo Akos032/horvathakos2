@@ -6,8 +6,6 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Retrieve user data and admin status from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-  const adminStatus = JSON.parse(localStorage.getItem("admin"));
 
   return (
     <nav id="navbar">
