@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center; /* Center the navbar contents */
     align-items: center;
+    transition: all 0.3s ease-in-out;
 }
 
 #nav-header {
@@ -38,6 +39,8 @@
     gap: 10px; /* Adds space between buttons */
     padding: 0;
     margin: 0;
+    opacity: 1; /* Ensure links are visible */
+    transition: opacity 0.5s ease-out;
 }
 
 /* Styling links to look like buttons */
@@ -52,41 +55,64 @@
     text-decoration: none;
     padding: 10px 15px;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     font-size: 16px;
 }
 
 #nav-links a:hover {
-    background-color: #555; /* Slightly lighter hover effect */
+    background-color: #555;
+    transform: scale(1.05);
 }
 
-/* Logout button */
+/* Styling the Logout button */
 #nav-links button {
     display: inline-block;
-    background-color: #444; /* Match nav button style */
+    background-color: #444;
     color: white;
     text-decoration: none;
     padding: 10px 15px;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     font-size: 16px;
     border: none;
     cursor: pointer;
 }
 
-/* Hover effect only for Logout button */
 #nav-links button:hover {
-    background-color: #e74c3c; /* Red color on hover */
+    background-color: #e74c3c;
+    transform: scale(1.05);
 }
 
 /* Mobile menu */
 @media (max-width: 768px) {
     #menu-icon {
-        display: flex;
+        display: block;
+        cursor: pointer;
+    }
+
+    #menu-icon span {
+        display: block;
+        width: 30px;
+        height: 3px;
+        background-color: #fff;
+        margin: 6px auto;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #menu-icon.open span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    #menu-icon.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    #menu-icon.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
     }
 
     #nav-links {
-        display: none;
+        display: none; /* Initially hide the menu */
         flex-direction: column;
         position: absolute;
         background: #333;
@@ -95,20 +121,23 @@
         right: 0;
         padding: 10px 0;
         align-items: center;
+        transition: max-height 0.3s ease-out;
     }
 
     #nav-links.open {
-        display: flex;
+        display: flex; /* Display when menu is open */
     }
 
     #nav-links li {
         text-align: center;
         padding: 5px 0;
+        width: 100%;
     }
 
     #nav-links a, 
     #nav-links button {
-        width: 80%;
+        width: 90%;
         text-align: center;
+        padding: 15px;
     }
 }

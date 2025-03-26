@@ -30,7 +30,7 @@ export const Home = () => {
       }
     }
 
-    axios.get(`http://localhost:3001/api/osszes?keres=${kereses}`)
+    axios.get(`http://localhost:3001/api/valid?keres=${kereses}`)
       .then(response => setOsszes(response.data))
       .catch(error => console.error("API Error:", error));
 
@@ -105,26 +105,28 @@ export const Home = () => {
                 {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
               </button>
               {showTable === ossze.Receptek_id && (
-                <table id="info-table">
-                  <thead>
-                    <tr>
-                      <th>Hozzávalók neve</th>
-                      <th>Mennyiség</th>
-                      <th>Mértékegység</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {description
-                      .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
-                      .map((leiras) => (
-                        <tr key={leiras.id}>
-                          <td>{leiras.Hozzavalok_neve}</td>
-                          <td>{leiras.mennyiseg}</td>
-                          <td>{leiras.mértékegység}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+                <div id="info-table-wrapper">
+                  <table id="info-table">
+                    <thead>
+                      <tr>
+                        <th>Hozzávalók neve</th>
+                        <th>Mennyiség</th>
+                        <th>Mértékegység</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {description
+                        .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
+                        .map((leiras) => (
+                          <tr key={leiras.id}>
+                            <td>{leiras.Hozzavalok_neve}</td>
+                            <td>{leiras.mennyiseg}</td>
+                            <td>{leiras.mértékegység}</td>
+                         </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
               {user && (
                 <button

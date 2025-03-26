@@ -7,7 +7,7 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
 
   // Retrieve user data and admin status from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
-  const adminStatus = JSON.parse(localStorage.getItem("admin")); // Fetch admin status separately
+  const adminStatus = JSON.parse(localStorage.getItem("admin"));
 
   return (
     <nav id="navbar">
@@ -16,20 +16,23 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
           <img src={"Média.png"} alt="Logo" id="nav-logo" />
           <Link to="/" id="nav-title">Receptek</Link>
         </div>
-        <div id="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+        <div 
+          id="menu-icon" 
+          onClick={() => setMenuOpen(!menuOpen)} 
+          className={menuOpen ? 'open' : ''}
+        >
           <span></span>
           <span></span>
           <span></span>
         </div>
       </div>
+
+      {/* Update the display of the menu based on menuOpen */}
       <ul id="nav-links" className={menuOpen ? "open" : ""}>
-        {/* Always show Login link if not logged in */}
         {!isLoggedIn && <li><NavLink to="/login">Bejelentkezés</NavLink></li>}
 
-        {/* Only show Recept, Profile, and Admin after login */}
         {isLoggedIn && (
           <>
-            {/* Conditionally render Admin link based on admin status */}
             {adminStatus === 1 && <li><NavLink to="/admin">Admin</NavLink></li>}
             <li><NavLink to="/recept">Receptek</NavLink></li>
             <li><NavLink to="/profile">Profil</NavLink></li>

@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -73,6 +73,37 @@ app.get("/api/osszes", (req, res) => {
       SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
              GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
              preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+             napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes
+      FROM osszekoto 
+      INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
+      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+      INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
+      INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
+      INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
+      INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
+      INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
+    `;
+
+    if (keres) {
+        sql += ` WHERE receptek.Receptek_neve LIKE ?`;
+    }
+
+    sql += ` GROUP BY receptek.Receptek_id desc`;
+
+    db.query(sql, keres ? [`%${keres}%`] : [], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: "Hiba a lekérdezés során", error: err });
+        }
+        res.json(results);
+    });
+});
+
+app.get("/api/valid", (req, res) => {
+    const { keres } = req.query;
+    let sql = `
+      SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
+             GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
              napszak.idoszak, konyha.nemzetiseg, receptek.kep
       FROM osszekoto 
       INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
@@ -88,7 +119,7 @@ app.get("/api/osszes", (req, res) => {
         sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
 
-    sql += `and osszekoto.ervenyes = 1`
+    sql += `and osszekoto.ervenyes = 0`
 
     sql += ` GROUP BY receptek.Receptek_id desc`;
 
@@ -517,8 +548,17 @@ app.get('/api/saved-recipes/:userId', (req, res) => {
 });
 
 
-
-
+app.post('/api/toggle-recipe-status', (req, res) => {
+    const { recipeId, newStatus } = req.body;
+  
+    db.query('UPDATE osszekoto SET ervenyes = ? WHERE receptek_id = ?', [newStatus, recipeId], (error, results) => {
+      if (error) {
+        return res.status(500).json({ message: 'Failed to update status' });
+      }
+      res.json({ message: 'Status updated successfully' });
+    });
+  });
+  
 
 app.listen(3001, () => {
     console.log("Server is running on port 3001");

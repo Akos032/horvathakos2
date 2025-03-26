@@ -2,7 +2,7 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: #222;
     color: white;
-  }
+}
 
 #search-container {
     text-align: center;
@@ -35,11 +35,10 @@ body {
 
 #recipe-card img {
     width: 100%;
-    max-height: 150px; 
+    max-height: 150px;
     object-fit: cover;
     border-radius: 10px;
 }
-
 
 #recipe-body {
     padding: 10px;
@@ -74,36 +73,63 @@ body {
     transition-duration: .15s;
     transition-property: all;
     transition-timing-function: cubic-bezier(.4,0,.2,1);
-    :hover{
-        color: #000;
-        background: rgb(255, 218, 87);
-    }
-    
 }
 
 #expand-button:hover, #info-button:hover {
     color: #ffcc00;
 }
 
-#info-table {
+#save-button:hover {
+    background: rgb(255, 218, 87);
+    color: #000;
+}
+
+#info-table-wrapper {
+    overflow-x: auto; /* Horizontal scrolling for large tables */
+    max-width: 100%;  /* Ensure it does not exceed the container width */
+    margin-top: 10px; /* Space above the table */
+    padding: 10px;    /* Optional padding around the wrapper */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #333; /* Background color for the wrapper */
+  }
+  
+  #info-table {
     width: 100%;
     margin-top: 10px;
     border-collapse: collapse;
-    background: #222;
-}
-
-#info-table th, #info-table td {
+    background: #333;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  #info-table th, #info-table td {
     border: 1px solid #fff;
-    padding: 8px;
+    padding: 12px;
     text-align: left;
-}
-
-#about-section {
-    text-align: center;
-    margin: 20px;
-    font-size: 24px;
+  }
+  
+  #info-table th {
+    background-color: #444;
     font-weight: bold;
-}
+  }
+  
+  #info-table td {
+    background-color: black;
+  }
+  
+  #info-table tr:nth-child(even) {
+    background-color: black;
+  }
+  
+  #info-table tr:hover {
+    background-color: black;
+  }
+  
+  /* Add hover effect to the rows */
+  #info-table td:hover {
+    background-color: black;
+  }
+  
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -114,5 +140,9 @@ body {
 
     #recipe-card {
         width: 90%;
+    }
+
+    #info-table {
+        font-size: 14px;
     }
 }
