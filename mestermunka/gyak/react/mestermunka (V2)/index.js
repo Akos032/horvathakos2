@@ -73,7 +73,7 @@ app.get("/api/osszes", (req, res) => {
       SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
              GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
              preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
-             napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes
+             napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes, osszekoto.receptek_id
       FROM osszekoto 
       INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
       INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
@@ -389,6 +389,22 @@ app.post('/register', (req, res) => {
         });
     });
 });
+
+app.delete('/api/delete-recipe/:id', (req, res) => {
+    const recipeId = req.params.id;
+  
+    const query = `
+      DELETE FROM osszekoto WHERE receptek_id = ?;
+    `;
+  
+    db.query(query, [recipeId, recipeId], (err, result) => {
+      if (err) {
+        console.error("Error deleting recipe:", err);
+        return res.status(500).json({ error: "Failed to delete recipe" });
+      }
+      res.status(200).json({ message: `Recipe with ID: ${recipeId} deleted successfully` });
+    });
+  });
 
 
 
