@@ -105,28 +105,22 @@ export const Home = () => {
                 {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
               </button>
               {showTable === ossze.Receptek_id && (
-                <div id="info-table-wrapper">
-                  <table id="info-table">
-                    <thead>
-                      <tr>
-                        <th>Hozzávalók neve</th>
-                        <th>Mennyiség</th>
-                        <th>Mértékegység</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {description
-                        .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
-                        .map((leiras) => (
-                          <tr key={leiras.id}>
-                            <td>{leiras.Hozzavalok_neve}</td>
-                            <td>{leiras.mennyiseg}</td>
-                            <td>{leiras.mértékegység}</td>
-                         </tr>
-                        ))}
-                    </tbody>
-                  </table>
+                <div id="info-box">
+                <div id="ingredients-wrapper">
+                  {description
+                    .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
+                    .map((leiras) => (
+                      <div key={leiras.id} className="ingredient-row">
+                        <span className="ingredient-name">{leiras.Hozzavalok_neve}</span>
+                        <span className="ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
+                      </div>
+                    ))}
                 </div>
+                <p><strong>Étkezés típusa:</strong> {ossze.etkezes}</p>
+                <p><strong>Érzékenységek:</strong> {ossze.erzekenyseg}</p>
+                <p><strong>Napszak:</strong> {ossze.idoszak}</p>
+                <p><strong>Konyha:</strong> {ossze.nemzetiseg}</p>
+              </div>
               )}
               {user && (
                 <button

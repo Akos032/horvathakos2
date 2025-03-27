@@ -115,16 +115,26 @@ export const Admin = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {description
-                        .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
-                        .map((leiras) => (
-                          <tr key={leiras.id}>
-                            <td>{leiras.Hozzavalok_neve}</td>
-                            <td>{leiras.mennyiseg}</td>
-                            <td>{leiras.mértékegység}</td>
-                          </tr>
-                        ))}
-                    </tbody>
+                    {description
+                      .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
+                      .map((leiras) => (
+                        <tr key={leiras.id}>
+                          <td>{leiras.Hozzavalok_neve}</td>
+                          <td>{leiras.mennyiseg}</td>
+                          <td>{leiras.mértékegység}</td>
+                        </tr>
+                      ))}
+                    
+                    {/* Add a single row at the bottom, spanning all columns */}
+                    <tr>
+                      <td colSpan="3">
+                        <strong>Étkezés típusa:</strong> {ossze.etkezes} <br />
+                        <strong>Érzékenységek:</strong> {ossze.erzekenyseg} <br />
+                        <strong>Napszak:</strong> {ossze.idoszak} <br />
+                        <strong>Konyha:</strong> {ossze.nemzetiseg}
+                      </td>
+                    </tr>
+                  </tbody>
                   </table>
                 </div>
               )}

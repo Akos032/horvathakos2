@@ -154,3 +154,21 @@ textarea {
     width: 100%;
   }
 }
+
+/* Ingredient dropdown: white text on dark background */
+.ingredientSection select {
+  background-color: #222;  /* Dark background */
+  color: white;
+}
+
+/* Placeholder option: black text */
+.ingredientSection select option:first-child {
+  color: black;
+}
+
+/* Dropdown options: white text, dark background */
+.ingredientSection select option {
+  background-color: #222;
+  color: white;
+}
+

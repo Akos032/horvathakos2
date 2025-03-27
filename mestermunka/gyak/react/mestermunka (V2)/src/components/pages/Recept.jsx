@@ -20,6 +20,46 @@ const Recept = () => {
   const [selectedNationality, setSelectedNationality] = useState('');
   const [selectedDayTime, setSelectedDayTime] = useState('');
 
+  const customSelectStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: '#444',
+      color: 'white',
+      borderColor: state.isFocused ? '#007bff' : '#444',
+      boxShadow: state.isFocused ? '0 0 0 1px #007bff' : 'none',
+      '&:hover': {
+        borderColor: '#007bff',
+      },
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: 'white',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: 'white',
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: '#222',
+      color: 'white',
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? '#333' : '#222',
+      color: 'white',
+      cursor: 'pointer',
+      '&:active': {
+        backgroundColor: '#007bff',
+      },
+    }),
+    input: (base) => ({
+      ...base,
+      color: 'white',
+    }),
+  };
+  
+
   useEffect(() => {
     async function fetchOptions() {
       try {
@@ -131,12 +171,13 @@ const Recept = () => {
           {ingredients.map((ingredient, index) => (
             <div key={index} className={styles.ingredientSection}>
               <Select
-                options={ingredientOptions}
-                value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)}
-                onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-                placeholder="Válasz egy hozzávalot..."
-                isSearchable
-                required
+              options={ingredientOptions}
+              value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)}
+              onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
+              placeholder="Válasz egy hozzávalot..."
+              isSearchable
+              required
+              styles={customSelectStyles}
               />
               <input
                 className={styles.input}

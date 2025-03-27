@@ -9,6 +9,7 @@ export default function Profile() {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [TobbId, setTobbId] = useState(null); 
   const [showTable, setShowTable] = useState(null);
+  const [description, setDescription] = useState([]);  // State to store recipe description data
 
   useEffect(() => {
     try {
@@ -17,6 +18,7 @@ export default function Profile() {
       if (loggedInUser) {
         setUser(loggedInUser);
         loadSavedRecipes(loggedInUser.Felhasznalo_id);
+        loadDescriptionData();  // Fetch description data
       } else {
         alert("You are not logged in! Redirecting to login.");
         window.location.href = "/login";  
@@ -28,13 +30,22 @@ export default function Profile() {
     }
   }, []);
 
+  // Fetch saved recipes
   const loadSavedRecipes = (userId) => {
     axios.get(`http://localhost:3001/api/saved-recipes/${userId}`)
       .then(response => {
-        console.log("Mentett receptek:", response.data); 
         setSavedRecipes(response.data); 
       })
       .catch(error => console.error("Hiba a mentett receptek lekérdezésekor", error));
+  };
+
+  // Fetch description data
+  const loadDescriptionData = () => {
+    axios.get("http://localhost:3001/leiras")
+      .then(response => {
+        setDescription(response.data); // Update description state
+      })
+      .catch(error => console.error("Hiba a recept leírás lekérdezésekor", error));
   };
 
   const removeRecipe = (recipeId) => {
@@ -87,30 +98,35 @@ export default function Profile() {
                 </button>
                 <button 
                   id="info-button" 
-                  onClick={() => setShowTable(showTable === recipe.Receptek_id ? null : recipe.Receptek_id)} 
-                  className="text-blue-500 mt-2"
+                  onClick={() => setShowTable(showTable === recipe.Receptek_id ? null : recipe.Receptek_id)}
                 >
                   {showTable === recipe.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
                 </button>
-
                 {showTable === recipe.Receptek_id && (
-                  <div className="mt-4 text-left">
-                    <p><strong>Hozzávalók:</strong> {recipe.hozzavalok}</p>
-                    <p><strong>Étkezés típusa:</strong> {recipe.etkezes}</p>
-                    <p><strong>Érzékenységek:</strong> {recipe.erzekenyseg}</p>
-                    <p><strong>Mennyiség:</strong> {recipe.mennyiseg} {recipe["mértékegység"]}</p>
-                    <p><strong>Napszak:</strong> {recipe.idoszak}</p>
-                    <p><strong>Konyha:</strong> {recipe.nemzetiseg}</p>
+                <div id="info-box">
+                  <div id="ingredients-wrapper">
+                    {description
+                      .filter(leiras => leiras.Receptek_id === recipe.Receptek_id)
+                      .map((leiras) => (
+                        <div key={leiras.id} className="ingredient-row">
+                          <span className="ingredient-name">{leiras.Hozzavalok_neve}</span>
+                          <span className="ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
+                        </div>
+                      ))}
                   </div>
-                )}
-
-                <button 
-                  id="save-button" 
-                  onClick={() => removeRecipe(recipe.Receptek_id)} 
-                  className="text-red-500 mt-2"
-                >
-                  ❌ Eltávolítás
-                </button>
+                  <p><strong>Étkezés típusa:</strong> {recipe.etkezes}</p>
+                  <p><strong>Érzékenységek:</strong> {recipe.erzekenyseg}</p>
+                  <p><strong>Napszak:</strong> {recipe.idoszak}</p>
+                  <p><strong>Konyha:</strong> {recipe.nemzetiseg}</p>
+                </div>
+              )}
+              <button 
+                id="save-button" 
+                onClick={() => removeRecipe(recipe.Receptek_id)} 
+                className="text-red-500 mt-2"
+              >
+                ❌ Eltávolítás
+              </button>
               </div>
             </div>
           ))}
