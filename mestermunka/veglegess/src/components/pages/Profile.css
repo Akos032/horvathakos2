@@ -1,8 +1,3 @@
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #222;
-  color: white;
-}
 
 #profile-recipes-container {
   display: flex;
@@ -78,6 +73,7 @@ body {
   background: rgb(255, 87, 87);
 }
 
+#profile-expand-button:hover,
 #profile-info-button:hover {
   color: rgb(255, 218, 87);
 }
