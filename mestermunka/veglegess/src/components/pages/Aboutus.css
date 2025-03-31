@@ -1,0 +1,100 @@
+/* Alap stílusok */
+.about-box {
+    background: linear-gradient(135deg, #1e3a8a, #000000); /* Sötétkék és fekete átmenet */
+    color: white;
+    padding: 20px; /* Csökkentett padding */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 40px; /* Több térköz a szekciók között */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto; /* A magasságot automatikusan szabjuk, hogy ne legyen túl mély */
+}
+
+/* Hover effektus a dobozokhoz */
+.about-box:hover {
+    transform: translateY(-5px); /* Hover effektus: kicsit felugrik */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Szövegek */
+.about-title,
+.contact-title,
+.advertisement-title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+/* Kontakt lista */
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    margin-bottom: 10px;
+}
+
+.contact-list a {
+    color: #1abc9c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-list a:hover {
+    color: #16a085;
+}
+
+/* Hírlevél gomb */
+.advertisement-btn {
+    background: #3498db;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.advertisement-btn:hover {
+    background: #2980b9;
+    transform: translateY(-3px);
+}
+
+/* Flexbox beállítás a szekciók számára */
+.about-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.about-box {
+    flex: 1 1 30%; /* Alapértelmezett szélesség: 30% (a három szekció egymás mellett) */
+    margin: 10px; /* Kis térköz a szekciók között */
+}
+
+/* Reszponzivitás */
+@media (max-width: 768px) {
+    .about-box {
+        flex: 1 1 45%; /* Két szekció egymás mellett */
+        margin: 15px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-box {
+        flex: 1 1 100%; /* Mobilon minden szekció teljes szélességet foglal el */
+    }
+
+    .about-title,
+    .contact-title,
+    .advertisement-title {
+        font-size: 1.4rem; /* Kis képernyőn kisebb betűméret */
+    }
+}
