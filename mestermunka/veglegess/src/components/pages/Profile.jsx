@@ -9,7 +9,7 @@ export default function Profile() {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [TobbId, setTobbId] = useState(null); 
   const [showTable, setShowTable] = useState(null);
-  const [description, setDescription] = useState([]);  // State to store recipe description data
+  const [description, setDescription] = useState([]);
 
   useEffect(() => {
     try {
@@ -18,7 +18,7 @@ export default function Profile() {
       if (loggedInUser) {
         setUser(loggedInUser);
         loadSavedRecipes(loggedInUser.Felhasznalo_id);
-        loadDescriptionData();  // Fetch description data
+        loadDescriptionData();
       } else {
         alert("You are not logged in! Redirecting to login.");
         window.location.href = "/login";  
@@ -30,7 +30,6 @@ export default function Profile() {
     }
   }, []);
 
-  // Fetch saved recipes
   const loadSavedRecipes = (userId) => {
     axios.get(`http://localhost:3001/api/saved-recipes/${userId}`)
       .then(response => {
@@ -43,7 +42,7 @@ export default function Profile() {
   const loadDescriptionData = () => {
     axios.get("http://localhost:3001/leiras")
       .then(response => {
-        setDescription(response.data); // Update description state
+        setDescription(response.data);
       })
       .catch(error => console.error("Hiba a recept leírás lekérdezésekor", error));
   };
@@ -60,7 +59,6 @@ export default function Profile() {
     })
     .then(response => {
       alert("Recept eltávolítva!");
-      // Remove the recipe from savedRecipes state
       setSavedRecipes(savedRecipes.filter(recipe => recipe.Receptek_id !== recipeId));
     })
     .catch(error => {

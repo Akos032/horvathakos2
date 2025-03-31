@@ -16,12 +16,10 @@ export const Home = () => {
   const [savedRecipes, setSavedRecipes] = useState([]);
 
   useEffect(() => {
-    // Get logged-in user from localStorage
     const loggedInUser = localStorage.getItem("user");
 
     if (loggedInUser) {
       try {
-        // Parse user data only if it's a valid JSON string
         const userObj = JSON.parse(loggedInUser);
         setUser(userObj);
         loadSavedRecipes(userObj.Felhasznalo_id);
@@ -42,9 +40,7 @@ export const Home = () => {
   const loadSavedRecipes = (userId) => {
     axios.get(`http://localhost:3001/api/saved-recipes/${userId}`)
       .then(response => {
-        // Ensure we are working with an array of recipes
         const validRecipes = Array.isArray(response.data) ? response.data : [];
-        // Store only the Receptek_id values for simplicity
         setSavedRecipes(validRecipes.map(r => r.Receptek_id));
       })
       .catch(error => console.error("Hiba a mentett receptek lekérdezésekor", error));
@@ -68,7 +64,6 @@ export const Home = () => {
   .then(() => {
     alert("Recept elmentve!");
     setSavedRecipes(prevState => {
-      // Add the new recipe ID to the saved list
       return [...prevState, recipeId];
     });
   })
@@ -126,7 +121,7 @@ export const Home = () => {
                 <button
                   id="save-button"
                   onClick={() => saveRecipe(ossze?.Receptek_id)}
-                  disabled={savedRecipes.includes(ossze?.Receptek_id)} // Check if recipe is saved using the Receptek_id
+                  disabled={savedRecipes.includes(ossze?.Receptek_id)}
                 >
                   {savedRecipes.includes(ossze?.Receptek_id) ? "✅ Mentve" : "❤️ Mentés"}
                 </button>
@@ -136,8 +131,7 @@ export const Home = () => {
         ))}
       </div>
       <div id="container">
-        {/* Already existing content */}
-        <AboutSection /> {/* Here we use it */}
+        <AboutSection />
       </div>
     </div>
   );
