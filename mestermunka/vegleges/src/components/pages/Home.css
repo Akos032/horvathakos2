@@ -158,7 +158,6 @@ body {
     }
     
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     #search-container {
         width: 90%;

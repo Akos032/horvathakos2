@@ -1,4 +1,4 @@
-/* Admin Page Styling */
+
 #admin-container {
     padding: 20px;
   }
@@ -57,7 +57,7 @@
   #admin-expand-button,
   #admin-info-button,
   #admin-delete-button {
-    background-color: #FF5722; /* Red color for delete button */
+    background-color: #FF5722;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -97,8 +97,6 @@
   #admin-info-table td {
     background-color: #555;
   }
-  
-  /* Switch (Toggle Button) Styling */
   #admin-recipe-toggle {
     position: absolute;
     top: 10px;
@@ -143,18 +141,17 @@
   }
   
   input:checked + .slider {
-    background-color: #4CAF50; /* Green when active */
+    background-color: #4CAF50;
   }
   
   input:checked + .slider:before {
-    transform: translateX(25px); /* Move the circle to the right */
+    transform: translateX(25px);
   }
   
   input:not(:checked) + .slider {
-    background-color: #FF5722; /* Red when inactive */
+    background-color: #FF5722;
   }
   
-  /* Media Query for Responsiveness */
   @media (max-width: 768px) {
     #admin-recipe-card {
       width: 100%;

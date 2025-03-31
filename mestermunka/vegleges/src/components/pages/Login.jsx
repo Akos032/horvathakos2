@@ -10,7 +10,7 @@ export const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
-  const [transitioning, setTransitioning] = useState(false); // to control animation state
+  const [transitioning, setTransitioning] = useState(false);
   const navigate = useNavigate();
 
   const handleAuth = (event, isRegister) => {
@@ -33,8 +33,6 @@ export const Login = ({ setIsLoggedIn }) => {
     .then(response => {
       if (isRegister) {
         alert("Sikeres regisztráció!");
-
-        // Animate the transition back to login
         setTransitioning(true);
         setTimeout(() => {
           setIsRegistering(false);
@@ -42,7 +40,7 @@ export const Login = ({ setIsLoggedIn }) => {
           setEmail("");
           setPassword("");
           setTransitioning(false);
-        }, 1000); // delay to allow fade animation
+        }, 1000);
       } else {
         alert("Sikeres bejelentkezés!");
         localStorage.setItem("user", JSON.stringify(response.data.user));

@@ -6,7 +6,7 @@ import './Admin.css';
 
 export const Admin = () => {
   const [kereses, setKereses] = useState("");
-  const [osszes, setOsszes] = useState([]);  // Assume this data comes from an API
+  const [osszes, setOsszes] = useState([]);
   const [TobbId, setTobbId] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [description, setDescription] = useState([]);
@@ -35,21 +35,16 @@ export const Admin = () => {
   };
 
   const toggleRecipeStatus = (recipeId, currentStatus) => {
-    const newStatus = currentStatus === 1 ? 0 : 1;  // Toggle between 1 (inactive) and 0 (active)
-  
-    // Optimistic update: immediately reflect changes in the UI
+    const newStatus = currentStatus === 1 ? 0 : 1;
     setOsszes(osszes.map(recipe =>
       recipe.Receptek_id === recipeId ? { ...recipe, ervenyes: newStatus } : recipe
     ));
-  
-    // Now, send the updated status to the backend to persist it
     axios.post('http://localhost:3001/api/toggle-recipe-status', { recipeId, newStatus })
       .then(() => {
         console.log(`Recipe ID: ${recipeId} status updated to ${newStatus}`);
       })
       .catch(error => {
         console.error("Error toggling recipe status:", error);
-        // Revert the local state change in case of an error with the API request
         setOsszes(osszes.map(recipe =>
           recipe.Receptek_id === recipeId ? { ...recipe, ervenyes: currentStatus } : recipe
         ));
@@ -74,13 +69,12 @@ export const Admin = () => {
       <div id="admin-recipes-container">
         {osszes.map((ossze) => (
           <div id="admin-recipe-card" key={ossze.Receptek_id}>
-            {/* Toggle Button */}
             <div id="admin-recipe-toggle">
                 <label className="switch">
                     <input 
                     type="checkbox" 
-                    checked={ossze.ervenyes === 0} // 0 means active (checked), 1 means inactive (unchecked)
-                    onChange={() => toggleRecipeStatus(ossze.Receptek_id, ossze.ervenyes)} // Toggle function
+                    checked={ossze.ervenyes === 0}
+                    onChange={() => toggleRecipeStatus(ossze.Receptek_id, ossze.ervenyes)}
                     />
                     <span className="slider"></span>
                 </label>
@@ -124,8 +118,6 @@ export const Admin = () => {
                           <td>{leiras.mértékegység}</td>
                         </tr>
                       ))}
-                    
-                    {/* Add a single row at the bottom, spanning all columns */}
                     <tr>
                       <td colSpan="3">
                         <strong>Étkezés típusa:</strong> {ossze.etkezes} <br />

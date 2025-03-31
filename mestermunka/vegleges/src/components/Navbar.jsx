@@ -5,7 +5,7 @@ import './Navbar.css';
 const NavBar = ({ isLoggedIn, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Retrieve user data and admin status from localStorage
+  // user adatai meghivása a localStorage-ból
   const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
   const adminStatus = localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")) : 0;
 
@@ -26,8 +26,6 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
           <span></span>
         </div>
       </div>
-
-      {/* Update the display of the menu based on menuOpen */}
       <ul id="nav-links" className={menuOpen ? "open" : ""}>
         {!isLoggedIn && <li><NavLink to="/login">Bejelentkezés</NavLink></li>}
 

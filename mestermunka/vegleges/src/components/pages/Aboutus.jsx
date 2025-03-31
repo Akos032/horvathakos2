@@ -4,9 +4,7 @@ import './Aboutus.css';
 export const AboutSection = () => {
   return (
     <div className="container">
-      {/* Közös konténer, amely a három szekciót tartalmazza */}
       <div className="row about-section">
-        {/* Rólunk szöveg */}
         <div className="col-md-4 about-box">
           <h2 className="about-title">Rólunk</h2>
           <p>
@@ -16,8 +14,6 @@ export const AboutSection = () => {
             Minden receptünket gondosan válogatjuk, hogy inspiráljunk, új ízeket próbálj ki, és egy könnyed főzési élményt nyújtsunk. A legfontosabb számunkra, hogy mindenki élvezze a főzést és az étkezést, miközben finom és egészséges ételeket készíthet.
           </p>
         </div>
-
-        {/* Elérhetőségek szekció */}
         <div className="col-md-4 about-box">
           <h3 className="contact-title">Elérhetőségeink:</h3>
           <ul className="contact-list">
@@ -27,8 +23,6 @@ export const AboutSection = () => {
             <li><strong>Instagram:</strong> <a href="https://www.instagram.com/fozomester" target="_blank" rel="noopener noreferrer">@fozomester</a></li>
           </ul>
         </div>
-
-        {/* Hírlevél szekció */}
         <div className="col-md-4 about-box">
           <h3 className="advertisement-title">Ne hagyd ki!</h3>
           <p className="advertisement-text">

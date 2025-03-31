@@ -3,7 +3,7 @@
     color: white;
     padding: 10px 20px;
     display: flex;
-    justify-content: center; /* Center the navbar contents */
+    justify-content: center;
     align-items: center;
     transition: all 0.3s ease-in-out;
 }
@@ -32,25 +32,23 @@
     color: white;
 }
 
-/* Centering nav links */
 #nav-links {
     list-style: none;
     display: flex;
-    gap: 10px; /* Adds space between buttons */
+    gap: 10px;
     padding: 0;
     margin: 0;
-    opacity: 1; /* Ensure links are visible */
+    opacity: 1;
     transition: opacity 0.5s ease-out;
 }
 
-/* Styling links to look like buttons */
 #nav-links li {
     display: inline;
 }
 
 #nav-links a {
     display: inline-block;
-    background-color: #444; /* Dark background */
+    background-color: #444;
     color: white;
     text-decoration: none;
     padding: 10px 15px;
@@ -64,7 +62,6 @@
     transform: scale(1.05);
 }
 
-/* Styling the Logout button */
 #nav-links button {
     display: inline-block;
     background-color: #444;
@@ -83,7 +80,6 @@
     transform: scale(1.05);
 }
 
-/* Mobile menu */
 @media (max-width: 768px) {
     #menu-icon {
         display: block;
@@ -112,7 +108,7 @@
     }
 
     #nav-links {
-        display: none; /* Initially hide the menu */
+        display: none;
         flex-direction: column;
         position: absolute;
         background: #333;
@@ -125,7 +121,7 @@
     }
 
     #nav-links.open {
-        display: flex; /* Display when menu is open */
+        display: flex;
     }
 
     #nav-links li {

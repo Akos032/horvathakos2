@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import styles from './Recept.module.css';  // Import the CSS module
+import styles from './Recept.module.css';
 
 const Recept = () => {
   const [recipeName, setRecipeName] = useState('');
