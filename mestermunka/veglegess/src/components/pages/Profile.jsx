@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
-import './Profile.css'
+import './Profile.css';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -37,8 +37,6 @@ export default function Profile() {
       })
       .catch(error => console.error("Hiba a mentett receptek lekérdezésekor", error));
   };
-
-  // Fetch description data
   const loadDescriptionData = () => {
     axios.get("http://localhost:3001/leiras")
       .then(response => {
@@ -70,7 +68,7 @@ export default function Profile() {
   if (!user) return <p>Betöltés...</p>;
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-5 shadow-lg rounded-2xl bg-gradient-to-r from-black to-gray-900 text-white text-center">
+    <div id="profile-container" className="max-w-lg mx-auto mt-10 p-5 shadow-lg rounded-2xl bg-gradient-to-r from-black to-gray-900 text-white text-center">
       <h1>{user.Felhasznalonev} profilja</h1>
       <p className="text-gray-400">{user.Email}</p>
 
@@ -78,37 +76,37 @@ export default function Profile() {
       {savedRecipes.length === 0 || savedRecipes.every(recipe => recipe.Receptek_id === null) ? (
       <p className="text-gray-400 text-lg font-semibold">📌 Nincs lementett recepted!</p>
         ) : (
-        <div id="recipes-container">
+        <div id="profile-recipes-container">
           {savedRecipes.map(recipe => (
-            <div id="recipe-card" key={recipe.Receptek_id} className="mt-4">
+            <div id="profile-recipe-card" key={recipe.Receptek_id} className="mt-4">
               <img src={recipe.kep} alt={recipe.Receptek_neve} className="w-full h-48 object-cover rounded-md" />
-              <div id="recipe-body" className="mt-2">
-                <h5 id="recipe-title" className="text-2xl font-bold">{recipe.Receptek_neve}</h5>
-                <p id="recipe-text" className="text-gray-300">
+              <div id="profile-recipe-body" className="mt-2">
+                <h5 id="profile-recipe-title" className="text-2xl font-bold">{recipe.Receptek_neve}</h5>
+                <p id="profile-recipe-text" className="text-gray-300">
                   {TobbId === recipe.Receptek_id ? recipe.Keszites : `${recipe.Keszites?.substring(0, 200) || ''}...`}
                 </p>
                 <button 
-                  id="expand-button" 
+                  id="profile-expand-button" 
                   onClick={() => setTobbId(TobbId === recipe.Receptek_id ? null : recipe.Receptek_id)} 
                   className="text-blue-500 mt-2"
                 >
                   {TobbId === recipe.Receptek_id ? "Kevesebb" : "Több"}
                 </button>
                 <button 
-                  id="info-button" 
+                  id="profile-info-button" 
                   onClick={() => setShowTable(showTable === recipe.Receptek_id ? null : recipe.Receptek_id)}
                 >
                   {showTable === recipe.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
                 </button>
                 {showTable === recipe.Receptek_id && (
-                <div id="info-box">
-                  <div id="ingredients-wrapper">
+                <div id="profile-info-box">
+                  <div id="profile-ingredients-wrapper">
                     {description
                       .filter(leiras => leiras.Receptek_id === recipe.Receptek_id)
                       .map((leiras) => (
-                        <div key={leiras.id} className="ingredient-row">
-                          <span className="ingredient-name">{leiras.Hozzavalok_neve}</span>
-                          <span className="ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
+                        <div key={leiras.id} className="profile-ingredient-row">
+                          <span className="profile-ingredient-name">{leiras.Hozzavalok_neve}</span>
+                          <span className="profile-ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
                         </div>
                       ))}
                   </div>
@@ -119,7 +117,7 @@ export default function Profile() {
                 </div>
               )}
               <button 
-                id="save-button" 
+                id="profile-save-button" 
                 onClick={() => removeRecipe(recipe.Receptek_id)} 
                 className="text-red-500 mt-2"
               >
