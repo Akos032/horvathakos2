@@ -1,4 +1,4 @@
-/* 🔘 Save & Unsave Buttons */
+
 #save-button,
 #unsave-button {
   margin: 5px;
@@ -33,7 +33,6 @@
   background: rgb(255, 87, 87);
 }
 
-/* 🔵 Info Button */
 #info-button {
   margin-top: 10px;
   display: inline-block;
@@ -125,8 +124,6 @@
     }
   }
   
-
-/* 📱 Responsive Styling */
 @media (max-width: 600px) {
   #save-button,
   #unsave-button,
