@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -70,25 +70,25 @@ app.get("/osszes", (req, res) => {
 app.get("/api/osszes", (req, res) => {
     const { keres } = req.query;
     let sql = `
-      SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
-             GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
-             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+      SELECT receptek.Receptek_id, receptek.receptek_neve, receptek.keszites, 
+             GROUP_CONCAT(DISTINCT hozzavalok.hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mertekegyseg,
              napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes, osszekoto.receptek_id
       FROM osszekoto 
       INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
-      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
       INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
       INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
       INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
-      INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
-      INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
+      INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
+      INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
     `;
 
     if (keres) {
-        sql += ` WHERE receptek.Receptek_neve LIKE ?`;
+        sql += ` WHERE receptek.receptek_neve LIKE ?`;
     }
 
-    sql += ` GROUP BY receptek.Receptek_id desc`;
+    sql += ` GROUP BY receptek.receptek_id desc`;
 
     db.query(sql, keres ? [`%${keres}%`] : [], (err, results) => {
         if (err) {
@@ -101,27 +101,27 @@ app.get("/api/osszes", (req, res) => {
 app.get("/api/valid", (req, res) => {
     const { keres } = req.query;
     let sql = `
-      SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
-             GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
-             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység,
+      SELECT receptek.Receptek_id, receptek.receptek_neve, receptek.keszites, 
+             GROUP_CONCAT(DISTINCT hozzavalok.hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+             preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mertekegyseg,
              napszak.idoszak, konyha.nemzetiseg, receptek.kep
       FROM osszekoto 
       INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
-      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+      INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
       INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
       INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
       INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
-      INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
-      INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
+      INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
+      INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
     `;
 
     if (keres) {
-        sql += ` WHERE receptek.Receptek_neve LIKE ?`;
+        sql += ` WHERE receptek.receptek_neve LIKE ?`;
     }
 
     sql += `and osszekoto.ervenyes = 0`
 
-    sql += ` GROUP BY receptek.Receptek_id desc`;
+    sql += ` GROUP BY receptek.receptek_id desc`;
 
     db.query(sql, keres ? [`%${keres}%`] : [], (err, results) => {
         if (err) {
@@ -132,7 +132,7 @@ app.get("/api/valid", (req, res) => {
 });
 
 app.get("/leiras", (req, res) => {
-    const sql = "SELECT  receptek.Receptek_id, hozzavalok.Hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mértékegység FROM `osszekoto` inner join hozzavalok on osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id inner join mertekegyseg on osszekoto.mertekegyseg_id = mertekegyseg.id inner join receptek on osszekoto.receptek_id = receptek.Receptek_id;"
+    const sql = "SELECT  receptek.Receptek_id, hozzavalok.hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mertekegyseg FROM `osszekoto` inner join hozzavalok on osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id inner join mertekegyseg on osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id inner join receptek on osszekoto.receptek_id = receptek.Receptek_id;"
     db.query(sql, (err, result) => {
         if (err) return res.json(err)
         return res.json(result)
@@ -153,15 +153,11 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
                 db.release();
                 return res.status(500).json({ message: 'Transaction error', error: err });
             }
-
-            // Step 1: Insert the recipe into 'receptek'
             insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName)
                 .then((recipeId) => {
-                    // Step 2: Insert preferences, sensitivity, and ingredients into 'osszekoto' with ingredients
                     return insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients);
                 })
                 .then(() => {
-                    // Commit transaction after all queries are successful
                     db.commit((err) => {
                         if (err) {
                             return db.rollback(() => {
@@ -174,7 +170,6 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
                     });
                 })
                 .catch((err) => {
-                    // Rollback transaction if any step fails
                     db.rollback(() => {
                         db.release();
                         res.status(500).json({ message: 'Error processing recipe', error: err });
@@ -184,55 +179,48 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
     });
 });
 
-// Insert the recipe into the 'receptek' table
+
 function insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO receptek (Receptek_neve, Keszites, konyha_oszekoto, napszak_oszekoto, kep) VALUES (?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO receptek (receptek_neve, keszites, konyha_osszekoto, napszak_osszekoto, kep) VALUES (?, ?, ?, ?, ?)';
         db.query(query, [recipeName, description, nationalityId, dayTimeId,imageName], (err, result) => {
             if (err) return reject(err);
-            resolve(result.insertId); // Return the inserted recipe ID
+            resolve(result.insertId);
         });
     });
 }
 
-// Insert preferences, sensitivity, and ingredients into the 'osszekoto' table
 function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients) {
     return new Promise((resolve, reject) => {
         if (!ingredients || ingredients.length === 0) {
-            return resolve(); // No ingredients to insert, just insert the preferences and sensitivity
+            return resolve();
         }
-
-        // First insert into 'mertekegyseg' for all ingredients
         const mertekegysegPromises = ingredients.map(async (ingredient) => {
             console.log("Inserting mertekegyseg for:", ingredient);
             try {
                 return await insertMertekegyseg(db, ingredient.mennyiseg, ingredient.mertekegyseg);
             } catch (error) {
                 console.error("Error inserting mertekegyseg:", error);
-                throw error; // Re-throw the error to stop execution
+                throw error;
             }
         });
 
         Promise.all(mertekegysegPromises)
             .then((mertekegysegResults) => {
                 console.log("Mertekegyseg Insertion Results:", mertekegysegResults);
-
-                // Prepare the bulk insert data for 'osszekoto'
                 const osszekotoValues = ingredients.map((ingredient, index) => {
                     console.log("Inserting ingredient into osszekoto:", ingredient, mertekegysegResults[index]);
                     return [
-                        recipeId,  // recipeId
-                        ingredient.hozzavalok_id,  // Hozzavalok_id
-                        mertekegysegResults[index].insertId,  // mertekegyseg_id
-                        1,  // ervenyes (assuming always 1)
-                        sensitivity || null,  // sensitivity
-                        preferences || null  // preferences
+                        recipeId,
+                        ingredient.hozzavalok_id,
+                        mertekegysegResults[index].insertId,
+                        1,
+                        sensitivity || null,
+                        preferences || null 
                     ];
                 });
 
                 console.log("Inserting into osszekoto:", osszekotoValues);
-
-                // Insert into 'osszekoto' table in bulk
                 const insertQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
                 db.query(insertQuery, [osszekotoValues], (err, result) => {
                     if (err) {
@@ -245,22 +233,20 @@ function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sens
             })
             .catch((err) => {
                 console.error("Error in inserting ingredients:", err);
-                reject(err); // If any promise fails, reject the entire operation
+                reject(err);
             });
     });
 }
-
-// Insert into 'mertekegyseg' table (handles the quantity and unit)
 function insertMertekegyseg(db, amount, unit) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO mertekegyseg (mennyiseg, mértékegység) VALUES (?, ?) ON DUPLICATE KEY UPDATE mennyiseg = VALUES(mennyiseg), mértékegység = VALUES(mértékegység)';
+        const query = 'INSERT INTO mertekegyseg (mennyiseg, mertekegyseg) VALUES (?, ?) ON DUPLICATE KEY UPDATE mennyiseg = VALUES(mennyiseg), mertekegyseg = VALUES(mertekegyseg)';
         db.query(query, [amount, unit], (err, result) => {
             if (err) {
                 console.error("Error in inserting mertekegyseg:", err);
                 return reject(err);
             }
             console.log("Mertekegyseg inserted successfully:", result);
-            resolve(result);  // Return the result to get the insertId of 'mertekegyseg'
+            resolve(result);
         });
     });
 }
@@ -275,7 +261,7 @@ app.post('/login', (req, res) => {
         return res.status(400).json({ error: "❌ Hiányzó email vagy jelszó!" });
     }
 
-    const sql = "SELECT * FROM regisztracio WHERE Email = ?";
+    const sql = "SELECT * FROM regisztracio WHERE email = ?";
 
     db.query(sql, [Email], (err, result) => {
         if (err) {
@@ -308,23 +294,20 @@ app.post('/login', (req, res) => {
                 console.log("❌ Hibás jelszó!");
                 return res.status(401).json({ error: "❌ Hibás jelszó!" });
             }
-
-            // Create the JWT token without modifying the user object
             const user = result[0];
             const token = jwt.sign({
                 id: user.Felhasznalo_id,
                 username: user.Felhasznalonev,
-                email: user.Email, // Email in the token for identification
+                email: user.Email,
             }, 'your-secret-key', { expiresIn: '1h' });
 
             console.log("✅ Sikeres bejelentkezés:", user.Felhasznalonev);
 
-            // Send the token and user data back to the frontend without modifying user object
             return res.json({
                 success: "Sikeres bejelentkezés!",
-                token: token, // Send the token back to the frontend
-                user: user,  // Send the user object without modification
-                admin: user.Admin // Send the admin status separately without changing the user object
+                token: token,
+                user: user,
+                admin: user.Admin
             });
         });
     });
@@ -351,7 +334,7 @@ app.post('/register', (req, res) => {
 
         console.log("🔑 Hash-elt jelszó:", hash);
 
-        const sql = "INSERT INTO regisztracio (Felhasznalonev, Email, Jelszo) VALUES (?, ?, ?)";
+        const sql = "INSERT INTO regisztracio (felhasznalonev, email, jelszo) VALUES (?, ?, ?)";
         const values = [Felhasznalonev, Email, hash];
 
         console.log("📝 SQL lekérdezés:", sql);
@@ -364,9 +347,7 @@ app.post('/register', (req, res) => {
             }
 
             console.log("✅ Sikeres regisztráció:", result);
-
-            // 🔹 Fetch the newly registered user
-            const fetchUserQuery = "SELECT Felhasznalonev, Email, Admin FROM regisztracio WHERE Email = ?";
+            const fetchUserQuery = "SELECT felhasznalonev, email, admin FROM regisztracio WHERE email = ?";
             db.query(fetchUserQuery, [Email], (err, userResult) => {
                 if (err) {
                     console.error("❌ Hiba a felhasználó lekérdezésekor:", err);
@@ -377,10 +358,8 @@ app.post('/register', (req, res) => {
                     const user = {
                         Felhasznalonev: userResult[0].Felhasznalonev,
                         Email: userResult[0].Email,
-                        admin: userResult[0].Admin === 1 // Convert to boolean
+                        admin: userResult[0].Admin === 1
                     };
-
-                    // 🔹 Return user data to frontend
                     return res.json({ user });
                 } else {
                     return res.status(500).json({ error: "Nem sikerült lekérdezni a felhasználót." });
@@ -392,19 +371,34 @@ app.post('/register', (req, res) => {
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
-  
-    const query = `
-      DELETE FROM osszekoto WHERE receptek_id = ?;
+
+    const deleteMeasurementsQuery = `
+        DELETE FROM mertekegyseg 
+        WHERE Mertekegyseg_id IN (
+            SELECT mertekegyseg_id FROM osszekoto WHERE receptek_id = ?
+        );
     `;
-  
-    db.query(query, [recipeId, recipeId], (err, result) => {
-      if (err) {
-        console.error("Error deleting recipe:", err);
-        return res.status(500).json({ error: "Failed to delete recipe" });
-      }
-      res.status(200).json({ message: `Recipe with ID: ${recipeId} deleted successfully` });
+
+    const deleteRecipeQuery = `
+        DELETE FROM receptek WHERE Receptek_id = ?;
+    `;
+
+    db.query(deleteMeasurementsQuery, [recipeId], (err, result) => {
+        if (err) {
+            console.error("Error deleting measurements:", err);
+            return res.status(500).json({ error: "Failed to delete measurement data" });
+        }
+
+        db.query(deleteRecipeQuery, [recipeId], (err, result) => {
+            if (err) {
+                console.error("Error deleting recipe:", err);
+                return res.status(500).json({ error: "Failed to delete recipe" });
+            }
+            res.status(200).json({ message: `Recipe with ID: ${recipeId} and its related measurements deleted successfully` });
+        });
     });
-  });
+});
+
 
 
 
@@ -472,7 +466,7 @@ app.get("/api/hozzavalok", (req, res) => {
     let sql = "SELECT * FROM hozzavalok";
 
     if (keres) {
-        sql += ` WHERE Hozzavalok_neve LIKE ?`;
+        sql += ` WHERE hozzavalok_neve LIKE ?`;
     }
 
     db.query(sql, keres ? [`%${keres}%`, `%${keres}%`] : [], (err, results) => {
@@ -488,8 +482,7 @@ app.post('/api/save-recipe', (req, res) => {
         return res.status(400).json({ error: "Hiányzó adatok!" });
     }
 
-    // Check if the recipe is already saved
-    const checkSql = "SELECT * FROM sajat_receptek WHERE Profil = ? AND Recept = ?";
+    const checkSql = "SELECT * FROM sajat_receptek WHERE profil = ? AND recept = ?";
     db.query(checkSql, [Profil, Receptek], (err, results) => {
         if (err) {
             console.error("❌ Hiba a kereséskor:", err);
@@ -498,9 +491,7 @@ app.post('/api/save-recipe', (req, res) => {
         if (results.length > 0) {
             return res.status(400).json({ error: "Ezt a receptet már elmentetted!" });
         }
-
-        // Insert new saved recipe
-        const insertSql = "INSERT INTO sajat_receptek (Profil, Recept) VALUES (?, ?)";
+        const insertSql = "INSERT INTO sajat_receptek (profil, recept) VALUES (?, ?)";
         db.query(insertSql, [Profil, Receptek], (err) => {
             if (err) {
                 console.error("❌ Hiba a mentéskor:", err);
@@ -519,7 +510,7 @@ app.post('/api/unsave-recipe', (req, res) => {
     }
 
     // Delete the saved recipe from the database
-    const deleteSql = "DELETE FROM sajat_receptek WHERE Profil = ? AND Recept = ?";
+    const deleteSql = "DELETE FROM sajat_receptek WHERE profil = ? AND recept = ?";
     db.query(deleteSql, [Profil, Receptek], (err) => {
         if (err) {
             console.error("❌ Hiba a törléskor:", err);
@@ -535,23 +526,23 @@ app.get('/api/saved-recipes/:userId', (req, res) => {
     const { userId } = req.params;
 
     const sql = `
-    SELECT receptek.Receptek_id, receptek.Receptek_neve, receptek.Keszites, 
-    GROUP_CONCAT(DISTINCT hozzavalok.Hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+    SELECT receptek.Receptek_id, receptek.receptek_neve, receptek.keszites, 
+    GROUP_CONCAT(DISTINCT hozzavalok.hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
     preferencia.etkezes, 
     GROUP_CONCAT(DISTINCT erzekenysegek.erzekenyseg SEPARATOR ', ') AS erzekenyseg, 
-    GROUP_CONCAT(DISTINCT mertekegyseg.mennyiseg, ' ', mertekegyseg.mértékegység SEPARATOR ', ') AS mennyiseg,
+    GROUP_CONCAT(DISTINCT mertekegyseg.mennyiseg, ' ', mertekegyseg.mertekegyseg SEPARATOR ', ') AS mennyiseg,
     napszak.idoszak, konyha.nemzetiseg, receptek.kep
     FROM osszekoto 
     INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
-    INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.id
+    INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
     INNER JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
     INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
     INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
-    INNER JOIN konyha ON receptek.konyha_oszekoto = konyha.konyha_id
-    INNER JOIN napszak ON receptek.napszak_oszekoto = napszak.napszak_id
-    INNER JOIN sajat_receptek ON receptek.Receptek_id = sajat_receptek.Recept
-    INNER JOIN regisztracio ON sajat_receptek.Profil = regisztracio.Felhasznalo_id
-    WHERE sajat_receptek.Profil = ?
+    INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
+    INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
+    INNER JOIN sajat_receptek ON receptek.Receptek_id = sajat_receptek.recept
+    INNER JOIN regisztracio ON sajat_receptek.profil = regisztracio.felhasznalo_id
+    WHERE sajat_receptek.profil = ?
     GROUP BY receptek.Receptek_id;
 
     `;

@@ -4,7 +4,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from "axios";
 import './Home.css';
 import { AboutSection } from './Aboutus';
-import Profile from "./Profile";
+
 
 export const Home = () => {
   const [kereses, setKereses] = useState("");
@@ -89,9 +89,9 @@ export const Home = () => {
           <div id="recipe-card" key={ossze.Receptek_id}>
             <img src={ossze.kep} alt="Recept kép" />
             <div id="recipe-body">
-              <h5 id="recipe-title">{ossze.Receptek_neve}</h5>
+              <h5 id="recipe-title">{ossze.receptek_neve}</h5>
               <p id="recipe-text">
-                {TobbId === ossze.Receptek_id ? ossze.Keszites : `${ossze.Keszites.substring(0, 200)}...`}
+                {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
               </p>
               <button id="expand-button" onClick={() => setTobbId(TobbId === ossze.Receptek_id ? null : ossze.Receptek_id)}>
                 {TobbId === ossze.Receptek_id ? "Kevesebb" : "Több"}
@@ -106,8 +106,8 @@ export const Home = () => {
                     .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
                     .map((leiras) => (
                       <div key={leiras.id} className="ingredient-row">
-                        <span className="ingredient-name">{leiras.Hozzavalok_neve}</span>
-                        <span className="ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
+                        <span className="ingredient-name">{leiras.hozzavalok_neve}</span>
+                        <span className="ingredient-amount">{leiras.mennyiseg} {leiras.mertekegyseg}</span>
                       </div>
                     ))}
                 </div>

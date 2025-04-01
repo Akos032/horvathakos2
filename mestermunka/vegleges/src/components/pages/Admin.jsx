@@ -81,9 +81,9 @@ export const Admin = () => {
             </div>
             <img src={ossze.kep} alt="Recipe Image" />
             <div id="admin-recipe-body">
-              <h5 id="admin-recipe-title">{ossze.Receptek_neve}</h5>
+              <h5 id="admin-recipe-title">{ossze.receptek_neve}</h5>
               <p id="admin-recipe-text">
-                {TobbId === ossze.Receptek_id ? ossze.Keszites : `${ossze.Keszites.substring(0, 200)}...`}
+                {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
               </p>
 
               <button 
@@ -113,9 +113,9 @@ export const Admin = () => {
                       .filter(leiras => leiras.Receptek_id === ossze.Receptek_id)
                       .map((leiras) => (
                         <tr key={leiras.id}>
-                          <td>{leiras.Hozzavalok_neve}</td>
+                          <td>{leiras.hozzavalok_neve}</td>
                           <td>{leiras.mennyiseg}</td>
-                          <td>{leiras.mértékegység}</td>
+                          <td>{leiras.mertekegyseg}</td>
                         </tr>
                       ))}
                     <tr>

@@ -79,11 +79,11 @@ export default function Profile() {
         <div id="profile-recipes-container">
           {savedRecipes.map(recipe => (
             <div id="profile-recipe-card" key={recipe.Receptek_id} className="mt-4">
-              <img src={recipe.kep} alt={recipe.Receptek_neve} className="w-full h-48 object-cover rounded-md" />
+              <img src={recipe.kep} alt={recipe.receptek_neve} className="w-full h-48 object-cover rounded-md" />
               <div id="profile-recipe-body" className="mt-2">
                 <h5 id="profile-recipe-title" className="text-2xl font-bold">{recipe.Receptek_neve}</h5>
                 <p id="profile-recipe-text" className="text-gray-300">
-                  {TobbId === recipe.Receptek_id ? recipe.Keszites : `${recipe.Keszites?.substring(0, 200) || ''}...`}
+                  {TobbId === recipe.Receptek_id ? recipe.keszites : `${recipe.keszites?.substring(0, 200) || ''}...`}
                 </p>
                 <button 
                   id="profile-expand-button" 
@@ -105,8 +105,8 @@ export default function Profile() {
                       .filter(leiras => leiras.Receptek_id === recipe.Receptek_id)
                       .map((leiras) => (
                         <div key={leiras.id} className="profile-ingredient-row">
-                          <span className="profile-ingredient-name">{leiras.Hozzavalok_neve}</span>
-                          <span className="profile-ingredient-amount">{leiras.mennyiseg} {leiras.mértékegység}</span>
+                          <span className="profile-ingredient-name">{leiras.hozzavalok_neve}</span>
+                          <span className="profile-ingredient-amount">{leiras.mennyiseg} {leiras.mertekegyseg}</span>
                         </div>
                       ))}
                   </div>

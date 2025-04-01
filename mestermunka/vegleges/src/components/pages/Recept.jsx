@@ -72,7 +72,7 @@ const Recept = () => {
         setIngredientOptions(
           ingredientsRes.data.map(ing => ({
             value: ing.Hozzavalok_id, 
-            label: ing.Hozzavalok_neve
+            label: ing.hozzavalok_neve
           }))
         );
         setNationalityOptions(nationalitiesRes.data);

@@ -10,27 +10,28 @@ body {
 }
 
 #search-input {
-    width: 50%;
+    width: 20%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 #recipes-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
 #recipe-card {
-    max-width: 800px;
-    width: 100%;
-    background: #333;
-    color: white;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    padding: 10px;
+  flex: 1 1 calc(50% - 20px);
+  max-width: 400px;
+  background: #333;
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 #recipe-card img {
@@ -165,7 +166,7 @@ body {
     }
 
     #recipe-card {
-        width: 90%;
+      flex: 1 1 100%;
     }
 
     #info-table {
