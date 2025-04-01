@@ -52,14 +52,14 @@ export const Home = () => {
     return;
   }
 
-  if (!user.Felhasznalo_id || !recipeId) {
+  if (!user.felhasznalo_id || !recipeId) {
     alert("Invalid data: No user or recipe ID.");
     return;
   }
 
   axios.post("http://localhost:3001/api/save-recipe", {
-    Profil: user.Felhasznalo_id,
-    Receptek: recipeId
+    profil: user.felhasznalo_id,
+    receptek: recipeId
   })
   .then(() => {
     alert("Recept elmentve!");
@@ -91,7 +91,7 @@ export const Home = () => {
             <div id="recipe-body">
               <h5 id="recipe-title">{ossze.receptek_neve}</h5>
               <p id="recipe-text">
-                {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
+                {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 210)}...`}
               </p>
               <button id="expand-button" onClick={() => setTobbId(TobbId === ossze.Receptek_id ? null : ossze.Receptek_id)}>
                 {TobbId === ossze.Receptek_id ? "Kevesebb" : "Több"}

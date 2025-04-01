@@ -254,16 +254,16 @@ function insertMertekegyseg(db, amount, unit) {
 app.post('/login', (req, res) => {
     console.log("📥 Beérkező adatok:", req.body);
 
-    const { Email, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!Email || !password) {
+    if (!email || !password) {
         console.log("❌ Hiányzó email vagy jelszó!");
         return res.status(400).json({ error: "❌ Hiányzó email vagy jelszó!" });
     }
 
     const sql = "SELECT * FROM regisztracio WHERE email = ?";
 
-    db.query(sql, [Email], (err, result) => {
+    db.query(sql, [email], (err, result) => {
         if (err) {
             console.error("❌ SQL Hiba:", err);
             return res.status(500).json({ error: "Adatbázis hiba!" });
@@ -276,7 +276,7 @@ app.post('/login', (req, res) => {
             return res.status(401).json({ error: "❌ Hibás email vagy nem létezik a felhasználó!" });
         }
 
-        const hashedPassword = result[0].Jelszo;
+        const hashedPassword = result[0].jelszo;
         console.log("🔐 Adatbázisból kapott hash:", hashedPassword);
         console.log("📥 Beírt jelszó:", password);
 
@@ -296,18 +296,18 @@ app.post('/login', (req, res) => {
             }
             const user = result[0];
             const token = jwt.sign({
-                id: user.Felhasznalo_id,
-                username: user.Felhasznalonev,
-                email: user.Email,
+                id: user.felhasznalo_id,
+                username: user.felhasznalonev,
+                email: user.email,
             }, 'your-secret-key', { expiresIn: '1h' });
 
-            console.log("✅ Sikeres bejelentkezés:", user.Felhasznalonev);
+            console.log("✅ Sikeres bejelentkezés:", user.felhasznalonev);
 
             return res.json({
                 success: "Sikeres bejelentkezés!",
                 token: token,
                 user: user,
-                admin: user.Admin
+                admin: user.admin
             });
         });
     });
@@ -320,9 +320,9 @@ app.post('/login', (req, res) => {
 app.post('/register', (req, res) => {
     console.log("📥 Beérkező adatok:", req.body);
 
-    const { Felhasznalonev, Email, password } = req.body;
+    const { felhasznalonev, email, password } = req.body;
 
-    if (!Felhasznalonev || !Email || !password) {
+    if (!felhasznalonev || !email || !password) {
         return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
     }
 
@@ -335,7 +335,7 @@ app.post('/register', (req, res) => {
         console.log("🔑 Hash-elt jelszó:", hash);
 
         const sql = "INSERT INTO regisztracio (felhasznalonev, email, jelszo) VALUES (?, ?, ?)";
-        const values = [Felhasznalonev, Email, hash];
+        const values = [felhasznalonev, email, hash];
 
         console.log("📝 SQL lekérdezés:", sql);
         console.log("📊 Értékek:", values);
@@ -348,7 +348,7 @@ app.post('/register', (req, res) => {
 
             console.log("✅ Sikeres regisztráció:", result);
             const fetchUserQuery = "SELECT felhasznalonev, email, admin FROM regisztracio WHERE email = ?";
-            db.query(fetchUserQuery, [Email], (err, userResult) => {
+            db.query(fetchUserQuery, [email], (err, userResult) => {
                 if (err) {
                     console.error("❌ Hiba a felhasználó lekérdezésekor:", err);
                     return res.status(500).json({ error: "Hiba a felhasználó lekérdezésekor." });
@@ -356,9 +356,9 @@ app.post('/register', (req, res) => {
 
                 if (userResult.length > 0) {
                     const user = {
-                        Felhasznalonev: userResult[0].Felhasznalonev,
-                        Email: userResult[0].Email,
-                        admin: userResult[0].Admin === 1
+                        felhasznalonev: userResult[0].felhasznalonev,
+                        email: userResult[0].email,
+                        admin: userResult[0].admin === 1
                     };
                     return res.json({ user });
                 } else {
@@ -476,14 +476,14 @@ app.get("/api/hozzavalok", (req, res) => {
 });
 
 app.post('/api/save-recipe', (req, res) => {
-    const { Profil, Receptek } = req.body;
+    const { profil, receptek } = req.body;
 
-    if (!Profil || !Receptek) {
+    if (!profil || !receptek) {
         return res.status(400).json({ error: "Hiányzó adatok!" });
     }
 
     const checkSql = "SELECT * FROM sajat_receptek WHERE profil = ? AND recept = ?";
-    db.query(checkSql, [Profil, Receptek], (err, results) => {
+    db.query(checkSql, [profil, receptek], (err, results) => {
         if (err) {
             console.error("❌ Hiba a kereséskor:", err);
             return res.status(500).json({ error: "Adatbázis hiba!" });
@@ -492,7 +492,7 @@ app.post('/api/save-recipe', (req, res) => {
             return res.status(400).json({ error: "Ezt a receptet már elmentetted!" });
         }
         const insertSql = "INSERT INTO sajat_receptek (profil, recept) VALUES (?, ?)";
-        db.query(insertSql, [Profil, Receptek], (err) => {
+        db.query(insertSql, [profil, receptek], (err) => {
             if (err) {
                 console.error("❌ Hiba a mentéskor:", err);
                 return res.status(500).json({ error: "Adatbázis hiba!" });
@@ -503,15 +503,15 @@ app.post('/api/save-recipe', (req, res) => {
 });
 
 app.post('/api/unsave-recipe', (req, res) => {
-    const { Profil, Receptek } = req.body;
+    const { profil, receptek } = req.body;
 
-    if (!Profil || !Receptek) {
+    if (!profil || !receptek) {
         return res.status(400).json({ error: "Hiányzó adatok!" });
     }
 
     // Delete the saved recipe from the database
     const deleteSql = "DELETE FROM sajat_receptek WHERE profil = ? AND recept = ?";
-    db.query(deleteSql, [Profil, Receptek], (err) => {
+    db.query(deleteSql, [profil, receptek], (err) => {
         if (err) {
             console.error("❌ Hiba a törléskor:", err);
             return res.status(500).json({ error: "Adatbázis hiba!" });
@@ -520,8 +520,6 @@ app.post('/api/unsave-recipe', (req, res) => {
     });
 });
 
-
-// Get saved recipes for a user
 app.get('/api/saved-recipes/:userId', (req, res) => {
     const { userId } = req.params;
 

@@ -17,12 +17,12 @@ export const Login = ({ setIsLoggedIn }) => {
     event.preventDefault();
     const endpoint = isRegister ? "register" : "login";
     const userData = {
-      Felhasznalonev: username.trim(),
-      Email: email.trim(),
+      felhasznalonev: username.trim(),
+      email: email.trim(),
       password: password.trim(),
     };
 
-    if (!userData.Email || !userData.password || (isRegister && !userData.Felhasznalonev)) {
+    if (!userData.email || !userData.password || (isRegister && !userData.felhasznalonev)) {
       alert("Minden mezőt ki kell tölteni!");
       return;
     }

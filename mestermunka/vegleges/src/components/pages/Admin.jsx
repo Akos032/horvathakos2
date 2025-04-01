@@ -81,7 +81,7 @@ export const Admin = () => {
             </div>
             <img src={ossze.kep} alt="Recipe Image" />
             <div id="admin-recipe-body">
-              <h5 id="admin-recipe-title">{ossze.receptek_neve}</h5>
+              <h5 id="admin-recipe-title" style={{margin:"5px"}}>{ossze.receptek_neve}</h5>
               <p id="admin-recipe-text">
                 {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
               </p>

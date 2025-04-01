@@ -17,7 +17,7 @@ export default function Profile() {
 
       if (loggedInUser) {
         setUser(loggedInUser);
-        loadSavedRecipes(loggedInUser.Felhasznalo_id);
+        loadSavedRecipes(loggedInUser.felhasznalo_id);
         loadDescriptionData();
       } else {
         alert("You are not logged in! Redirecting to login.");
@@ -52,8 +52,8 @@ export default function Profile() {
     }
 
     axios.post("http://localhost:3001/api/unsave-recipe", {
-      Profil: user.Felhasznalo_id,
-      Receptek: recipeId
+      profil: user.felhasznalo_id,
+      receptek: recipeId
     })
     .then(response => {
       alert("Recept eltávolítva!");
@@ -69,8 +69,8 @@ export default function Profile() {
 
   return (
     <div id="profile-container" className="max-w-lg mx-auto mt-10 p-5 shadow-lg rounded-2xl bg-gradient-to-r from-black to-gray-900 text-white text-center">
-      <h1>{user.Felhasznalonev} profilja</h1>
-      <p className="text-gray-400">{user.Email}</p>
+      <h1>{user.felhasznalonev} profilja</h1>
+      <p className="text-gray-400">{user.email}</p>
 
       <h2 className="mt-4 text-xl font-semibold">Mentett receptek</h2>
       {savedRecipes.length === 0 || savedRecipes.every(recipe => recipe.Receptek_id === null) ? (
