@@ -26,7 +26,7 @@ const jwt = require('jsonwebtoken');
 const checkAdmin = (req, res, next) => {
     const user = req.user;
   
-    if (!user || user.Admin !== 1) {
+    if (!user || user.admin !== 1) {
       return res.status(403).json({ error: 'You do not have admin rights!' });
     }
   
@@ -454,7 +454,7 @@ app.get('/api/preferences', (req, res) => {
 });
 
 app.get("/Keszities", (req, res) => {
-    const sql = "Select Keszites from `receptek`";
+    const sql = "Select keszites from `receptek`";
     db.query(sql, (err, result) => {
         if (err) return res.json(err)
         return res.json(result)

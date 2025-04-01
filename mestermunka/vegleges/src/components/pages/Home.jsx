@@ -22,7 +22,7 @@ export const Home = () => {
       try {
         const userObj = JSON.parse(loggedInUser);
         setUser(userObj);
-        loadSavedRecipes(userObj.Felhasznalo_id);
+        loadSavedRecipes(userObj.felhasznalo_id);
       } catch (error) {
         console.error("Failed to parse user from localStorage:", error);
       }
