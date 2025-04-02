@@ -1,95 +1,241 @@
-
-.about-box {
-    background: linear-gradient(135deg, #1e3a8a, #000000);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: auto;
+/* Base styles */
+.about-container {
+  padding: 20px;
+  background-color: #fff; /* White background */
+  font-family: Arial, sans-serif;
+  color: #333; /* Default text color black */
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
-.about-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+.about-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+  margin-bottom: 15px;
 }
 
-.about-title,
-.contact-title,
-.advertisement-title {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #fff;
+.contact-box, .advertisement-box {
+  flex: 1;
+  padding: 30px;
+}
+
+.contact-title, .advertisement-title {
+  font-size: 1.5em;
+  color: #1E3A8A;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .contact-list {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
+  font-size: 1em;
 }
 
 .contact-list li {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .contact-list a {
-    color: #1abc9c;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  color: #1E3A8A;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .contact-list a:hover {
-    color: #16a085;
+  color: #2563eb;
+}
+
+.advertisement-text {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .advertisement-btn {
-    background: #3498db;
-    color: #fff;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
+  background-color: #1E3A8A;
+  color: white;
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .advertisement-btn:hover {
-    background: #2980b9;
-    transform: translateY(-3px);
+  background-color: #2563eb;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.about-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    flex-wrap: wrap;
+.about-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.about-box {
-    flex: 1 1 30%;
-    margin: 10px;
+.about-popup.show {
+  opacity: 1;
+  visibility: visible;
 }
 
-/* Reszponzivitás */
+.popup-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: scale(0.9);
+  animation: popupAnimation 0.3s forwards;
+}
+
+@keyframes popupAnimation {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.popup-content h2 {
+  font-size: 2em;
+  color: #1E3A8A;
+  margin-bottom: 20px;
+}
+
+.popup-content p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #333;
+}
+
+.popup-content p.highlight {
+  color: #1E3A8A;
+  font-weight: bold;
+}
+
+.close-btn {
+  background-color: #D32F2F; /* Red color */
+  color: white;
+  font-size: 1.2em;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  margin: 20px auto 0;
+}
+
+.close-btn:hover {
+  background-color: #B71C1C; /* Dark red on hover */
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.uploaded-recipes-section {
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  flex-shrink: 0;
+  text-align: center;
+  margin-top: 20px; /* Add spacing above section */
+}
+
+/* Add margin between recipes */
+.uploaded-recipes-section > * {
+  margin-bottom: 20px; /* Adds spacing between recipes */
+}
+
+/* Mobile-friendly media queries */
 @media (max-width: 768px) {
-    .about-box {
-        flex: 1 1 45%;
-        margin: 15px 0;
-    }
+  .about-footer {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .contact-box, .advertisement-box {
+    flex: none;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .advertisement-btn {
+    width: 100%;
+    font-size: 1.1em;
+    padding: 12px;
+  }
+
+  .contact-title, .advertisement-title {
+    font-size: 1.3em;
+  }
+
+  .contact-list li {
+    font-size: 0.9em;
+  }
+
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-content h2 {
+    font-size: 1.8em;
+  }
+
+  .popup-content p {
+    font-size: 1em;
+  }
 }
 
+/* Extra small devices (phones) */
 @media (max-width: 480px) {
-    .about-box {
-        flex: 1 1 100%;
-    }
+  .contact-title, .advertisement-title {
+    font-size: 1.2em;
+  }
 
-    .about-title,
-    .contact-title,
-    .advertisement-title {
-        font-size: 1.4rem;
-    }
+  .popup-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .popup-content h2 {
+    font-size: 1.5em;
+  }
+
+  .popup-content p {
+    font-size: 0.95em;
+  }
+
+  .advertisement-btn {
+    font-size: 1em;
+    padding: 10px;
+  }
+
+  .contact-list li {
+    font-size: 0.85em;
+  }
 }

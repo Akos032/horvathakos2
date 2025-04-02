@@ -1,20 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import './Aboutus.css';
 
 export const AboutSection = () => {
+  const [showAbout, setShowAbout] = useState(false);
+
+  const toggleAboutText = () => {
+    setShowAbout(!showAbout);
+  };
+
+  const closePopup = () => {
+    setShowAbout(false);
+  };
+
   return (
-    <div className="container">
-      <div className="row about-section">
-        <div className="col-md-4 about-box">
-          <h2 className="about-title">Rólunk</h2>
-          <p>
-            Mi egy lelkes csapat vagyunk, akik szenvedélyesen hisznek abban, hogy a főzés nem csak egy szükségszerű tevékenység, hanem egy kreatív, szórakoztató és közösségformáló élmény is. Célunk, hogy segítünk mindenkinek, aki szeretne finom és változatos ételeket készíteni, legyen szó kezdő háziasszonyról vagy tapasztalt séfről.
-          </p>
-          <p>
-            Minden receptünket gondosan válogatjuk, hogy inspiráljunk, új ízeket próbálj ki, és egy könnyed főzési élményt nyújtsunk. A legfontosabb számunkra, hogy mindenki élvezze a főzést és az étkezést, miközben finom és egészséges ételeket készíthet.
-          </p>
-        </div>
-        <div className="col-md-4 about-box">
+    <div className="about-container">
+      <div className="about-footer">
+        <div className="contact-box">
           <h3 className="contact-title">Elérhetőségeink:</h3>
           <ul className="contact-list">
             <li><strong>Email:</strong> info@fozomester.hu</li>
@@ -23,14 +24,35 @@ export const AboutSection = () => {
             <li><strong>Instagram:</strong> <a href="https://www.instagram.com/fozomester" target="_blank" rel="noopener noreferrer">@fozomester</a></li>
           </ul>
         </div>
-        <div className="col-md-4 about-box">
+        <div className="advertisement-box">
           <h3 className="advertisement-title">Ne hagyd ki!</h3>
           <p className="advertisement-text">
             Különleges akcióink és új receptjeink folyamatosan frissülnek! Iratkozz fel a hírlevelünkre, hogy elsőként értesülj a legújabb ajánlatainkról!
           </p>
-          <button className="advertisement-btn">Iratkozz fel most!</button>
+          <button className="advertisement-btn" onClick={toggleAboutText}>
+            Iratkozz fel most!
+          </button>
         </div>
       </div>
+
+      {showAbout && (
+        <div className="about-popup show" onClick={closePopup}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Rólunk</h2>
+            <p>
+              Mi egy szenvedélyes és kreatív csapat vagyunk, akik elkötelezettek amellett, hogy a főzés mindenki számára elérhető és élvezetes legyen. Hiszünk abban, hogy a konyhában töltött idő nem csupán szükségszerűség, hanem lehetőség arra, hogy új ízeket fedezzünk fel, emlékeket teremtsünk és megosszuk az étkezés örömét szeretteinkkel.
+            </p>
+            <p>
+              Célunk, hogy változatos, könnyen követhető és inspiráló recepteket kínáljunk, amelyek segítségével bárki magabiztosan alkothat a konyhában, legyen akár kezdő, akár tapasztalt séf. A világ különböző konyháinak ízeit ötvözve szeretnénk mindenkit arra ösztönözni, hogy próbáljon ki új dolgokat, és fedezze fel a főzés örömét.
+            </p>
+            <p>
+              Emellett közösségépítő szerepünk is fontos számunkra: interaktív tartalmakkal, tippekkel és kihívásokkal ösztönzünk arra, hogy oszd meg velünk saját konyhai élményeidet. Csatlakozz hozzánk, és tapasztald meg, hogy a főzés nem csupán egy napi rutin, hanem egy igazi kreatív kaland!
+            </p>
+            <button className="close-btn" onClick={closePopup}>Bezárás</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
