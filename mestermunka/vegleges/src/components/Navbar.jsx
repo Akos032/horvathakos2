@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import Hamburger from 'hamburger-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -8,7 +8,7 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const ref = useRef(null);
-
+  const location = useLocation();
 
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   const adminStatus = localStorage.getItem('admin') ? JSON.parse(localStorage.getItem('admin')) : 0;
@@ -26,15 +26,17 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
           <img src={'Média.png'} alt="Logo" id="navbar-logo" />
           <Link to="/" id="navbar-title">Receptek</Link>
         </div>
-        <div id="navbar-search-container">
-          <input
-            type="text"
-            id="desktop-search-input"
-            placeholder="Keresés..."
-            value={searchValue}
-            onChange={handleSearch}
-          />
-        </div>
+        {location.pathname === '/' && (
+          <div id="navbar-search-container">
+            <input
+              type="text"
+              id="desktop-search-input"
+              placeholder="Keresés..."
+              value={searchValue}
+              onChange={handleSearch}
+            />
+          </div>
+        )}
         <div ref={ref} id='hamburger'>
           <Hamburger toggled={menuOpen} size={20} toggle={setMenuOpen} />
         </div>
@@ -52,15 +54,17 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
         )}
       </AnimatePresence>
       <ul id="navbar-links" className={menuOpen ? 'open' : ''}>
-        <div id="mobile-search-container">
-          <input
-            type="text"
-            id="mobile-search-input"
-            placeholder="Keresés..."
-            value={searchValue}
-            onChange={handleSearch}
-          />
-        </div>
+        {location.pathname === '/' && (
+          <div id="mobile-search-container">
+            <input
+              type="text"
+              id="mobile-search-input"
+              placeholder="Keresés..."
+              value={searchValue}
+              onChange={handleSearch}
+            />
+          </div>
+        )}
 
         {!isLoggedIn && <li><NavLink to="/login">Bejelentkezés</NavLink></li>}
         {isLoggedIn && (
