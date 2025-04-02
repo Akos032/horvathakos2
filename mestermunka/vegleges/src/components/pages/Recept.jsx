@@ -164,7 +164,9 @@ const Recept = () => {
         </div>
         <div>
           <label className={styles.label}>Kép feltöltése:</label>
-          <input className={styles.inputFile} type="file" accept="image/*" onChange={handleImageChange} required />
+          <div className={styles.inputWrapper}>
+            <input className={styles.inputFile} type="file" accept="image/*" onChange={handleImageChange} required />
+          </div>
         </div>
         <div>
           <label className={styles.label}>Hozzávalok:</label>

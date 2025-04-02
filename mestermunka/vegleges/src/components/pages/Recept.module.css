@@ -4,6 +4,33 @@
   box-sizing: border-box;
 }
 
+.fileUploadContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inputFile {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
 .container {
   padding: 20px;
   max-width: 900px;
@@ -131,6 +158,13 @@ textarea {
 }
 
 @media (max-width: 768px) {
+
+  .inputFile {
+    max-width: 350px;
+    font-size: 18px;
+    padding: 12px;
+  }
+  
   .form {
     padding: 1rem;
   }
