@@ -5,9 +5,7 @@ import axios from "axios";
 import './Home.css';
 import { AboutSection } from './Aboutus';
 
-
-export const Home = () => {
-  const [kereses, setKereses] = useState("");
+export const Home = ({kereses}) => {
   const [osszes, setOsszes] = useState([]);
   const [TobbId, setTobbId] = useState(null);
   const [showTable, setShowTable] = useState(false);
@@ -73,19 +71,14 @@ export const Home = () => {
   });
 };
 
+const filteredRecipes = osszes.filter(recipe =>
+  recipe.receptek_neve.toLowerCase().includes(kereses.toLowerCase())
+);
+
   return (
     <div id="container">
-      <div id="search-container">
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Keresés..."
-          value={kereses}
-          onChange={(e) => setKereses(e.target.value)}
-        />
-      </div>
       <div id="recipes-container">
-        {osszes.map((ossze) => (
+        {filteredRecipes.map((ossze) => (
           <div id="recipe-card" key={ossze.Receptek_id}>
             <img src={ossze.kep} alt="Recept kép" />
             <div id="recipe-body">
