@@ -100,8 +100,11 @@ const Recept = () => {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    if (e.target.files.length > 0) {
+      setImage(e.target.files[0]);
+    }
   };
+  
 
   const addIngredient = () => {
     setIngredients([...ingredients, { ingredientId: '', amount: '', unit: '' }]);
@@ -162,10 +165,17 @@ const Recept = () => {
           <label className={styles.label}>A recepted neve:</label>
           <input className={styles.input} type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
-        <div>
-          <label className={styles.label}>Kép feltöltése:</label>
-          <div className={styles.inputWrapper}>
-            <input className={styles.inputFile} type="file" accept="image/*" onChange={handleImageChange} required />
+        <div style={{ maxWidth: "100vw", overflowX: "hidden" }}>
+          <div>
+              <label htmlFor="file-upload">Kép feltöltése:</label>
+              <input
+                id="file-upload"
+                className="inputFile"
+                type="file"
+                accept="image/*"
+                required
+                style={{ width: "auto", maxWidth: "100%", display: "block" }}
+              />
           </div>
         </div>
         <div>
