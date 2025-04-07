@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 01. 09:42
--- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- Létrehozás ideje: 2025. Ápr 07. 11:17
+-- Kiszolgáló verziója: 10.4.28-MariaDB
+-- PHP verzió: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,7 +29,6 @@ USE `finomsagok`;
 -- Tábla szerkezet ehhez a táblához `erzekenysegek`
 --
 
-DROP TABLE IF EXISTS `erzekenysegek`;
 CREATE TABLE `erzekenysegek` (
   `erzekenyseg` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `erzekenyseg_id` int(10) NOT NULL
@@ -47,10 +46,20 @@ INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tábla szerkezet ehhez a táblához `feltoltot_recept`
+--
+
+CREATE TABLE `feltoltot_recept` (
+  `profil_id` int(11) NOT NULL,
+  `feltoltot_recept_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tábla szerkezet ehhez a táblához `hozzavalok`
 --
 
-DROP TABLE IF EXISTS `hozzavalok`;
 CREATE TABLE `hozzavalok` (
   `hozzavalok_neve` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Hozzavalok_id` int(11) NOT NULL
@@ -348,7 +357,6 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `konyha`
 --
 
-DROP TABLE IF EXISTS `konyha`;
 CREATE TABLE `konyha` (
   `nemzetiseg` varchar(30) NOT NULL,
   `konyha_id` int(11) NOT NULL
@@ -371,7 +379,6 @@ INSERT INTO `konyha` (`nemzetiseg`, `konyha_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `mertekegyseg`
 --
 
-DROP TABLE IF EXISTS `mertekegyseg`;
 CREATE TABLE `mertekegyseg` (
   `mennyiseg` int(20) NOT NULL,
   `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -434,7 +441,6 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 -- Tábla szerkezet ehhez a táblához `napszak`
 --
 
-DROP TABLE IF EXISTS `napszak`;
 CREATE TABLE `napszak` (
   `idoszak` varchar(20) NOT NULL,
   `napszak_id` int(11) NOT NULL
@@ -455,7 +461,6 @@ INSERT INTO `napszak` (`idoszak`, `napszak_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `osszekoto`
 --
 
-DROP TABLE IF EXISTS `osszekoto`;
 CREATE TABLE `osszekoto` (
   `hozzavalok_id` int(11) DEFAULT NULL,
   `receptek_id` int(11) DEFAULT NULL,
@@ -470,19 +475,19 @@ CREATE TABLE `osszekoto` (
 --
 
 INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegyseg_id`, `preferencia_id`, `ervenyes`) VALUES
-(176, 45, 2, 149, 0, 1),
-(382, 45, 2, 150, 0, 1),
-(170, 45, 2, 151, 0, 1),
-(171, 45, 2, 152, 0, 1),
-(417, 45, 2, 153, 0, 1),
-(418, 45, 2, 154, 0, 1),
-(161, 45, 2, 155, 0, 1),
-(201, 45, 2, 156, 0, 1),
-(169, 45, 2, 157, 0, 1),
-(419, 45, 2, 158, 0, 1),
-(163, 45, 2, 159, 0, 1),
-(418, 45, 2, 160, 0, 1),
-(161, 45, 2, 161, 0, 1),
+(176, 45, 2, 149, 0, 0),
+(382, 45, 2, 150, 0, 0),
+(170, 45, 2, 151, 0, 0),
+(171, 45, 2, 152, 0, 0),
+(417, 45, 2, 153, 0, 0),
+(418, 45, 2, 154, 0, 0),
+(161, 45, 2, 155, 0, 0),
+(201, 45, 2, 156, 0, 0),
+(169, 45, 2, 157, 0, 0),
+(419, 45, 2, 158, 0, 0),
+(163, 45, 2, 159, 0, 0),
+(418, 45, 2, 160, 0, 0),
+(161, 45, 2, 161, 0, 0),
 (233, 46, 1, 162, 1, 0),
 (424, 46, 1, 163, 1, 0),
 (166, 46, 1, 164, 1, 0),
@@ -517,7 +522,6 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 -- Tábla szerkezet ehhez a táblához `preferencia`
 --
 
-DROP TABLE IF EXISTS `preferencia`;
 CREATE TABLE `preferencia` (
   `etkezes` varchar(30) NOT NULL,
   `etkezes_id` int(11) NOT NULL
@@ -540,7 +544,6 @@ INSERT INTO `preferencia` (`etkezes`, `etkezes_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `receptek`
 --
 
-DROP TABLE IF EXISTS `receptek`;
 CREATE TABLE `receptek` (
   `keszites` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Receptek_id` int(11) NOT NULL,
@@ -566,7 +569,6 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 -- Tábla szerkezet ehhez a táblához `regisztracio`
 --
 
-DROP TABLE IF EXISTS `regisztracio`;
 CREATE TABLE `regisztracio` (
   `admin` int(1) NOT NULL,
   `felhasznalo_id` int(11) NOT NULL,
@@ -594,7 +596,6 @@ INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felha
 -- Tábla szerkezet ehhez a táblához `sajat_receptek`
 --
 
-DROP TABLE IF EXISTS `sajat_receptek`;
 CREATE TABLE `sajat_receptek` (
   `recept` int(10) NOT NULL,
   `profil` int(10) NOT NULL
@@ -617,6 +618,13 @@ INSERT INTO `sajat_receptek` (`recept`, `profil`) VALUES
 --
 ALTER TABLE `erzekenysegek`
   ADD PRIMARY KEY (`erzekenyseg_id`);
+
+--
+-- A tábla indexei `feltoltot_recept`
+--
+ALTER TABLE `feltoltot_recept`
+  ADD KEY `feltoltot_recept_id` (`feltoltot_recept_id`),
+  ADD KEY `profil_id` (`profil_id`);
 
 --
 -- A tábla indexei `hozzavalok`
@@ -706,7 +714,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -718,7 +726,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
@@ -731,6 +739,13 @@ ALTER TABLE `regisztracio`
 --
 
 --
+-- Megkötések a táblához `feltoltot_recept`
+--
+ALTER TABLE `feltoltot_recept`
+  ADD CONSTRAINT `feltoltot_recept_ibfk_1` FOREIGN KEY (`feltoltot_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feltoltot_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Megkötések a táblához `osszekoto`
 --
 ALTER TABLE `osszekoto`
@@ -738,7 +753,7 @@ ALTER TABLE `osszekoto`
   ADD CONSTRAINT `osszekoto_ibfk_3` FOREIGN KEY (`hozzavalok_id`) REFERENCES `hozzavalok` (`Hozzavalok_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `osszekoto_ibfk_5` FOREIGN KEY (`etrend_id`) REFERENCES `erzekenysegek` (`erzekenyseg_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `osszekoto_ibfk_6` FOREIGN KEY (`receptek_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `osszekoto_ibfk_7` FOREIGN KEY (`mertekegyseg_id`) REFERENCES `mertekegyseg` (`mertekegyseg_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `osszekoto_ibfk_7` FOREIGN KEY (`mertekegyseg_id`) REFERENCES `mertekegyseg` (`Mertekegyseg_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Megkötések a táblához `receptek`
@@ -751,8 +766,8 @@ ALTER TABLE `receptek`
 -- Megkötések a táblához `sajat_receptek`
 --
 ALTER TABLE `sajat_receptek`
-  ADD CONSTRAINT `sajat_receptek_ibfk_1` FOREIGN KEY (`Recept`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `sajat_receptek_ibfk_2` FOREIGN KEY (`Profil`) REFERENCES `regisztracio` (`Felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `sajat_receptek_ibfk_1` FOREIGN KEY (`recept`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `sajat_receptek_ibfk_2` FOREIGN KEY (`profil`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

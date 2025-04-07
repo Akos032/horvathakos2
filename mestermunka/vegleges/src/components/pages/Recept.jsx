@@ -98,12 +98,6 @@ const Recept = () => {
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
-
-  const handleImageChange = (e) => {
-    if (e.target.files.length > 0) {
-      setImage(e.target.files[0]);
-    }
-  };
   
 
   const addIngredient = () => {
