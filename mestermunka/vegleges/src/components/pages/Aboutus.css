@@ -1,0 +1,95 @@
+
+.about-box {
+    background: linear-gradient(135deg, #1e3a8a, #000000);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto;
+}
+
+.about-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.about-title,
+.contact-title,
+.advertisement-title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    margin-bottom: 10px;
+}
+
+.contact-list a {
+    color: #1abc9c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-list a:hover {
+    color: #16a085;
+}
+
+.advertisement-btn {
+    background: #3498db;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.advertisement-btn:hover {
+    background: #2980b9;
+    transform: translateY(-3px);
+}
+
+.about-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.about-box {
+    flex: 1 1 30%;
+    margin: 10px;
+}
+
+/* Reszponzivitás */
+@media (max-width: 768px) {
+    .about-box {
+        flex: 1 1 45%;
+        margin: 15px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-box {
+        flex: 1 1 100%;
+    }
+
+    .about-title,
+    .contact-title,
+    .advertisement-title {
+        font-size: 1.4rem;
+    }
+}
