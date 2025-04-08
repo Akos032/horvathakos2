@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -53,7 +53,18 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error('Invalid file type. Only JPEG, PNG, or GIF are allowed.'));
+        }
+        cb(null, true);
+    },
+    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5MB
+});
+
 
 app.get("/", (req, res) => {
     res.send("Fut a backend");
@@ -140,9 +151,13 @@ app.get("/leiras", (req, res) => {
 })
 
 app.post('/api/recipes', upload.single('image'), (req, res) => {
-    const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients } = req.body;
+    const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients, userId } = req.body;
     const imageName = req.file ? req.file.filename : null;
-    
+
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
+
     db.getConnection((err, db) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection error', error: err });
@@ -153,14 +168,22 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
                 db.release();
                 return res.status(500).json({ message: 'Transaction error', error: err });
             }
-            insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName)
+
+            insertRecipe(db, recipeName, description, nationalityId, dayTimeId, imageName)
                 .then((recipeId) => {
-                    return insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients);
+                    if (!recipeId) {
+                        throw new Error('Recipe ID is not defined');
+                    }
+
+                    return insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients)
+                        .then(() => {
+                            return insertUserRecipeRelation(db, userId, recipeId);
+                        });
                 })
                 .then(() => {
                     db.commit((err) => {
                         if (err) {
-                            return db.rollback(() => {
+                            db.rollback(() => {
                                 db.release();
                                 res.status(500).json({ message: 'Transaction commit error', error: err });
                             });
@@ -172,18 +195,18 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
                 .catch((err) => {
                     db.rollback(() => {
                         db.release();
-                        res.status(500).json({ message: 'Error processing recipe', error: err });
+                        res.status(500).json({ message: 'Error processing recipe', error: err.message || err });
                     });
                 });
-        });
+
+            });
     });
 });
 
-
-function insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imageName) {
+function insertRecipe(db, recipeName, description, nationalityId, dayTimeId, imageName) {
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO receptek (receptek_neve, keszites, konyha_osszekoto, napszak_osszekoto, kep) VALUES (?, ?, ?, ?, ?)';
-        db.query(query, [recipeName, description, nationalityId, dayTimeId,imageName], (err, result) => {
+        db.query(query, [recipeName, description, nationalityId, dayTimeId, imageName], (err, result) => {
             if (err) return reject(err);
             resolve(result.insertId);
         });
@@ -192,49 +215,74 @@ function insertRecipe(db, recipeName, description, nationalityId, dayTimeId,imag
 
 function insertPreferencesSensitivityIngredients(db, recipeId, preferences, sensitivity, ingredients) {
     return new Promise((resolve, reject) => {
-        if (!ingredients || ingredients.length === 0) {
-            return resolve();
-        }
-        const mertekegysegPromises = ingredients.map(async (ingredient) => {
-            console.log("Inserting mertekegyseg for:", ingredient);
-            try {
-                return await insertMertekegyseg(db, ingredient.mennyiseg, ingredient.mertekegyseg);
-            } catch (error) {
-                console.error("Error inserting mertekegyseg:", error);
-                throw error;
+        try {
+            if (!ingredients || ingredients.length === 0) {
+                return resolve();
             }
-        });
 
-        Promise.all(mertekegysegPromises)
-            .then((mertekegysegResults) => {
-                console.log("Mertekegyseg Insertion Results:", mertekegysegResults);
-                const osszekotoValues = ingredients.map((ingredient, index) => {
-                    console.log("Inserting ingredient into osszekoto:", ingredient, mertekegysegResults[index]);
-                    return [
-                        recipeId,
-                        ingredient.hozzavalok_id,
-                        mertekegysegResults[index].insertId,
-                        1,
-                        sensitivity || null,
-                        preferences || null 
-                    ];
-                });
-
-                console.log("Inserting into osszekoto:", osszekotoValues);
-                const insertQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
-                db.query(insertQuery, [osszekotoValues], (err, result) => {
-                    if (err) {
-                        console.error("Error inserting into osszekoto:", err);
-                        return reject(err);
-                    }
-                    console.log("Successfully inserted into osszekoto:", result);
-                    resolve();
-                });
-            })
-            .catch((err) => {
-                console.error("Error in inserting ingredients:", err);
-                reject(err);
+            const mertekegysegPromises = ingredients.map(async (ingredient) => {
+                try {
+                    return await insertMertekegyseg(db, ingredient.mennyiseg, ingredient.mertekegyseg);
+                } catch (error) {
+                    console.error("Error inserting mertekegyseg:", error);
+                    throw error;
+                }
             });
+
+            Promise.all(mertekegysegPromises)
+                .then((mertekegysegResults) => {
+                    const osszekotoValues = ingredients.map((ingredient, index) => {
+                        return [
+                            recipeId,
+                            ingredient.hozzavalok_id,
+                            mertekegysegResults[index].insertId,
+                            1,
+                            sensitivity || null,
+                            preferences || null 
+                        ];
+                    });
+
+                    const insertQuery = 'INSERT INTO osszekoto (receptek_id, hozzavalok_id, mertekegyseg_id, ervenyes, etrend_id, preferencia_id) VALUES ?';
+                    db.query(insertQuery, [osszekotoValues], (err, result) => {
+                        if (err) {
+                            console.error("Error inserting into osszekoto:", err);
+                            return reject(err);
+                        }
+                        resolve();
+                    });
+                })
+                .catch((err) => {
+                    console.error("Error in inserting ingredients:", err);
+                    reject(err);
+                });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+
+function insertUserRecipeRelation(db, userId, recipeId) {
+    return new Promise((resolve, reject) => {
+        const checkUserQuery = 'SELECT * FROM `regisztracio` WHERE felhasznalo_id = ?';
+        db.query(checkUserQuery, [userId], (err, results) => {
+            if (err) {
+                console.error("Error checking user:", err);
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return reject(new Error(`User with ID ${userId} does not exist in regisztracio table`));
+            }
+
+            const query = 'INSERT INTO feltoltot_recept (profil_id, feltoltot_recept_id) VALUES (?, ?)';
+            db.query(query, [userId, recipeId], (err, result) => {
+                if (err) {
+                    console.error("Error inserting into feltoltot_recept:", err);
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
     });
 }
 function insertMertekegyseg(db, amount, unit) {

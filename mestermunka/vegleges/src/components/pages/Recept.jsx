@@ -19,6 +19,7 @@ const Recept = () => {
 
   const [selectedNationality, setSelectedNationality] = useState('');
   const [selectedDayTime, setSelectedDayTime] = useState('');
+  const [user, setUser] = useState(null);
 
   const customSelectStyles = {
     control: (base, state) => ({
@@ -62,6 +63,16 @@ const Recept = () => {
 
   useEffect(() => {
     async function fetchOptions() {
+
+      const loggedInUser = localStorage.getItem('user');
+      if (loggedInUser) {
+        try {
+          const userObj = JSON.parse(loggedInUser);
+          setUser(userObj);
+        } catch (error) {
+          console.error('Failed to parse user from localStorage:', error);
+        }
+      }
       try {
         const ingredientsRes = await axios.get('http://localhost:3001/api/ingredients');
         const nationalitiesRes = await axios.get('http://localhost:3001/api/nationalities');
@@ -119,6 +130,12 @@ const Recept = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!user || !user.felhasznalo_id) {
+      alert('You need to be logged in to submit a recipe');
+      return;
+    }
+  
+    const userId = user.felhasznalo_id; 
     const formData = new FormData();
     formData.append('recipeName', recipeName);
     formData.append('description', description);
@@ -126,22 +143,31 @@ const Recept = () => {
     formData.append('dayTimeId', selectedDayTime);
     formData.append('preferences', preferences);
     formData.append('sensitivity', sensitivity);
-    formData.append('image', image);
-
+    
+    if (image) {
+      formData.append('image', image);
+    } else {
+      alert("Please upload an image.");
+      return;
+    }
+  
+    formData.append('userId', userId);
+  
     ingredients.forEach((ingredient, index) => {
       formData.append(`ingredients[${index}][hozzavalok_id]`, ingredient.ingredientId);
       formData.append(`ingredients[${index}][mennyiseg]`, ingredient.amount);
       formData.append(`ingredients[${index}][mertekegyseg]`, ingredient.unit);
     });
-
+  
     if (!validateData()) {
       return;
     }
-
+  
     try {
       const response = await axios.post('http://localhost:3001/api/recipes', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+  
       if (response.status === 200) {
         alert('Recipe added successfully!');
       }
@@ -150,6 +176,8 @@ const Recept = () => {
       alert('Error adding recipe: ' + (error.response ? error.response.data.message : error.message));
     }
   };
+  
+  
 
   return (
     <div className={styles.container}>
@@ -161,15 +189,16 @@ const Recept = () => {
         </div>
         <div style={{ maxWidth: "100vw", overflowX: "hidden" }}>
           <div>
-              <label htmlFor="file-upload">Kép feltöltése:</label>
-              <input
-                id="file-upload"
-                className="inputFile"
-                type="file"
-                accept="image/*"
-                required
-                style={{ width: "auto", maxWidth: "100%", display: "block" }}
-              />
+            <label htmlFor="file-upload">Kép feltöltése:</label>
+            <input
+              id="file-upload"
+              className="inputFile"
+              type="file"
+              accept="image/*"
+              required
+              style={{ width: "auto", maxWidth: "100%", display: "block" }}
+              onChange={(e) => setImage(e.target.files[0])}
+            />
           </div>
         </div>
         <div>
