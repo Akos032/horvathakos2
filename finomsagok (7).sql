@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 07. 11:17
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Gép: 127.0.0.1:3307
+-- Létrehozás ideje: 2025. Ápr 09. 10:30
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -429,11 +429,7 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 (2, 'csipet', 185),
 (1, 'csipet', 186),
 (1, 'evőkanál', 187),
-(2, 'csésze', 188),
-(500, 'gramm', 189),
-(42, 'mg', 190),
-(9000, 'kg', 191),
-(1, 'l', 194);
+(2, 'csésze', 188);
 
 -- --------------------------------------------------------
 
@@ -583,12 +579,7 @@ CREATE TABLE `regisztracio` (
 
 INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felhasznalonev`) VALUES
 (1, 1, 'horvath0akos@gmail.com', '$2b$10$UADHvTcUBgNN57Z5yDUEm.2fDLULGJsxALCMK4KMAVDvVG.oRdMBW', 'Akos0603'),
-(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'varjuricsi'),
-(0, 3, 'konyhafonok@gmail.com', '$2b$10$pIgGD7bMcSfGZ5vAY2ttDOGmNQmyYp41p0Nn390CczgK.8PUW3XNW', 'Konyha fönök'),
-(0, 9, 'receptimado@gmail.com', '$2b$10$fK.mCxrkCCUoh8aNDAqHjuoRCieZhuxS26OzYve7kzaYNP5OmvqUG', 'Recept imádo'),
-(0, 10, 'Patrik@gmail.com', '$2b$10$79pdgP8rLcRDLhEeoz.1Ze9NlGHKReUGlZQ155XGtJYu/tDcdIYky', 'Patrik'),
-(0, 11, 'kiChi@gmail.com', '$2b$10$7BqYsCGiZPuNZltkDeXwj.46VVGuhX7/tmTruPNvECcgCwXZhQAVK', 'kiChi'),
-(0, 12, 'kereszteny@gmail.com', '$2b$10$8sxhtnylibfBiQI4eFAN0OFZmhADZO6p/EV1Lm8CGIcuRzhLmQqLC', 'kereszteny');
+(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'varjuricsi');
 
 -- --------------------------------------------------------
 
@@ -714,7 +705,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -726,7 +717,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
