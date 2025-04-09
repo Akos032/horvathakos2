@@ -106,9 +106,21 @@ const Recept = () => {
 
   const handleInputChange = (index, field, value) => {
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index][field] = value;
+    if (field === 'amount') {
+      if (value === '') {
+        updatedIngredients[index][field] = '';
+      } else {
+        const numericValue = Math.max(0, parseFloat(value));
+        updatedIngredients[index][field] = numericValue.toString();
+      }
+    } else {
+      updatedIngredients[index][field] = value;
+    }
+  
     setIngredients(updatedIngredients);
   };
+  
+  
   
 
   const addIngredient = () => {
@@ -215,13 +227,13 @@ const Recept = () => {
               styles={customSelectStyles}
               />
               <input
-                className={styles.input}
-                type="number"
-                placeholder="Mennyiség"
-                value={ingredient.amount}
-                onChange={(e) => handleInputChange(index, 'amount', e.target.value)}
-                required
-              />
+              className={styles.input}
+              type="number"
+              placeholder="Mennyiség"
+              value={ingredient.amount}
+              onChange={(e) => handleInputChange(index, 'amount', e.target.value)}
+              required
+             />
               <input
                 className={styles.input}
                 type="text"
