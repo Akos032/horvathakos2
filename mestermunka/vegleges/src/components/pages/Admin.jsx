@@ -37,6 +37,7 @@ export const Admin = () => {
       })
       .catch(error => console.error("Error deleting recipe:", error));
   };
+  
 
   const deleteUser = (userId) => {
     axios.delete(`http://localhost:3001/api/delete-user/${userId}`)

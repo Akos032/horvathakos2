@@ -257,18 +257,44 @@ app.delete('/api/recipes/:recipeId', (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Database connection error', error: err });
         }
-
-        db.query('DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, results) => {
-            db.release();
+        db.query('SELECT image_path FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, results) => {
             if (err) {
-                return res.status(500).json({ message: 'Error deleting recipe', error: err });
+                db.release();
+                return res.status(500).json({ message: 'Error retrieving recipe details', error: err });
             }
 
-            if (results.affectedRows === 0) {
+            if (results.length === 0) {
+                db.release();
                 return res.status(404).json({ message: 'Recipe not found or you are not authorized to delete this recipe' });
             }
+            const imagePath = results[0].image_path;
 
-            res.status(200).json({ message: 'Recipe deleted successfully!' });
+            db.query('DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, deleteResults) => {
+                db.release();
+
+                if (err) {
+                    return res.status(500).json({ message: 'Error deleting recipe', error: err });
+                }
+
+                if (deleteResults.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Recipe not found or you are not authorized to delete this recipe' });
+                }
+
+                if (imagePath) {
+                    const imageFilePath = path.join(__dirname, 'public', imagePath);
+
+                    fs.unlink(imageFilePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting image file:', err);
+                            return res.status(500).json({ message: 'Error deleting image file', error: err });
+                        }
+
+                        res.status(200).json({ message: 'Recipe and image deleted successfully!' });
+                    });
+                } else {
+                    res.status(200).json({ message: 'Recipe deleted successfully, no image found' });
+                }
+            });
         });
     });
 });
