@@ -1,241 +1,375 @@
-/* Base styles */
+/* Alap beállítások a teljes képernyő kitöltésére */
 .about-container {
-  padding: 20px;
-  background-color: #fff; /* White background */
-  font-family: Arial, sans-serif;
-  color: #333; /* Default text color black */
-  transition: background-color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: auto;
+    padding: 20px;
+    background-color: #f4f4f9;
 }
 
+/* Alap beállítások a footerhez */
 .about-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  flex-grow: 1;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
 }
 
+/* Konténerek stílusai */
 .contact-box, .advertisement-box {
-  flex: 1;
-  padding: 30px;
+    flex: 1 1 48%;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #ffffff;  /* Fehér háttér */
+    color: black; /* Fekete szöveg */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
+/* Konténer szegélyezés */
+.contact-box {
+    border-left: 5px solid #007bff; /* Kék szegély */
+}
+
+.advertisement-box {
+    border-left: 5px solid #28a745; /* Zöld szegély */
+}
+
+/* Címek stílusai */
 .contact-title, .advertisement-title {
-  font-size: 1.5em;
-  color: #1E3A8A;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 1.3em;
+    color: #007bff;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: bold;
 }
 
+/* A lista stílusa */
 .contact-list {
-  list-style: none;
-  padding: 0;
-  font-size: 1em;
+    list-style: none;
+    padding: 0;
 }
 
 .contact-list li {
-  margin-bottom: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    color: black;
 }
 
-.contact-list a {
-  color: #1E3A8A;
-  text-decoration: none;
-  transition: color 0.3s ease;
+.contact-list li strong {
+    font-weight: bold;
 }
 
-.contact-list a:hover {
-  color: #2563eb;
+/* Gombok */
+.about-btn {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    width: fit-content;
 }
 
-.advertisement-text {
-  font-size: 1.1em;
-  margin-bottom: 20px;
-  color: #333;
+.about-btn:hover {
+    background-color: #0056b3;
 }
 
-.advertisement-btn {
-  background-color: #1E3A8A;
-  color: white;
-  font-size: 1.2em;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+/* Reszponzív beállítások */
+@media (max-width: 768px) {
+    .about-footer {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .contact-box, .advertisement-box {
+        width: 90%;
+        margin-bottom: 15px;
+    }
+
+    .contact-title, .advertisement-title {
+        font-size: 1.1em; /* Kisebb címek mobilon */
+    }
 }
 
-.advertisement-btn:hover {
-  background-color: #2563eb;
-  transform: scale(1.1);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+/* Minimalista gomb effektek */
+.about-btn {
+    transition: transform 0.2s ease;
 }
 
+.about-btn:hover {
+    transform: scale(1.05); /* Kisebb növekedés hoverre */
+}
+
+/* Modern stílusú animációk */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.about-footer {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+
+
+
+/* Popup stílus */
 .about-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease-in-out;
 }
 
 .about-popup.show {
-  opacity: 1;
-  visibility: visible;
+    visibility: visible;
+    opacity: 1;
 }
 
 .popup-content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 600px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transform: scale(0.9);
-  animation: popupAnimation 0.3s forwards;
+    background-color: white;
+    padding: 15px 20px;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    overflow-y: auto;
+    max-height: 80vh; /* Kisebb magasság */
 }
 
-@keyframes popupAnimation {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+h2 {
+    color: #007bff;
 }
 
-.popup-content h2 {
-  font-size: 2em;
-  color: #1E3A8A;
-  margin-bottom: 20px;
+.about-image {
+    width: 100%;
+    height: auto;
+    max-height: 200px; /* Kép kisebb magasságban */
+    object-fit: contain;
+    margin: 20px 0;
 }
 
-.popup-content p {
-  font-size: 1.1em;
-  line-height: 1.6;
-  color: #333;
+.feedback-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
 }
 
-.popup-content p.highlight {
-  color: #1E3A8A;
-  font-weight: bold;
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
 }
 
+.star-rating {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.star {
+    cursor: pointer;
+    color: #ccc; /* Alapértelmezett szürke szín */
+    transition: color 0.2s ease;
+}
+
+.star.selected {
+    color: #ffcc00; /* Arany szín, ha kiválasztva */
+}
+
+.star:hover {
+    color: #ffcc00; /* Arany szín hover hatásra is */
+}
+
+/* Submit feedback gomb */
+.submit-feedback {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-feedback:hover {
+    background-color: #0056b3;
+}
+
+/* Feedback lista */
+.feedback-entry {
+    background-color: #f4f4f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.feedback-text {
+    font-size: 1em;
+    color: #333;
+}
+
+.feedback-meta {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+}
+
+.feedback-list h4 {
+    color: #007bff;
+    font-size: 1.2em;
+}
+
+.feedback-entry.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Gombok */
 .close-btn {
-  background-color: #D32F2F; /* Red color */
-  color: white;
-  font-size: 1.2em;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  display: block;
-  margin: 20px auto 0;
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .close-btn:hover {
-  background-color: #B71C1C; /* Dark red on hover */
-  transform: scale(1.05);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: darkred;
 }
 
-.uploaded-recipes-section {
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  flex-shrink: 0;
-  text-align: center;
-  margin-top: 20px; /* Add spacing above section */
-}
-
-/* Add margin between recipes */
-.uploaded-recipes-section > * {
-  margin-bottom: 20px; /* Adds spacing between recipes */
-}
-
-/* Mobile-friendly media queries */
-@media (max-width: 768px) {
-  .about-footer {
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-  }
-
-  .contact-box, .advertisement-box {
-    flex: none;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
-  .advertisement-btn {
-    width: 100%;
-    font-size: 1.1em;
-    padding: 12px;
-  }
-
-  .contact-title, .advertisement-title {
-    font-size: 1.3em;
-  }
-
-  .contact-list li {
-    font-size: 0.9em;
-  }
-
-  .popup-content {
-    width: 90%;
-    padding: 20px;
-  }
-
-  .popup-content h2 {
-    font-size: 1.8em;
-  }
-
-  .popup-content p {
+/* Like gomb animáció */
+.like-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 25px;
     font-size: 1em;
-  }
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Extra small devices (phones) */
-@media (max-width: 480px) {
-  .contact-title, .advertisement-title {
-    font-size: 1.2em;
-  }
+.like-btn:hover {
+    background-color: #218838;
+}
 
-  .popup-content {
-    width: 95%;
-    padding: 15px;
-  }
-
-  .popup-content h2 {
-    font-size: 1.5em;
-  }
-
-  .popup-content p {
-    font-size: 0.95em;
-  }
-
-  .advertisement-btn {
-    font-size: 1em;
+.like-popup {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
     padding: 10px;
-  }
+    border-radius: 5px;
+    font-size: 0.9em;
+    display: none;
+    animation: likePopup 0.5s ease-in-out;
+}
 
-  .contact-list li {
-    font-size: 0.85em;
-  }
+.like-popup.show {
+    display: block;
+}
+
+@keyframes likePopup {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Rólunk szöveg színének beállítása */
+.about-popup h2,
+.about-popup p,
+.about-popup .feedback-form label {
+    color: #000; /* Fekete szín */
+}
+
+/* Responszív beállítások */
+@media (max-width: 768px) {
+    .about-footer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-box, .advertisement-box {
+        width: 100%;
+    }
+
+    .about-popup {
+        padding: 10px;
+    }
+
+    .popup-content {
+        width: 95%;
+        max-width: none;
+        text-align: left;
+    }
+
+    .about-image {
+        max-height: 200px;
+    }
+
+    .feedback-form textarea {
+        height: 80px;
+    }
+
+    .star-rating {
+        font-size: 1.2em;
+    }
 }

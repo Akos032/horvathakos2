@@ -3,17 +3,49 @@ import './Aboutus.css';
 
 export const AboutSection = () => {
   const [showAbout, setShowAbout] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [submittedFeedback, setSubmittedFeedback] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(0);
 
   const toggleAboutText = () => {
-    setShowAbout(!showAbout);
+    setShowAbout((prevState) => !prevState);
   };
 
   const closePopup = () => {
     setShowAbout(false);
   };
 
+  const handleLike = () => {
+    setLikes((prevLikes) => prevLikes + 1);
+  };
+
+  const handleFeedbackChange = (e) => {
+    setFeedback(e.target.value);
+  };
+
+  const handleFeedbackSubmit = (e) => {
+    e.preventDefault();
+    if (feedback.trim()) {
+      const newFeedback = {
+        text: feedback.trim(),
+        rating: selectedRating,
+        date: new Date().toLocaleString("hu-HU", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+      };
+      setSubmittedFeedback([...submittedFeedback, newFeedback]);
+      setFeedback("");
+      setSelectedRating(0);
+    }
+  };
+
   return (
-    <div className="about-container">
+    <div className="about-container full-footer">
       <div className="about-footer">
         <div className="contact-box">
           <h3 className="contact-title">Elérhetőségeink:</h3>
@@ -27,10 +59,10 @@ export const AboutSection = () => {
         <div className="advertisement-box">
           <h3 className="advertisement-title">Ne hagyd ki!</h3>
           <p className="advertisement-text">
-            Különleges akcióink és új receptjeink folyamatosan frissülnek! Iratkozz fel a hírlevelünkre, hogy elsőként értesülj a legújabb ajánlatainkról!
+            Különleges akcióink és új receptjeink folyamatosan frissülnek!
           </p>
-          <button className="advertisement-btn" onClick={toggleAboutText}>
-            Iratkozz fel most!
+          <button className="about-btn" onClick={toggleAboutText}>
+            Rólunk
           </button>
         </div>
       </div>
@@ -39,20 +71,62 @@ export const AboutSection = () => {
         <div className="about-popup show" onClick={closePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h2>Rólunk</h2>
+            <img src="public/Média.png" alt="Rólunk" className="about-image" />
             <p>
-              Mi egy szenvedélyes és kreatív csapat vagyunk, akik elkötelezettek amellett, hogy a főzés mindenki számára elérhető és élvezetes legyen. Hiszünk abban, hogy a konyhában töltött idő nem csupán szükségszerűség, hanem lehetőség arra, hogy új ízeket fedezzünk fel, emlékeket teremtsünk és megosszuk az étkezés örömét szeretteinkkel.
+              Mi egy szenvedélyes és kreatív csapat vagyunk, akik elkötelezettek amellett, hogy a főzés mindenki számára elérhető és élvezetes legyen.
             </p>
             <p>
-              Célunk, hogy változatos, könnyen követhető és inspiráló recepteket kínáljunk, amelyek segítségével bárki magabiztosan alkothat a konyhában, legyen akár kezdő, akár tapasztalt séf. A világ különböző konyháinak ízeit ötvözve szeretnénk mindenkit arra ösztönözni, hogy próbáljon ki új dolgokat, és fedezze fel a főzés örömét.
+              Célunk, hogy változatos, könnyen követhető és inspiráló recepteket kínáljunk, amelyek segítségével bárki magabiztosan alkothat a konyhában.
             </p>
             <p>
-              Emellett közösségépítő szerepünk is fontos számunkra: interaktív tartalmakkal, tippekkel és kihívásokkal ösztönzünk arra, hogy oszd meg velünk saját konyhai élményeidet. Csatlakozz hozzánk, és tapasztald meg, hogy a főzés nem csupán egy napi rutin, hanem egy igazi kreatív kaland!
+              Emellett közösségépítő szerepünk is fontos számunkra. Csatlakozz hozzánk, és tapasztald meg, hogy a főzés nem csupán egy napi rutin, hanem egy igazi kreatív kaland!
             </p>
-            <button className="close-btn" onClick={closePopup}>Bezárás</button>
+
+            <div className="about-actions">
+              <button className="close-btn" onClick={closePopup}>Kilépés</button>
+              <button className="like-btn" onClick={handleLike}>❤️ Like ({likes})</button>
+            </div>
+
+            <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
+              <label htmlFor="feedback">Oszd meg velünk a véleményed:</label>
+              <textarea
+                id="feedback"
+                value={feedback}
+                onChange={handleFeedbackChange}
+                placeholder="Írd le, mi tetszett vagy min javítanál..."
+                required
+              ></textarea>
+
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className={star <= selectedRating ? "star selected" : "star"}
+                    onClick={() => setSelectedRating(star)}
+                  >
+                    ⭐
+                  </span>
+                ))}
+              </div>
+
+
+              <button type="submit" className="submit-feedback">Vélemény elküldése</button>
+            </form>
+
+            {submittedFeedback.length > 0 && (
+              <div className="feedback-list">
+                <h4>Így látták mások:</h4>
+                {submittedFeedback.map((item, index) => (
+                  <div key={index} className="feedback-entry fade-in">
+                    <p className="feedback-text">💬 <strong>{item.text}</strong></p>
+                    <p className="feedback-meta">Értékelés: {item.rating} ⭐ – {item.date}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
     </div>
   );
 };
-
