@@ -59,7 +59,9 @@ export const AboutSection = () => {
         <div className="advertisement-box">
           <h3 className="advertisement-title">Ne hagyd ki!</h3>
           <p className="advertisement-text">
-            Különleges akcióink és új receptjeink folyamatosan frissülnek!
+                   Üdvözlünk a Finomságok oldalán! Fedezd fel receptjeinket, és hozd el a konyhába a szenvedélyt!
+                      Mondj véleményt!
+                      Kíváncsiak vagyunk a visszajelzésedre! Hogyan találtad az oldalunkat? Mi tetszett, min változtatnál? Oszd meg velünk, és segíts, hogy még jobbá váljunk!
           </p>
           <button className="about-btn" onClick={toggleAboutText}>
             Rólunk
