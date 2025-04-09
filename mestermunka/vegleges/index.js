@@ -569,34 +569,55 @@ app.post('/register', (req, res) => {
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
+    const getImageQuery = `SELECT kep FROM receptek WHERE Receptek_id = ?`;
 
-    const deleteMeasurementsQuery = `
-        DELETE FROM mertekegyseg 
-        WHERE Mertekegyseg_id IN (
-            SELECT mertekegyseg_id FROM osszekoto WHERE receptek_id = ?
-        );
-    `;
-
-    const deleteRecipeQuery = `
-        DELETE FROM receptek WHERE Receptek_id = ?;
-    `;
-
-    db.query(deleteMeasurementsQuery, [recipeId], (err, result) => {
+    db.query(getImageQuery, [recipeId], (err, result) => {
         if (err) {
-            console.error("Error deleting measurements:", err);
-            return res.status(500).json({ error: "Failed to delete measurement data" });
+            console.error("Error fetching image filename:", err);
+            return res.status(500).json({ error: "Failed to fetch image filename" });
         }
 
-        db.query(deleteRecipeQuery, [recipeId], (err, result) => {
-            if (err) {
-                console.error("Error deleting recipe:", err);
-                return res.status(500).json({ error: "Failed to delete recipe" });
+        if (result.length === 0) {
+            return res.status(404).json({ error: "Recipe not found" });
+        }
+
+        const imageFilename = result[0].kep;
+        const imagePath = path.join(__dirname, 'public', imageFilename);
+
+        fs.unlink(imagePath, (fsErr) => {
+            if (fsErr) {
+                console.error("Error deleting image file:", fsErr);
+                return res.status(500).json({ error: "Failed to delete image file" });
             }
-            res.status(200).json({ message: `Recipe with ID: ${recipeId} and its related measurements deleted successfully` });
+
+            const deleteMeasurementsQuery = `
+                DELETE FROM mertekegyseg 
+                WHERE Mertekegyseg_id IN (
+                    SELECT mertekegyseg_id FROM osszekoto WHERE receptek_id = ?
+                );
+            `;
+
+            const deleteRecipeQuery = `
+                DELETE FROM receptek WHERE Receptek_id = ?;
+            `;
+
+            db.query(deleteMeasurementsQuery, [recipeId], (err, result) => {
+                if (err) {
+                    console.error("Error deleting measurements:", err);
+                    return res.status(500).json({ error: "Failed to delete measurement data" });
+                }
+
+                db.query(deleteRecipeQuery, [recipeId], (err, result) => {
+                    if (err) {
+                        console.error("Error deleting recipe:", err);
+                        return res.status(500).json({ error: "Failed to delete recipe" });
+                    }
+                    res.status(200).json({ message: `Recipe with ID: ${recipeId} and its related measurements and image deleted successfully` });
+                });
+            });
         });
     });
 });
-
 
 
 
