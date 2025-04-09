@@ -84,7 +84,7 @@ app.get("/api/osszes", (req, res) => {
       SELECT receptek.Receptek_id, receptek.receptek_neve, receptek.keszites, 
              GROUP_CONCAT(DISTINCT hozzavalok.hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
              preferencia.etkezes, erzekenysegek.erzekenyseg, hozzavalok.hozzavalok_neve, mertekegyseg.mennyiseg, mertekegyseg.mertekegyseg,
-             napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes, osszekoto.receptek_id
+             napszak.idoszak, konyha.nemzetiseg, receptek.kep, osszekoto.ervenyes, osszekoto.receptek_id, regisztracio.felhasznalonev AS feltolto_nev
       FROM osszekoto 
       INNER JOIN receptek ON osszekoto.receptek_id = receptek.Receptek_id
       INNER JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
@@ -93,6 +93,8 @@ app.get("/api/osszes", (req, res) => {
       INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
       INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
       INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
+      LEFT JOIN feltoltot_recept ON receptek.Receptek_id = feltoltot_recept.feltoltot_recept_id
+      LEFT JOIN regisztracio ON feltoltot_recept.profil_id = regisztracio.felhasznalo_id
     `;
 
     if (keres) {
@@ -108,6 +110,52 @@ app.get("/api/osszes", (req, res) => {
         res.json(results);
     });
 });
+
+app.get('/api/user-stats', (req, res) => {
+    const sql = `
+      SELECT 
+        regisztracio.admin,
+        regisztracio.felhasznalo_id, 
+        regisztracio.felhasznalonev, 
+        regisztracio.email, 
+        COUNT(feltoltot_recept.feltoltot_recept_id) AS receptek_szama
+      FROM regisztracio
+      LEFT JOIN feltoltot_recept ON regisztracio.felhasznalo_id = feltoltot_recept.profil_id
+      GROUP BY regisztracio.felhasznalo_id
+    `;
+    db.query(sql, (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba", err });
+      res.json(results);
+    });
+});
+
+app.post('/api/toggle-admin', (req, res) => {
+    const { userId, newStatus } = req.body;
+    const sql = "UPDATE regisztracio SET admin = ? WHERE felhasznalo_id = ?";
+    db.query(sql, [newStatus, userId], (err) => {
+      if (err) {
+        console.error("Hiba az admin státusz frissítésekor:", err);
+        return res.status(500).json({ error: "Nem sikerült frissíteni az admin státuszt." });
+      }
+      res.json({ message: "Admin státusz frissítve." });
+    });
+});
+  
+  
+
+app.delete('/api/delete-user/:id', (req, res) => {
+    const userId = req.params.id;
+  
+    const sql = "DELETE FROM regisztracio WHERE felhasznalo_id = ?";
+    db.query(sql, [userId], (err, result) => {
+      if (err) {
+        console.error("Hiba a felhasználó törlésekor:", err);
+        return res.status(500).json({ error: "Hiba a törlés során." });
+      }
+      res.json({ message: "Felhasználó sikeresen törölve." });
+    });
+  });
+  
 
 app.get("/api/valid", (req, res) => {
     const { keres } = req.query;
@@ -149,6 +197,82 @@ app.get("/leiras", (req, res) => {
         return res.json(result)
     })
 })
+
+app.get('/api/recipes/user/:userId', (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const sql = `
+    SELECT 
+        receptek.Receptek_id, 
+        receptek.receptek_neve, 
+        receptek.keszites, 
+        receptek.kep,
+        preferencia.etkezes, 
+        GROUP_CONCAT(DISTINCT erzekenysegek.erzekenyseg SEPARATOR ', ') AS erzekenyseg, 
+        napszak.idoszak, 
+        konyha.nemzetiseg
+    FROM receptek
+    INNER join osszekoto on receptek.Receptek_id = osszekoto.receptek_id
+    INNER JOIN feltoltot_recept ON receptek.Receptek_id = feltoltot_recept.feltoltot_recept_id
+    INNER JOIN regisztracio ON feltoltot_recept.profil_id = regisztracio.felhasznalo_id
+    INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
+    INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
+    INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
+    INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
+    WHERE regisztracio.felhasznalo_id = ?
+    GROUP BY receptek.Receptek_id;
+    `;
+
+    db.getConnection((err, db) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection error', error: err });
+        }
+
+        db.query(sql, [userId], (err, results) => {
+            db.release();
+            if (err) {
+                return res.status(500).json({ message: 'Error fetching created recipes', error: err });
+            }
+            res.status(200).json(results);
+        });
+    });
+});
+
+
+
+
+app.delete('/api/recipes/:recipeId', (req, res) => {
+    const { recipeId } = req.params;
+    const { userId } = req.body;
+
+    if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
+
+    db.getConnection((err, db) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database connection error', error: err });
+        }
+
+        db.query('DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, results) => {
+            db.release();
+            if (err) {
+                return res.status(500).json({ message: 'Error deleting recipe', error: err });
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ message: 'Recipe not found or you are not authorized to delete this recipe' });
+            }
+
+            res.status(200).json({ message: 'Recipe deleted successfully!' });
+        });
+    });
+});
+
 
 app.post('/api/recipes', upload.single('image'), (req, res) => {
     const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients, userId } = req.body;
@@ -556,8 +680,6 @@ app.post('/api/unsave-recipe', (req, res) => {
     if (!profil || !receptek) {
         return res.status(400).json({ error: "Hiányzó adatok!" });
     }
-
-    // Delete the saved recipe from the database
     const deleteSql = "DELETE FROM sajat_receptek WHERE profil = ? AND recept = ?";
     db.query(deleteSql, [profil, receptek], (err) => {
         if (err) {
@@ -612,7 +734,7 @@ app.post('/api/toggle-recipe-status', (req, res) => {
       }
       res.json({ message: 'Status updated successfully' });
     });
-  });
+});
   
 
 app.listen(3001, () => {
