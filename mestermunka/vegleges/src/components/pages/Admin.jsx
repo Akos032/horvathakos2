@@ -37,7 +37,6 @@ export const Admin = () => {
       })
       .catch(error => console.error("Error deleting recipe:", error));
   };
-  
 
   const deleteUser = (userId) => {
     axios.delete(`http://localhost:3001/api/delete-user/${userId}`)
@@ -102,7 +101,7 @@ export const Admin = () => {
               </div>
               <img src={ossze.kep} alt="Recipe Image" />
               <div id="admin-recipe-body">
-                <h5 id="admin-recipe-title" style={{ margin: "5px" }}>{ossze.receptek_neve}</h5>
+                <h5 id="admin-recipe-title">{ossze.receptek_neve}</h5>
                 <p id="admin-recipe-text">
                   {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
                 </p>
@@ -132,15 +131,6 @@ export const Admin = () => {
                               <td>{leiras.mertekegyseg}</td>
                             </tr>
                           ))}
-                        <tr>
-                          <td colSpan="3">
-                            <strong>Étkezés típusa:</strong> {ossze.etkezes} <br />
-                            <strong>Érzékenységek:</strong> {ossze.erzekenyseg} <br />
-                            <strong>Napszak:</strong> {ossze.idoszak} <br />
-                            <strong>Konyha:</strong> {ossze.nemzetiseg} <br />
-                            <strong>Feltöltötte:</strong> {ossze.feltolto_nev || 'Alap'}
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -156,43 +146,30 @@ export const Admin = () => {
         <div id="admin-recipes-container">
           {users.map((user) => (
             <div id="admin-recipe-card" key={user.felhasznalo_id}>
-            <div id="admin-recipe-body">
-              <h5 id="admin-recipe-title">{user.felhasznalonev}</h5>
-              <p id="admin-recipe-text"><strong>Email:</strong> {user.email}</p>
-              <p id="admin-recipe-text"><strong>Feltöltött receptek:</strong> {user.receptek_szama}</p>
-              <p id="admin-recipe-text"><strong>Jogosultság:</strong> {user.admin === 1 ? 'Admin' : 'Felhasználó'}</p>
-          
-              {user.admin !== 1 && (
+              <div id="admin-recipe-body">
+                <h5 id="admin-recipe-title">{user.felhasznalonev}</h5>
+                <p id="admin-recipe-text"><strong>Email:</strong> {user.email}</p>
+                <p id="admin-recipe-text"><strong>Feltöltött receptek:</strong> {user.receptek_szama}</p>
+                <p id="admin-recipe-text"><strong>Jogosultság:</strong> {user.admin === 1 ? 'Admin' : 'Felhasználó'}</p>
+                {user.admin !== 1 && (
+                  <button
+                    id="admin-delete-button"
+                    onClick={() => deleteUser(user.felhasznalo_id)}
+                  >
+                    Felhasználó törlése
+                  </button>
+                )}
                 <button
-                  id="admin-delete-button"
-                  onClick={() => deleteUser(user.felhasznalo_id)}
+                  id="admin-expand-button"
+                  onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}
                 >
-                  Felhasználó törlése
+                  {user.admin === 1 ? 'Eltávolít' : 'Adminná tesz'}
                 </button>
-              )}
-          
-              <button
-                id="admin-delete-button"
-                style={{ marginTop: '10px', backgroundColor: user.admin === 1 ? '#F44336' : '#4CAF50' }}
-                onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}
-              >
-                {user.admin === 1 ? 'Admin jog visszavonása' : 'Admin jog adása'}
-              </button>
+              </div>
             </div>
-          </div>          
           ))}
         </div>
       )}
-
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button
-          className="admin-toggle-button"
-          style={{ backgroundColor: '#FF5722', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontSize: '16px', fontWeight: '600' }}
-          onClick={() => setShowUsers(!showUsers)}
-        >
-          {showUsers ? "Receptek megtekintése" : "Felhasználók megtekintése"}
-        </button>
-      </div>
     </div>
   );
 };
