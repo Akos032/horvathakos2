@@ -248,12 +248,7 @@ function deleteUser(userId, connection, res) {
             res.status(200).json({ message: `User ${userId} and all associated data were successfully deleted.` });
         });
     });
-}
-
-
-
-
-  
+}  
 
 app.get("/api/valid", (req, res) => {
     const { keres } = req.query;
