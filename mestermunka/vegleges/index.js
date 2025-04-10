@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3307,
+    port: 3306,
     password: "",
     database: "finomsagok"
 
@@ -62,7 +62,7 @@ const upload = multer({
         }
         cb(null, true);
     },
-    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5MB
+    limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 
@@ -145,16 +145,72 @@ app.post('/api/toggle-admin', (req, res) => {
 
 app.delete('/api/delete-user/:id', (req, res) => {
     const userId = req.params.id;
-  
-    const sql = "DELETE FROM regisztracio WHERE felhasznalo_id = ?";
-    db.query(sql, [userId], (err, result) => {
-      if (err) {
-        console.error("Hiba a felhasználó törlésekor:", err);
-        return res.status(500).json({ error: "Hiba a törlés során." });
-      }
-      res.json({ message: "Felhasználó sikeresen törölve." });
+
+    db.getConnection((err, connection) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database connection error', details: err });
+        }
+        const getRecipesQuery = `SELECT Receptek_id, kep FROM receptek WHERE user_id = ?`;
+        connection.query(getRecipesQuery, [userId], (err, recipes) => {
+            if (err) {
+                connection.release();
+                return res.status(500).json({ error: 'Error fetching user recipes', details: err });
+            }
+
+            if (recipes.length === 0) {
+                const deleteUserQuery = `DELETE FROM regisztracio WHERE felhasznalo_id = ?`;
+                connection.query(deleteUserQuery, [userId], (err) => {
+                    connection.release();
+                    if (err) {
+                        return res.status(500).json({ error: 'Error deleting user', details: err });
+                    }
+                    return res.json({ message: 'User deleted (no recipes associated).' });
+                });
+                return;
+            }
+            let completed = 0;
+            recipes.forEach(recipe => {
+                const recipeId = recipe.Receptek_id;
+                const imageFilename = recipe.kep;
+                const imagePath = path.join(__dirname, 'public', imageFilename);
+                fs.unlink(imagePath, (fsErr) => {
+                    if (fsErr) {
+                        console.error(`Error deleting image for recipe ${recipeId}:`, fsErr);
+                    }
+                    const deleteMeasurementsQuery = `
+                        DELETE FROM mertekegyseg 
+                        WHERE Mertekegyseg_id IN (
+                            SELECT mertekegyseg_id FROM osszekoto WHERE receptek_id = ?
+                        );
+                    `;
+                    connection.query(deleteMeasurementsQuery, [recipeId], (err) => {
+                        if (err) {
+                            console.error(`Error deleting measurements for recipe ${recipeId}:`, err);
+                        }
+                        const deleteRecipeQuery = `DELETE FROM receptek WHERE Receptek_id = ?`;
+                        connection.query(deleteRecipeQuery, [recipeId], (err) => {
+                            if (err) {
+                                console.error(`Error deleting recipe ${recipeId}:`, err);
+                            }
+
+                            completed++;
+                            if (completed === recipes.length) {
+                                const deleteUserQuery = `DELETE FROM regisztracio WHERE felhasznalo_id = ?`;
+                                connection.query(deleteUserQuery, [userId], (err) => {
+                                    connection.release();
+                                    if (err) {
+                                        return res.status(500).json({ error: 'Error deleting user', details: err });
+                                    }
+                                    return res.json({ message: 'User, their recipes, measurements, and images deleted successfully.' });
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+        });
     });
-  });
+});
   
 
 app.get("/api/valid", (req, res) => {
@@ -241,65 +297,6 @@ app.get('/api/recipes/user/:userId', (req, res) => {
         });
     });
 });
-
-
-
-
-app.delete('/api/recipes/:recipeId', (req, res) => {
-    const { recipeId } = req.params;
-    const { userId } = req.body;
-
-    if (!userId) {
-        return res.status(400).json({ message: "User ID is required" });
-    }
-
-    db.getConnection((err, db) => {
-        if (err) {
-            return res.status(500).json({ message: 'Database connection error', error: err });
-        }
-        db.query('SELECT image_path FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, results) => {
-            if (err) {
-                db.release();
-                return res.status(500).json({ message: 'Error retrieving recipe details', error: err });
-            }
-
-            if (results.length === 0) {
-                db.release();
-                return res.status(404).json({ message: 'Recipe not found or you are not authorized to delete this recipe' });
-            }
-            const imagePath = results[0].image_path;
-
-            db.query('DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?', [recipeId, userId], (err, deleteResults) => {
-                db.release();
-
-                if (err) {
-                    return res.status(500).json({ message: 'Error deleting recipe', error: err });
-                }
-
-                if (deleteResults.affectedRows === 0) {
-                    return res.status(404).json({ message: 'Recipe not found or you are not authorized to delete this recipe' });
-                }
-
-                if (imagePath) {
-                    const imageFilePath = path.join(__dirname, 'public', imagePath);
-
-                    fs.unlink(imageFilePath, (err) => {
-                        if (err) {
-                            console.error('Error deleting image file:', err);
-                            return res.status(500).json({ message: 'Error deleting image file', error: err });
-                        }
-
-                        res.status(200).json({ message: 'Recipe and image deleted successfully!' });
-                    });
-                } else {
-                    res.status(200).json({ message: 'Recipe deleted successfully, no image found' });
-                }
-            });
-        });
-    });
-});
-
-
 app.post('/api/recipes', upload.single('image'), (req, res) => {
     const { recipeName, description, nationalityId, dayTimeId, preferences, sensitivity, ingredients, userId } = req.body;
     const imageName = req.file ? req.file.filename : null;
