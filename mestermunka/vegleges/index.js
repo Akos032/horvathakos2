@@ -118,9 +118,32 @@ app.get('/api/user-stats', (req, res) => {
         regisztracio.felhasznalo_id, 
         regisztracio.felhasznalonev, 
         regisztracio.email, 
-        COUNT(feltoltot_recept.feltoltot_recept_id) AS receptek_szama
-      FROM regisztracio
-      LEFT JOIN feltoltot_recept ON regisztracio.felhasznalo_id = feltoltot_recept.profil_id
+        COUNT(feltoltot_recept.feltoltot_recept_id) AS receptek_szama,
+        receptek.Receptek_id, 
+        receptek.receptek_neve, 
+        receptek.keszites, 
+        GROUP_CONCAT(DISTINCT hozzavalok.hozzavalok_neve SEPARATOR ', ') AS hozzavalok,
+        preferencia.etkezes, 
+        erzekenysegek.erzekenyseg, 
+        hozzavalok.hozzavalok_neve, 
+        mertekegyseg.mennyiseg, 
+        mertekegyseg.mertekegyseg,
+        napszak.idoszak, 
+        konyha.nemzetiseg, 
+        receptek.kep, 
+        osszekoto.ervenyes, 
+        osszekoto.receptek_id, 
+        regisztracio.felhasznalonev AS feltolto_nev
+        FROM regisztracio
+        LEFT JOIN feltoltot_recept ON regisztracio.felhasznalo_id = feltoltot_recept.profil_id
+        LEFT JOIN receptek ON feltoltot_recept.feltoltot_recept_id = receptek.Receptek_id
+        LEFT JOIN osszekoto ON receptek.Receptek_id = osszekoto.receptek_id
+        LEFT JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
+        LEFT JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
+        LEFT JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
+        LEFT JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
+        LEFT JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
+        LEFT JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
       GROUP BY regisztracio.felhasznalo_id
     `;
     db.query(sql, (err, results) => {
@@ -141,41 +164,41 @@ app.post('/api/toggle-admin', (req, res) => {
     });
 });
   
-  
-
-app.delete('/api/delete-user/:id', (req, res) => {
-    const userId = req.params.id;
-
+app.delete('/api/delete-user/:userId/:recipeId', (req, res) => {
+    const userId = req.params.userId;
+    const recipeId = req.params.recipeId;
     db.getConnection((err, connection) => {
         if (err) {
-            return res.status(500).json({ error: 'Database connection error', details: err });
+            console.error("Error establishing a database connection:", err);
+            return res.status(500).json({ error: "Failed to connect to database" });
         }
-        const getRecipesQuery = `SELECT Receptek_id, kep FROM receptek WHERE user_id = ?`;
-        connection.query(getRecipesQuery, [userId], (err, recipes) => {
-            if (err) {
-                connection.release();
-                return res.status(500).json({ error: 'Error fetching user recipes', details: err });
-            }
 
-            if (recipes.length === 0) {
-                const deleteUserQuery = `DELETE FROM regisztracio WHERE felhasznalo_id = ?`;
-                connection.query(deleteUserQuery, [userId], (err) => {
-                    connection.release();
-                    if (err) {
-                        return res.status(500).json({ error: 'Error deleting user', details: err });
-                    }
-                    return res.json({ message: 'User deleted (no recipes associated).' });
-                });
-                return;
+        connection.beginTransaction((transactionErr) => {
+            if (transactionErr) {
+                connection.release();
+                console.error("Error starting transaction:", transactionErr);
+                return res.status(500).json({ error: "Failed to start transaction" });
             }
-            let completed = 0;
-            recipes.forEach(recipe => {
-                const recipeId = recipe.Receptek_id;
-                const imageFilename = recipe.kep;
+            const getImageQuery = `SELECT kep FROM receptek WHERE Receptek_id = ?`;
+            connection.query(getImageQuery, [recipeId], (err, result) => {
+                if (err) {
+                    connection.rollback(() => connection.release());
+                    console.error("Error fetching image filename:", err);
+                    return res.status(500).json({ error: "Failed to fetch image filename" });
+                }
+
+                if (result.length === 0) {
+                    connection.rollback(() => connection.release());
+                    return res.status(404).json({ error: "Recipe not found" });
+                }
+
+                const imageFilename = result[0].kep;
                 const imagePath = path.join(__dirname, 'public', imageFilename);
                 fs.unlink(imagePath, (fsErr) => {
                     if (fsErr) {
-                        console.error(`Error deleting image for recipe ${recipeId}:`, fsErr);
+                        connection.rollback(() => connection.release());
+                        console.error("Error deleting image file:", fsErr);
+                        return res.status(500).json({ error: "Failed to delete image file" });
                     }
                     const deleteMeasurementsQuery = `
                         DELETE FROM mertekegyseg 
@@ -185,25 +208,18 @@ app.delete('/api/delete-user/:id', (req, res) => {
                     `;
                     connection.query(deleteMeasurementsQuery, [recipeId], (err) => {
                         if (err) {
-                            console.error(`Error deleting measurements for recipe ${recipeId}:`, err);
+                            connection.rollback(() => connection.release());
+                            console.error("Error deleting measurements:", err);
+                            return res.status(500).json({ error: "Failed to delete measurement data" });
                         }
                         const deleteRecipeQuery = `DELETE FROM receptek WHERE Receptek_id = ?`;
                         connection.query(deleteRecipeQuery, [recipeId], (err) => {
                             if (err) {
-                                console.error(`Error deleting recipe ${recipeId}:`, err);
+                                connection.rollback(() => connection.release());
+                                console.error("Error deleting recipe:", err);
+                                return res.status(500).json({ error: "Failed to delete recipe" });
                             }
-
-                            completed++;
-                            if (completed === recipes.length) {
-                                const deleteUserQuery = `DELETE FROM regisztracio WHERE felhasznalo_id = ?`;
-                                connection.query(deleteUserQuery, [userId], (err) => {
-                                    connection.release();
-                                    if (err) {
-                                        return res.status(500).json({ error: 'Error deleting user', details: err });
-                                    }
-                                    return res.json({ message: 'User, their recipes, measurements, and images deleted successfully.' });
-                                });
-                            }
+                            deleteUser(userId, connection, res);
                         });
                     });
                 });
@@ -211,6 +227,32 @@ app.delete('/api/delete-user/:id', (req, res) => {
         });
     });
 });
+
+function deleteUser(userId, connection, res) {
+    const deleteUserQuery = `DELETE FROM regisztracio WHERE felhasznalo_id = ?`;
+
+    connection.query(deleteUserQuery, [userId], (err) => {
+        if (err) {
+            connection.rollback(() => connection.release());
+            console.error("Error deleting user:", err);
+            return res.status(500).json({ error: "Failed to delete user" });
+        }
+        connection.commit((commitErr) => {
+            if (commitErr) {
+                connection.rollback(() => connection.release());
+                console.error("Error committing transaction:", commitErr);
+                return res.status(500).json({ error: "Failed to commit transaction" });
+            }
+
+            connection.release();
+            res.status(200).json({ message: `User ${userId} and all associated data were successfully deleted.` });
+        });
+    });
+}
+
+
+
+
   
 
 app.get("/api/valid", (req, res) => {

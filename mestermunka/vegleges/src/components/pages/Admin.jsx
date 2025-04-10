@@ -34,19 +34,24 @@ export const Admin = () => {
     axios.delete(`http://localhost:3001/api/delete-recipe/${recipeId}`)
       .then(() => {
         setOsszes(osszes.filter(recipe => recipe.Receptek_id !== recipeId));
+        alert("Recept törölve!");
       })
-      .catch(error => console.error("Error deleting recipe:", error));
+      .catch(error => {
+        console.error("Error deleting recipe:", error);
+        alert("Hiba történt a recept törlésekor.");
+      });
   };
   
-
-  const deleteUser = (userId) => {
-    axios.delete(`http://localhost:3001/api/delete-user/${userId}`)
-      .then(() => {
-        setUsers(users.filter(user => user.felhasznalo_id !== userId));
-      })
-      .catch(error => console.error("Error deleting user:", error));
+  const deleteUser = (userId, recipeId) => {
+    axios.delete(`http://localhost:3001/api/delete-user/${userId}/${recipeId}`)
+        .then(() => {
+            setUsers(users.filter(user => user.felhasznalo_id !== userId));
+        })
+        .catch(error => {
+            console.log(userId, recipeId);
+            console.error("Error deleting user:", error);
+        });
   };
-
   const toggleAdminStatus = (userId, currentStatus) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
     axios.post('http://localhost:3001/api/toggle-admin', { userId, newStatus })
@@ -156,39 +161,43 @@ export const Admin = () => {
         <div id="admin-recipes-container">
           {users.map((user) => (
             <div id="admin-recipe-card" key={user.felhasznalo_id}>
-            <div id="admin-recipe-body">
-              <h5 id="admin-recipe-title">{user.felhasznalonev}</h5>
-              <p id="admin-recipe-text"><strong>Email:</strong> {user.email}</p>
-              <p id="admin-recipe-text"><strong>Feltöltött receptek:</strong> {user.receptek_szama}</p>
-              <p id="admin-recipe-text"><strong>Jogosultság:</strong> {user.admin === 1 ? 'Admin' : 'Felhasználó'}</p>
-          
-              {user.admin !== 1 && (
-                <button
-                  id="admin-delete-button"
-                  onClick={() => deleteUser(user.felhasznalo_id)}
-                >
-                  Felhasználó törlése
-                </button>
-              )}
-          
-              <button
-                id="admin-delete-button"
-                style={{ marginTop: '10px', backgroundColor: user.admin === 1 ? '#F44336' : '#4CAF50' }}
-                onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}
-              >
-                {user.admin === 1 ? 'Admin jog visszavonása' : 'Admin jog adása'}
-              </button>
+                <div id="admin-recipe-body">
+                    <h5 id="admin-recipe-title">{user.felhasznalonev}</h5>
+                    <p id="admin-recipe-text"><strong>Email:</strong> {user.email}</p>
+                    <p id="admin-recipe-text"><strong>Feltöltött receptek:</strong> {user.receptek_szama}</p>
+                    <p id="admin-recipe-text"><strong>Jogosultság:</strong> {user.admin === 1 ? 'Admin' : 'Felhasználó'}</p>
+
+                    {user.admin !== 1 && (
+                      <button
+                          id="admin-delete-button"
+                            onClick={() => {
+                            if (window.confirm(`Biztosan törölni szeretnéd ${user.felhasznalonev} felhasználót és az összes receptjét?`)) {
+                                  const firstRecipeId = user.receptek_id || null;
+                                  deleteUser(user.felhasznalo_id, firstRecipeId); 
+                                }
+                            }}
+                      >
+                        Felhasználó törlése
+                      </button>
+                    )}
+                    <button
+                        id="admin-delete-button"
+                        style={{ marginTop: '10px', backgroundColor: user.admin === 1 ? '#F44336' : '#4CAF50' }}
+                        onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}
+                    >
+                        {user.admin === 1 ? 'Admin jog visszavonása' : 'Admin jog adása'}
+                    </button>
+                </div>
             </div>
-          </div>          
           ))}
         </div>
       )}
-
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           className="admin-toggle-button"
           style={{ backgroundColor: '#FF5722', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontSize: '16px', fontWeight: '600' }}
           onClick={() => setShowUsers(!showUsers)}
+          
         >
           {showUsers ? "Receptek megtekintése" : "Felhasználók megtekintése"}
         </button>
