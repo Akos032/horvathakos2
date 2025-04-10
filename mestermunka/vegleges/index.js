@@ -826,8 +826,3 @@ app.post('/api/toggle-recipe-status', (req, res) => {
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
 })
-
-function toggleFilters() {
-    var filterPanel = document.getElementById('filterPanel');
-    filterPanel.classList.toggle('open');
-}
