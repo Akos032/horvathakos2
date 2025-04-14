@@ -72,7 +72,6 @@ export const Admin = () => {
 
   return (
     <div id="admin-container">
-      {/* Search input (only in recipe view) */}
       {!showUsers && (
         <div id="admin-search-container">
           <input
@@ -84,8 +83,6 @@ export const Admin = () => {
           />
         </div>
       )}
-
-      {/* Recipes view */}
       {!showUsers ? (
         <div id="admin-recipes-container">
           {osszes.map((ossze) => (
