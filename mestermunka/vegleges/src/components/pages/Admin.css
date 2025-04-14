@@ -5,7 +5,7 @@
   padding: 20px;
   background: linear-gradient(to bottom right, #003300, #006600, #00cc66);
   min-height: 100vh;
-  color: white;
+  color: red;
 }
 
 #admin-search-container {
@@ -16,31 +16,32 @@
 #admin-search-input {
   width: 100%;
   max-width: 400px;
-  padding: 12px;
+  padding: 10px;
   font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background: white;
-  color: black;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 #admin-recipes-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
 }
 
 #admin-recipe-card {
+  width: 300px;
   background: linear-gradient(145deg, #114422, #081f0e);
   color: white;
   border-radius: 16px;
   box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
-  max-width: 400px;
-  width: 100%;
+  padding: 15px;
+  text-align: center;
   overflow: hidden;
-  position: relative;
   transition: transform 0.3s ease;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 #admin-recipe-card:hover {
@@ -51,16 +52,11 @@
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-}
-
-#admin-recipe-body {
-  padding: 20px;
+  border-radius: 16px;
 }
 
 #admin-recipe-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -68,72 +64,67 @@
 #admin-recipe-text {
   font-size: 16px;
   margin-bottom: 10px;
-  color: #ddd;
 }
 
-.admin-button {
+#admin-expand-button,
+#admin-info-button,
+#admin-delete-button {
   background: white;
   color: black;
   font-weight: bold;
   padding: 12px 20px;
-  margin: 8px 0;
+  margin: 6px 8px 6px 0;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
   transition: background 0.3s ease, transform 0.2s ease;
-  width: 100%;
-  font-size: 16px;
 }
 
-.admin-button:hover {
+#admin-expand-button:hover,
+#admin-info-button:hover,
+#admin-delete-button:hover {
   background: #ffffcc;
   transform: scale(1.05);
   animation: home-pulse 2s infinite;
 }
 
+@keyframes home-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
 
 #admin-info-table-wrapper {
-  background: transparent;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: none;
-  margin-top: 20px;
   overflow-x: auto;
+  max-width: 100%;
 }
 
 #admin-info-table {
   width: 100%;
+  margin-top: 10px;
   border-collapse: collapse;
-  margin-top: 15px;
-  background: transparent;
+  background-color: #333;
+  color: white;
 }
 
 #admin-info-table th,
 #admin-info-table td {
-  background: transparent;
-  color: white;
-  font-size: 15px;
+  border: 1px solid #fff;
+  padding: 8px;
   text-align: left;
-  padding: 12px;
-  border: none;
 }
 
 #admin-info-table th {
-  font-size: 16px;
   font-weight: bold;
+  background-color: #444;
 }
 
-#admin-info-table tr {
-  background: transparent;
-}
-
-#admin-info-table tr:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-#admin-info-table tr:nth-child(even) {
-  background: transparent;
+#admin-info-table td {
+  background-color: #555;
 }
 
 #admin-recipe-toggle {
@@ -191,28 +182,32 @@ input:not(:checked) + .slider {
   background-color: #FF5722;
 }
 
-#admin-toggle-button-container {
-  text-align: center;
-  margin-top: 30px;
+.admin-toggle-button {
+  background: #FF5722;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-#admin-toggle-button-container .admin-button {
-  max-width: 300px;
-}
-
-
-
-@keyframes home-pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+.admin-toggle-button:hover {
+  background: #ffffcc;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
   #admin-recipe-card {
     width: 100%;
+  }
+
+  #admin-search-container {
+    text-align: center;
+  }
+
+  #admin-search-input {
+    width: 80%;
   }
 }
