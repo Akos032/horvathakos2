@@ -113,15 +113,14 @@ export default function Profile() {
                   {expandedRecipeId === recipe.Receptek_id ? recipe.keszites : `${recipe.keszites?.substring(0, 200) || ''}...`}
                 </p>
                 <button 
-                  id="profile-expand-button" 
                   onClick={() => setExpandedRecipeId(expandedRecipeId === recipe.Receptek_id ? null : recipe.Receptek_id)} 
-                  className="text-blue-500 mt-2"
+                  className="profile-button"
                 >
                   {expandedRecipeId === recipe.Receptek_id ? "Kevesebb" : "Több"}
                 </button>
                 <button 
-                  id="profile-info-button" 
                   onClick={() => setExpandedInfoRecipeId(expandedInfoRecipeId === recipe.Receptek_id ? null : recipe.Receptek_id)}
+                  className="profile-button"
                 >
                   {expandedInfoRecipeId === recipe.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
                 </button>
@@ -144,9 +143,8 @@ export default function Profile() {
                   </div>
                 )}
                 <button 
-                  id="profile-unsave-button" 
                   onClick={() => removeSavedRecipe(recipe.Receptek_id)} 
-                  className="text-red-500 mt-2"
+                  className="profile-button"
                 >
                   ❌ Eltávolítás
                 </button>
@@ -169,15 +167,14 @@ export default function Profile() {
                   {expandedRecipeId === recipe.Receptek_id ? recipe.keszites : `${recipe.keszites?.substring(0, 200) || ''}...`}
                 </p>
                 <button 
-                  id="profile-expand-button" 
                   onClick={() => setExpandedRecipeId(expandedRecipeId === recipe.Receptek_id ? null : recipe.Receptek_id)} 
-                  className="text-blue-500 mt-2"
+                  className="profile-button"
                 >
                   {expandedRecipeId === recipe.Receptek_id ? "Kevesebb" : "Több"}
                 </button>
                 <button 
-                  id="profile-info-button" 
                   onClick={() => setExpandedInfoRecipeId(expandedInfoRecipeId === recipe.Receptek_id ? null : recipe.Receptek_id)}
+                  className="profile-button"
                 >
                   {expandedInfoRecipeId === recipe.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
                 </button>
@@ -200,9 +197,8 @@ export default function Profile() {
                   </div>
                 )}
                 <button 
-                  id="profile-unsave-button" 
                   onClick={() => removeCreatedRecipe(recipe.Receptek_id)} 
-                  className="text-red-500 mt-2"
+                  className="profile-button"
                 >
                   ❌ Törlés
                 </button>

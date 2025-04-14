@@ -199,7 +199,7 @@ const Recept = () => {
           <label className={styles.label}>A recepted neve:</label>
           <input className={styles.input} type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} required />
         </div>
-        <div style={{ maxWidth: "100vw", overflowX: "hidden" }}>
+        <div>
           <div>
             <label htmlFor="file-upload">Kép feltöltése:</label>
             <input

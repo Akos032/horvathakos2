@@ -4,15 +4,15 @@
   align-items: center;
   gap: 40px;
   padding: 20px;
-  background: linear-gradient(to bottom right, #003300, #006600, #00cc66);
+  background: linear-gradient(to bottom right, #004d00, #00b300, #00e673);
   min-height: 100vh;
-  color: black;
+  color: white;
 }
 
 .title {
   font-size: 32px;
   font-weight: bold;
-  color: #fff;
+  color: white;
   text-align: center;
 }
 
@@ -20,47 +20,50 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #fff;
-  padding: 20px;
+  background: rgba(0, 70, 32, 0.9);
+  padding: 30px;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 25px rgba(0, 255, 100, 0.3);
   width: 100%;
   max-width: 800px;
+  color: white;
 }
 
 .label {
   font-size: 18px;
   font-weight: bold;
+  color: #d9ffe6;
 }
 
 .input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
+  padding: 12px;
+  border: 1px solid #66bb6a;
   border-radius: 8px;
   font-size: 16px;
-  background-color: #f9f9f9;
-  margin-bottom: 15px;
+  background-color: #1b4027;
+  color: #f0f0f0;
 }
 
 .input[type="file"] {
   padding: 8px;
+  background-color: transparent;
 }
 
 .button {
-  background: #28a745;
-  color: white;
+  background: white;
+  color: black;
   font-weight: bold;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .button:hover {
-  background: #218838;
+  background: #e6ffe6;
   transform: scale(1.05);
 }
 
@@ -71,34 +74,22 @@
   margin-bottom: 15px;
 }
 
-.removeIngredientButton {
-  background: #dc3545;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.removeIngredientButton:hover {
-  background: #c82333;
-  transform: scale(1.05);
-}
-
+.removeIngredientButton,
 .addIngredientButton {
-  background: #007bff;
-  color: white;
-  padding: 12px 20px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
   transition: background 0.3s ease, transform 0.2s ease;
-  margin-top: 10px;
 }
 
+.removeIngredientButton:hover,
 .addIngredientButton:hover {
-  background: #0056b3;
+  background: #e6ffe6;
   transform: scale(1.05);
 }
 
@@ -144,7 +135,6 @@
   cursor: pointer;
 }
 
-/* Mobil nézet */
 @media (max-width: 768px) {
   .search-container {
     justify-content: center;

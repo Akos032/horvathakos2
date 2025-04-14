@@ -62,7 +62,6 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  animation: home-pulse 2s infinite;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
   transition: background 0.3s ease, transform 0.2s ease;
 }
@@ -70,6 +69,7 @@
 .home-button:hover {
   background: #ffffcc;
   transform: scale(1.05);
+  animation: home-pulse 2s infinite;
 }
 
 @keyframes home-pulse {
@@ -81,81 +81,42 @@
   }
 }
 
-/* Bővebb információ táblázat */
-.home-infoBox {
-  background-color: #f1f8f6;  /* Világos zöldes háttér */
-  padding: 20px;
-  border-radius: 12px;  /* Kerekített sarkok */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);  /* Finom árnyék */
-  margin-top: 20px;
+.home-infoBox p {
+  color: #eee;
+  margin: 8px 0;
 }
 
-/* Táblázat dizájn */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
 }
 
-/* Fejléc stílus */
-th {
-  background-color: #28a745; /* Zöld háttér */
-  color: white;
-  font-size: 16px;
-  text-align: left;
-  padding: 12px;
-  border-radius: 8px;  /* Kerekített sarkok a fejlécnél */
-}
-
-/* Sorok stílus */
-td {
-  font-size: 15px;
-  color: black; /* Fekete szöveg a táblázat minden cellájában */
-  text-align: left;
-  padding: 12px;
-  border-top: 1px solid #ddd;  /* Finom vonal a sorok között */
-}
-
-/* Minden második sor egy árnyékolt szürke háttér */
-tr:nth-child(even) {
-  background-color: #f7f7f7;
-}
-
-/* Minden sorra hover hatás */
-tr:hover {
-  background-color: #e6f4e6; /* Finom zöld háttér */
-}
-
-/* Hozzávaló blokk, ne legyen túl széles */
 .home-ingredientsWrapper {
   max-width: 600px;
-  margin: 0 auto;  /* Középre igazítás */
+  margin: 0 auto;
   margin-bottom: 20px;
 }
 
-/* Hozzávalók egy sorának stílusa */
 .home-ingredientRow {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #555;
 }
 
-/* Hozzávaló neve */
 .home-ingredientName {
   font-weight: bold;
-  color: #333;
+  color: #fff;
   font-size: 14px;
 }
 
-/* Mennyiség és mértékegység */
-.home-ingredientAmount {
-  font-style: italic;
-  color: #555;
+.home-ingredientName {
+  font-weight: bold;
+  color: #fff;
   font-size: 14px;
 }
 
-/* Kereső mező és nagyító ikon */
 .home-search-container {
   display: flex;
   align-items: center;

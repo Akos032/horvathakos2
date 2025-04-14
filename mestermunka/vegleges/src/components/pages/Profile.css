@@ -1,35 +1,51 @@
+#profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px;
+  background: linear-gradient(to bottom right, #003300, #006600, #00cc66);
+  min-height: 100vh;
+  color: white;
+}
 
 #profile-recipes-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
 }
 
 #profile-recipe-card {
-  max-width: 800px;
-  width: 100%;
-  background: #333;
+  background: linear-gradient(145deg, #114422, #081f0e);
   color: white;
-  margin-bottom: 15px;
-  border-radius: 10px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
+  max-width: 400px;
+  width: 100%;
   overflow: hidden;
-  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+#profile-recipe-card:hover {
+  transform: scale(1.03);
 }
 
 #profile-recipe-card img {
   width: 100%;
-  max-height: 150px;
+  max-height: 200px;
   object-fit: cover;
-  border-radius: 10px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 #profile-recipe-body {
-  padding: 10px;
+  padding: 20px;
 }
 
 #profile-recipe-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 #profile-recipe-text {
@@ -37,133 +53,86 @@
   margin-bottom: 10px;
 }
 
-#profile-info-button,
-#profile-expand-button,
-#profile-save-button,
-#profile-unsave-button {
-  margin: 5px;
-  width: auto;
-  height: 50px;
-  display: inline-block;
-  outline: 0;
-  cursor: pointer;
-  border: 2px solid #000;
-  border-radius: 4px;
-  color: #fff;
-  background: #000;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 28px;
+.profile-button {
+  background: white;
+  color: black;
+  font-weight: bold;
   padding: 12px 20px;
-  text-align: center;
-  transition: all 0.15s ease-in-out;
+  margin: 6px 8px 6px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-#profile-save-button:hover,
-#profile-unsave-button:hover {
-  color: #000;
-  background: rgb(255, 218, 87);
-}
-
-#profile-unsave-button {
-  background: red;
-}
-
-#profile-unsave-button:hover {
-  background: rgb(255, 87, 87);
-}
-
-#profile-expand-button:hover,
-#profile-info-button:hover {
-  color: rgb(255, 218, 87);
+.profile-button:hover {
+  background: #ffffcc;
+  transform: scale(1.05);
+  animation: home-pulse 2s infinite;
 }
 
 #profile-info-box {
   margin-top: 16px;
-  padding: 16px;
-  border: 2px solid #fff;
-  border-radius: 6px;
-  background-color: #000;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-#profile-info-box p {
-  margin-bottom: 8px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #f1f8f6;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  color: black;
 }
 
 #profile-ingredients-wrapper {
-    display: flex;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+}
+
+.profile-ingredient-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.profile-ingredient-row:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+.profile-ingredient-name {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.profile-ingredient-amount {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+}
+
+
+#profile-info-box p {
+  color: #222;
+  margin: 8px 0;
+}
+
+@keyframes home-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  #profile-recipes-container {
     flex-direction: column;
-    gap: 10px; 
-    margin-bottom: 16px;
-  }
-  
-  .profile-ingredient-row {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 2px 0;
   }
-  
-  .profile-ingredient-name,
-  .profile-ingredient-amount {
-    font-size: 16px;
-    color: white;
-    margin: 0; 
-    padding: 0;
-  }
-  
-  .profile-ingredient-name {
-    flex: 1;
-    text-align: right;
-    margin-right: 10px;
-  }
-  
-  .profile-ingredient-amount {
-    flex: 1;
-    text-align: left;
-    margin-left: 10px;
-  }
-  
-
-  @media (max-width: 768px) {
-    #profile-info-box {
-      padding: 10px;
-    }
-  
-    .profile-ingredient-row {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .profile-ingredient-name,
-    .profile-ingredient-amount {
-      width: 100%;
-      text-align: left;
-    }
-  
-    .profile-ingredient-amount {
-      margin-left: 0;
-      margin-top: 5px;
-    }
-  }
-  
-@media (max-width: 600px) {
-  #profile-save-button,
-  #profile-unsave-button,
-  #profile-info-button {
+  .profile-button {
     width: 100%;
     font-size: 16px;
-    padding: 12px;
-    height: auto;
-    box-sizing: border-box;
-  }
-
-  #profile-info-box {
-    font-size: 15px;
     padding: 12px;
   }
 }

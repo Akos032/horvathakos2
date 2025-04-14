@@ -16,10 +16,9 @@ export const Admin = () => {
   useEffect(() => {
     if (!showUsers) {
       axios.get(`http://localhost:3001/api/osszes?keres=${kereses}`)
-        .then(response => {
-          setOsszes(response.data);
-        })
+        .then(response => setOsszes(response.data))
         .catch(error => console.error("API Error:", error));
+
       axios.get(`http://localhost:3001/leiras`)
         .then(data => setDescription(data.data))
         .catch(err => console.log(err));
@@ -73,6 +72,7 @@ export const Admin = () => {
 
   return (
     <div id="admin-container">
+      {/* Search input (only in recipe view) */}
       {!showUsers && (
         <div id="admin-search-container">
           <input
@@ -85,6 +85,7 @@ export const Admin = () => {
         </div>
       )}
 
+      {/* Recipes view */}
       {!showUsers ? (
         <div id="admin-recipes-container">
           {osszes.map((ossze) => (
@@ -105,12 +106,13 @@ export const Admin = () => {
                 <p id="admin-recipe-text">
                   {TobbId === ossze.Receptek_id ? ossze.keszites : `${ossze.keszites.substring(0, 200)}...`}
                 </p>
-                <button id="admin-expand-button" onClick={() => setTobbId(TobbId === ossze.Receptek_id ? null : ossze.Receptek_id)}>
+                <button className="admin-button" onClick={() => setTobbId(TobbId === ossze.Receptek_id ? null : ossze.Receptek_id)}>
                   {TobbId === ossze.Receptek_id ? "Kevesebb" : "Több"}
                 </button>
-                <button id="admin-info-button" onClick={() => setShowTable(showTable === ossze.Receptek_id ? null : ossze.Receptek_id)}>
+                <button className="admin-button" onClick={() => setShowTable(showTable === ossze.Receptek_id ? null : ossze.Receptek_id)}>
                   {showTable === ossze.Receptek_id ? 'Kevesebb' : 'Bővebb információ'}
                 </button>
+
                 {showTable === ossze.Receptek_id && (
                   <div id="admin-info-table-wrapper">
                     <table id="admin-info-table">
@@ -133,9 +135,14 @@ export const Admin = () => {
                           ))}
                       </tbody>
                     </table>
+                    <p><strong>Étkezés típusa:</strong> {ossze.etkezes}</p>
+                    <p><strong>Érzékenységek:</strong> {ossze.erzekenyseg}</p>
+                    <p><strong>Napszak:</strong> {ossze.idoszak}</p>
+                    <p><strong>Konyha:</strong> {ossze.nemzetiseg}</p>
                   </div>
                 )}
-                <button id="admin-delete-button" onClick={() => deleteRecipe(ossze.Receptek_id)}>
+
+                <button className="admin-button" onClick={() => deleteRecipe(ossze.Receptek_id)}>
                   Törlés
                 </button>
               </div>
@@ -143,6 +150,7 @@ export const Admin = () => {
           ))}
         </div>
       ) : (
+        /* Users view */
         <div id="admin-recipes-container">
           {users.map((user) => (
             <div id="admin-recipe-card" key={user.felhasznalo_id}>
@@ -152,17 +160,11 @@ export const Admin = () => {
                 <p id="admin-recipe-text"><strong>Feltöltött receptek:</strong> {user.receptek_szama}</p>
                 <p id="admin-recipe-text"><strong>Jogosultság:</strong> {user.admin === 1 ? 'Admin' : 'Felhasználó'}</p>
                 {user.admin !== 1 && (
-                  <button
-                    id="admin-delete-button"
-                    onClick={() => deleteUser(user.felhasznalo_id)}
-                  >
+                  <button className="admin-button" onClick={() => deleteUser(user.felhasznalo_id)}>
                     Felhasználó törlése
                   </button>
                 )}
-                <button
-                  id="admin-expand-button"
-                  onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}
-                >
+                <button className="admin-button" onClick={() => toggleAdminStatus(user.felhasznalo_id, user.admin)}>
                   {user.admin === 1 ? 'Eltávolít' : 'Adminná tesz'}
                 </button>
               </div>
@@ -170,6 +172,14 @@ export const Admin = () => {
           ))}
         </div>
       )}
+      <div id="admin-toggle-button-container">
+          <button
+            className="admin-button"
+            onClick={() => setShowUsers(!showUsers)}
+          >
+            {showUsers ? 'Receptek kezelése' : 'Felhasználók kezelése'}
+          </button>
+      </div>
     </div>
   );
 };
