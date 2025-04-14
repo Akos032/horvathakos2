@@ -119,7 +119,7 @@ app.get("/api/valid", (req, res) => {
         sql += ` WHERE receptek.Receptek_neve LIKE ?`;
     }
 
-    sql += `and osszekoto.ervenyes = 0`
+    sql += `and osszekoto.ervenyes = 1`
 
     sql += ` GROUP BY receptek.Receptek_id desc`;
 
