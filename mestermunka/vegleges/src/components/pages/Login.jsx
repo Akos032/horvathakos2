@@ -115,7 +115,13 @@ export const Login = ({ setIsLoggedIn }) => {
 
         const storedUser = JSON.parse(localStorage.getItem("user"));
         storedUser.szabalyzat = 1;
-        localStorage.setItem("user", JSON.stringify(storedUser));
+        if (user.szabalyzat === 0) {
+          localStorage.setItem("pendingUserId", user.felhasznalo_id);
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("admin", JSON.stringify(response.data.admin));
+          setShowRulesModal(true);
+          return;
+        }        
 
         localStorage.removeItem("pendingUserId");
         setIsLoggedIn(true);
