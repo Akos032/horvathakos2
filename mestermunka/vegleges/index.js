@@ -575,8 +575,6 @@ app.post('/register', (req, res) => {
     if (!felhasznalonev || !email || !password) {
       return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
     }
-  
-    // Ellenőrzés: van-e már ilyen felhasználónév vagy email
     const checkSql = "SELECT * FROM regisztracio WHERE felhasznalonev = ? OR email = ?";
     db.query(checkSql, [felhasznalonev, email], (err, result) => {
       if (err) {
@@ -599,8 +597,6 @@ app.post('/register', (req, res) => {
       } else if (emailTaken) {
         return res.status(400).json({ error: "❌ Az email cím már foglalt!" });
       }
-  
-      // Ha minden oké, jöhet a jelszó hashelése
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
           console.error("❌ Jelszó hash hiba:", err);
@@ -643,6 +639,33 @@ app.post('/register', (req, res) => {
           });
         });
       });
+    });
+});
+
+app.post('/api/update-username', (req, res) => {
+    const { userId, newUsername } = req.body;
+
+    if (!userId || !newUsername) {
+        return res.status(400).json({ error: "Hiányzó adatok!" });
+    }
+
+    const checkQuery = "SELECT * FROM regisztracio WHERE felhasznalonev = ?";
+    db.query(checkQuery, [newUsername], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Adatbázis hiba!" });
+        }
+
+        if (result.length > 0) {
+            return res.status(400).json({ error: "Ez a felhasználó név már foglalt" });
+        }
+
+        const updateQuery = "UPDATE regisztracio SET felhasznalonev = ? WHERE felhasznalo_id = ?";
+        db.query(updateQuery, [newUsername, userId], (err) => {
+            if (err) {
+                return res.status(500).json({ error: "Nem sikerült frissíteni a felhasználónevet." });
+            }
+            res.json({ success: "Felhasználónév frissítve!" });
+        });
     });
 });
   
