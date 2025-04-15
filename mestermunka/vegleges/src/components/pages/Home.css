@@ -138,7 +138,6 @@ table {
   cursor: pointer;
 }
 
-/* Mobil nézet */
 @media (max-width: 768px) {
   .home-search-container {
     justify-content: center;

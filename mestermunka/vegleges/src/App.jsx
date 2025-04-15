@@ -9,7 +9,7 @@ import Profile from './components/pages/Profile';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [kereses, setKereses] = useState(""); // 🔍 Search state here
+  const [kereses, setKereses] = useState("");
 
   useEffect(() => {
     const user = localStorage.getItem("user");
