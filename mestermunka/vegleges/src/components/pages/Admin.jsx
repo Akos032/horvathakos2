@@ -234,7 +234,6 @@ export const Admin = () => {
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           className="admin-toggle-button"
-          style={{ backgroundColor: '#FF5722', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer', fontSize: '16px', fontWeight: '600' }}
           onClick={() => setShowUsers(!showUsers)}
         >
           {showUsers ? 'Receptek megtekintése' : 'Felhasználók megtekintése'}

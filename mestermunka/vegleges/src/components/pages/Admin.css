@@ -68,7 +68,8 @@
 
 #admin-expand-button,
 #admin-info-button,
-#admin-delete-button {
+#admin-delete-button,
+.app-button {
   background: white;
   color: black;
   font-weight: bold;
@@ -83,7 +84,9 @@
 
 #admin-expand-button:hover,
 #admin-info-button:hover,
-#admin-delete-button:hover {
+#admin-delete-button:hover,
+.app-button:hover,
+#admin-toggle-button:hover {
   background: #ffffcc;
   transform: scale(1.05);
   animation: home-pulse 2s infinite;
@@ -107,25 +110,32 @@
   width: 100%;
   margin-top: 10px;
   border-collapse: collapse;
-  background-color: #333;
   color: white;
+  border: none;
+  background: transparent;
 }
 
 #admin-info-table th,
 #admin-info-table td {
-  border: 1px solid #fff;
-  padding: 8px;
+  border: none;
+  padding: 8px 10px;
   text-align: left;
+  background: transparent;
 }
 
 #admin-info-table th {
   font-weight: bold;
-  background-color: #444;
+  color: #fff;
 }
 
 #admin-info-table td {
-  background-color: #555;
+  color: #eee;
 }
+
+#admin-info-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
 
 #admin-recipe-toggle {
   position: absolute;
@@ -183,8 +193,8 @@ input:not(:checked) + .slider {
 }
 
 .admin-toggle-button {
-  background: #FF5722;
-  color: white;
+  background: white;
+  color: black;
   border: none;
   padding: 10px 15px;
   border-radius: 8px;
@@ -194,8 +204,8 @@ input:not(:checked) + .slider {
 }
 
 .admin-toggle-button:hover {
-  background: #ffffcc;
   transform: scale(1.05);
+  animation: home-pulse 2s infinite;
 }
 
 @media (max-width: 768px) {
