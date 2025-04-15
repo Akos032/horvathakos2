@@ -569,55 +569,84 @@ app.post('/api/accept-rules', (req, res) => {
   
 app.post('/register', (req, res) => {
     console.log("📥 Beérkező adatok:", req.body);
-
+  
     const { felhasznalonev, email, password } = req.body;
-
+  
     if (!felhasznalonev || !email || !password) {
-        return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
+      return res.status(400).json({ error: "❌ Hiányzó adatok!", details: req.body });
     }
-
-    bcrypt.hash(password, 10, (err, hash) => {
+  
+    // Ellenőrzés: van-e már ilyen felhasználónév vagy email
+    const checkSql = "SELECT * FROM regisztracio WHERE felhasznalonev = ? OR email = ?";
+    db.query(checkSql, [felhasznalonev, email], (err, result) => {
+      if (err) {
+        console.error("❌ SQL Hiba:", err);
+        return res.status(500).json({ error: "Adatbázis hiba az ellenőrzéskor!" });
+      }
+  
+      let usernameTaken = false;
+      let emailTaken = false;
+  
+      result.forEach(user => {
+        if (user.felhasznalonev === felhasznalonev) usernameTaken = true;
+        if (user.email === email) emailTaken = true;
+      });
+  
+      if (usernameTaken && emailTaken) {
+        return res.status(400).json({ error: "❌ A felhasználónév és az email cím is foglalt!" });
+      } else if (usernameTaken) {
+        return res.status(400).json({ error: "❌ A felhasználónév már foglalt!" });
+      } else if (emailTaken) {
+        return res.status(400).json({ error: "❌ Az email cím már foglalt!" });
+      }
+  
+      // Ha minden oké, jöhet a jelszó hashelése
+      bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
-            console.error("❌ Jelszó hash hiba:", err);
-            return res.status(500).json({ error: "Hiba a jelszó hashelésekor.", details: err.message });
+          console.error("❌ Jelszó hash hiba:", err);
+          return res.status(500).json({ error: "Hiba a jelszó hashelésekor.", details: err.message });
         }
-
+  
         console.log("🔑 Hash-elt jelszó:", hash);
-
+  
         const sql = "INSERT INTO regisztracio (felhasznalonev, email, jelszo) VALUES (?, ?, ?)";
         const values = [felhasznalonev, email, hash];
-
+  
         console.log("📝 SQL lekérdezés:", sql);
         console.log("📊 Értékek:", values);
-
+  
         db.query(sql, values, (err, result) => {
+          if (err) {
+            console.error("❌ SQL Hiba:", err);
+            return res.status(500).json({ error: "Hiba az adatbázis művelet végrehajtásakor.", details: err.sqlMessage });
+          }
+  
+          console.log("✅ Sikeres regisztráció:", result);
+  
+          const fetchUserQuery = "SELECT felhasznalonev, email, admin FROM regisztracio WHERE email = ?";
+          db.query(fetchUserQuery, [email], (err, userResult) => {
             if (err) {
-                console.error("❌ SQL Hiba:", err);
-                return res.status(500).json({ error: "Hiba az adatbázis művelet végrehajtásakor.", details: err.sqlMessage });
+              console.error("❌ Hiba a felhasználó lekérdezésekor:", err);
+              return res.status(500).json({ error: "Hiba a felhasználó lekérdezésekor." });
             }
-
-            console.log("✅ Sikeres regisztráció:", result);
-            const fetchUserQuery = "SELECT felhasznalonev, email, admin FROM regisztracio WHERE email = ?";
-            db.query(fetchUserQuery, [email], (err, userResult) => {
-                if (err) {
-                    console.error("❌ Hiba a felhasználó lekérdezésekor:", err);
-                    return res.status(500).json({ error: "Hiba a felhasználó lekérdezésekor." });
-                }
-
-                if (userResult.length > 0) {
-                    const user = {
-                        felhasznalonev: userResult[0].felhasznalonev,
-                        email: userResult[0].email,
-                        admin: userResult[0].admin === 1
-                    };
-                    return res.json({ user });
-                } else {
-                    return res.status(500).json({ error: "Nem sikerült lekérdezni a felhasználót." });
-                }
-            });
+  
+            if (userResult.length > 0) {
+              const user = {
+                felhasznalonev: userResult[0].felhasznalonev,
+                email: userResult[0].email,
+                admin: userResult[0].admin === 1
+              };
+              return res.json({ user });
+            } else {
+              return res.status(500).json({ error: "Nem sikerült lekérdezni a felhasználót." });
+            }
+          });
         });
+      });
     });
 });
+  
+  
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;

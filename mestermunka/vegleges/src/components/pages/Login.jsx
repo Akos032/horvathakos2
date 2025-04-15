@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 import { motion, AnimatePresence } from "framer-motion";
-import BackgroundBubbles from "./BackgroundBubbles";
 
 const RulesModal = ({ onAccept, onDecline }) => (
   <motion.div
@@ -83,10 +82,11 @@ export const Login = ({ setIsLoggedIn }) => {
 
         if (user.szabalyzat === 0) {
           localStorage.setItem("pendingUserId", user.felhasznalo_id);
-          localStorage.setItem("user", JSON.stringify(user)); // store temporarily
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("admin", JSON.stringify(response.data.admin));
           setShowRulesModal(true);
           return;
-        }
+        }             
 
         alert("Sikeres bejelentkezés!");
         localStorage.setItem("user", JSON.stringify(user));
@@ -107,30 +107,26 @@ export const Login = ({ setIsLoggedIn }) => {
       alert("Nem található felhasználói azonosító.");
       return;
     }
-
+  
     axios.post("http://localhost:3001/api/accept-rules", { userId })
       .then(() => {
         alert("Szabályzat elfogadva!");
         setShowRulesModal(false);
-
+  
         const storedUser = JSON.parse(localStorage.getItem("user"));
         storedUser.szabalyzat = 1;
-        if (user.szabalyzat === 0) {
-          localStorage.setItem("pendingUserId", user.felhasznalo_id);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("admin", JSON.stringify(response.data.admin));
-          setShowRulesModal(true);
-          return;
-        }        
-
+        localStorage.setItem("user", JSON.stringify(storedUser));
+  
         localStorage.removeItem("pendingUserId");
+  
         setIsLoggedIn(true);
-        navigate("/");
+        navigate("/home");
       })
       .catch(() => {
         alert("Hiba történt a szabályzat elfogadásakor.");
       });
   };
+  
 
   const declineRules = () => {
     alert("A szabályzat elfogadása szükséges a folytatáshoz.");
