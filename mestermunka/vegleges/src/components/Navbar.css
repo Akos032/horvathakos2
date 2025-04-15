@@ -172,7 +172,7 @@ body.with-navbar {
     }
 
     #mobile-search-input {
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         padding: 8px;
         border: 1px solid #ccc;
