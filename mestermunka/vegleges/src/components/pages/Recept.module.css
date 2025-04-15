@@ -68,11 +68,13 @@
 }
 
 .ingredientSection {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
   gap: 10px;
-  flex-wrap: wrap;
   margin-bottom: 15px;
+  align-items: center;
 }
+
 
 .removeIngredientButton,
 .addIngredientButton {
@@ -149,7 +151,6 @@
   }
 
   .ingredientSection {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    grid-template-columns: 1fr;
+  }  
 }

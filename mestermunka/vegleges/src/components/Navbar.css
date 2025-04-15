@@ -168,18 +168,18 @@ body.with-navbar {
     #mobile-search-container {
         width: 100%;
         padding: 10px;
-        background: #444;
+        background: #28a745;
     }
 
     #mobile-search-input {
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 16px;
-        background: #333;
-        color: white;
+        background: white;
+        color: black;
     }
 }
 

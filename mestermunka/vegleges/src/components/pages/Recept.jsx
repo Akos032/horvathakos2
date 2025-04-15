@@ -238,7 +238,7 @@ const Recept = () => {
               <input
                 className={styles.input}
                 type="text"
-                placeholder="Mértékegység (Például: gram, csipet)"
+                placeholder="Mértékegység"
                 value={ingredient.unit}
                 onChange={(e) => handleInputChange(index, 'unit', e.target.value)}
                 required
