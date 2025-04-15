@@ -1,4 +1,4 @@
-/* Alap beállítások a teljes képernyő kitöltésére */
+
 .about-container {
     font-family: 'Arial', sans-serif;
     display: flex;
@@ -9,7 +9,6 @@
     background-color: linear-gradient(to bottom right, #003300, #006600, #00cc66)
 }
 
-/* Alap beállítások a footerhez */
 .about-footer {
     display: flex;
     justify-content: space-between;
@@ -22,34 +21,31 @@
     width: 100%;
     box-sizing: border-box;
     position: relative;
-    flex-grow: 1; /* Kitöltés az üres helyekkel */
+    flex-grow: 1;
 }
 
-/* Konténerek stílusai */
 .contact-box, .advertisement-box {
     flex: 1 1 48%;
     margin: 10px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background: #ffffff;  /* Fehér háttér */
-    color: black; /* Fekete szöveg */
+    background: #ffffff;
+    color: black;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex-grow: 1; /* Kitöltés a maradék helyekkel */
+    flex-grow: 1;
 }
 
-/* Konténer szegélyezés */
 .contact-box {
-    border-left: 5px solid #007bff; /* Kék szegély */
+    border-left: 5px solid #007bff;
 }
 
 .advertisement-box {
-    border-left: 5px solid #28a745; /* Zöld szegély */
+    border-left: 5px solid #28a745;
 }
 
-/* Címek stílusai */
 .contact-title {
     font-size: 1.3em;
     color: #007bff;
@@ -65,7 +61,6 @@
     font-weight: bold;
 }
 
-/* A lista stílusa */
 .contact-list {
     list-style: none;
     padding: 0;
@@ -81,7 +76,6 @@
     font-weight: bold;
 }
 
-/* Gombok */
 .about-btn {
     padding: 12px 24px;
     background-color: #28a745;
@@ -99,7 +93,6 @@
     background-color: #218838;
 }
 
-/* Reszponzív beállítások */
 @media (max-width: 768px) {
     .about-footer {
         flex-direction: column;
@@ -113,20 +106,18 @@
     }
 
     .contact-title, .advertisement-title {
-        font-size: 1.1em; /* Kisebb címek mobilon */
+        font-size: 1.1em;
     }
 }
 
-/* Minimalista gomb effektek */
 .about-btn {
     transition: transform 0.2s ease;
 }
 
 .about-btn:hover {
-    transform: scale(1.05); /* Kisebb növekedés hoverre */
+    transform: scale(1.05);
 }
 
-/* Modern stílusú animációk */
 @keyframes fadeInUp {
     0% {
         opacity: 0;
@@ -142,7 +133,6 @@
     animation: fadeInUp 0.8s ease-out;
 }
 
-/* Popup stílus */
 .about-popup {
     position: fixed;
     top: 0;
@@ -173,18 +163,18 @@
     text-align: center;
     position: relative;
     overflow-y: auto;
-    max-height: 80vh; /* Kisebb magasság */
+    max-height: 80vh;
 }
 
 .about-image {
     width: 100%;
-    height: 100%; /* A kép teljes magassága kitölti a rendelkezésre álló teret */
-    object-fit: cover; /* A kép teljesen kitölti a teret, miközben az arányai is megmaradnak */
-    max-height: 200px; /* A magasság maximuma 200px, de a szélességhez arányosítva */
+    height: 100%;
+    object-fit: cover;
+    max-height: 200px;
     margin: 10px 0;
-    border: 1px solid black; /* Fekete keret */
-    border-radius: 50px 20px; /* Kerekített sarkok */
-    display: block; /* A kép középre igazítása */
+    border: 1px solid black;
+    border-radius: 50px 20px;
+    display: block;
 }
 
 .feedback-form label {
@@ -211,19 +201,18 @@ textarea {
 
 .star {
     cursor: pointer;
-    color: #ccc; /* Alapértelmezett szürke szín */
+    color: #ccc;
     transition: color 0.2s ease;
 }
 
 .star.selected {
-    color: #ffcc00; /* Arany szín, ha kiválasztva */
+    color: #ffcc00;
 }
 
 .star:hover {
-    color: #ffcc00; /* Arany szín hover hatásra is */
+    color: #ffcc00;
 }
 
-/* Submit feedback gomb */
 .submit-feedback {
     padding: 10px 20px;
     background-color: #007bff;
@@ -239,7 +228,6 @@ textarea {
     background-color: #0056b3;
 }
 
-/* Feedback lista */
 .feedback-entry {
     background-color: #f4f4f9;
     padding: 10px;
@@ -276,7 +264,6 @@ textarea {
     }
 }
 
-/* Gombok */
 .close-btn {
     padding: 10px 20px;
     background-color: red;
@@ -292,7 +279,6 @@ textarea {
     background-color: darkred;
 }
 
-/* Like gomb animáció */
 .like-btn {
     padding: 10px 20px;
     background-color: #28a745;
@@ -337,14 +323,12 @@ textarea {
     }
 }
 
-/* Rólunk szöveg színének beállítása */
 .about-popup h2,
 .about-popup p,
 .about-popup .feedback-form label {
-    color: #000; /* Fekete szín */
+    color: #000;
 }
 
-/* Responszív beállítások */
 @media (max-width: 768px) {
     .about-footer {
         flex-direction: column;
