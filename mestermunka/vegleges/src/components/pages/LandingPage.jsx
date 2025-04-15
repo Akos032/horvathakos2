@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import BackgroundBubbles from "./BackgroundBubbles"; // Mivel ugyanabban a mappában található
-import logo from "/Mediapng2.png"; // Itt változtathatod a logó elérési útját
+import BackgroundBubbles from "./BackgroundBubbles";
+import logo from "/Mediapng2.png";
 
 const phrases = [
   "Üdvözöl a Receptek4You oldala!",
@@ -22,17 +22,19 @@ const LandingPage = () => {
 
     const loadingTimer = setTimeout(() => setLoading(false), 4500);
 
-    // Automatikus navigálás a főoldalra, amikor a betöltés befejeződik
-    if (!loading) {
-      navigate("/home");
-    }
-
     return () => {
       clearInterval(phraseTimer);
       clearTimeout(loadingTimer);
     };
-  }, [loading, navigate]);
+  }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      sessionStorage.setItem("visited", "true");
+      navigate("/home");
+    }
+  }, [loading, navigate]);
+  
   return (
     <div
       style={{
@@ -49,8 +51,6 @@ const LandingPage = () => {
       }}
     >
       <BackgroundBubbles />
-
-      {/* VILLANÓ KÖR A LOGÓ MÖGÖTT */}
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: [0, 1.5, 1], opacity: [0, 1, 0.2] }}
@@ -64,8 +64,6 @@ const LandingPage = () => {
           zIndex: 0,
         }}
       />
-
-      {/* LOGÓ ANIMÁCIÓ */}
       <motion.img
         src={logo}
         alt="Média logó"
@@ -80,8 +78,6 @@ const LandingPage = () => {
           filter: "drop-shadow(0 0 12px rgba(255,255,255,0.5))",
         }}
       />
-
-      {/* SZLOGENEK FELVILLANÁSA */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPhrase}
@@ -94,8 +90,6 @@ const LandingPage = () => {
           {phrases[currentPhrase]}
         </motion.div>
       </AnimatePresence>
-
-      {/* LOADING VAGY GOMB */}
       {loading ? (
         <motion.div
           initial={{ opacity: 0 }}
@@ -120,7 +114,7 @@ const LandingPage = () => {
         <motion.button
           whileHover={{ scale: 1.1, boxShadow: "0 0 15px rgba(255,255,255,0.5)" }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/home")} // Itt is lehet manuális navigálás
+          onClick={() => navigate("/home")}
           style={{
             marginTop: "30px",
             padding: "14px 32px",
