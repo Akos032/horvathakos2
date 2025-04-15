@@ -26,7 +26,7 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
           <img src={'Mediapng2.png'} alt="Logo" id="navbar-logo" />
           <Link to="/" id="navbar-title">Receptek</Link>
         </div>
-        {location.pathname === '/' && (
+        {location.pathname === '/home' && (
           <div id="navbar-search-container">
             <input
               type="text"
@@ -54,7 +54,7 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
         )}
       </AnimatePresence>
       <ul id="navbar-links" className={menuOpen ? 'open' : ''}>
-        {location.pathname === '/' && (
+        {location.pathname === '/home' && (
           <div id="mobile-search-container">
             <input
               type="text"

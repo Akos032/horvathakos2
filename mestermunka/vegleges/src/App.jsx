@@ -38,7 +38,6 @@ function App() {
       {location.pathname !== "/" && (
         <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} setKereses={setKereses} />
       )}
-
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<Home kereses={kereses} />} />

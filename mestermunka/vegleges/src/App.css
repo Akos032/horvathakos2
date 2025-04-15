@@ -1,4 +1,7 @@
-.box{
-    border: 1px solid black;
+body, html, #root, .App {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
 }
-
+  
