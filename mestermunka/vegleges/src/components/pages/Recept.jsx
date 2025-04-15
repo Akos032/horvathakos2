@@ -221,10 +221,11 @@ const Recept = () => {
               options={ingredientOptions}
               value={ingredientOptions.find(option => option.value === ingredients[index].ingredientId)}
               onChange={(selectedOption) => handleIngredientChange(index, selectedOption)}
-              placeholder="Válasz egy hozzávalot..."
+              placeholder="Válassz egy hozzávalót..."
               isSearchable
               required
               styles={customSelectStyles}
+              getOptionLabel={(e) => e.label}
               />
               <input
               className={styles.input}
