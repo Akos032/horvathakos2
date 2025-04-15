@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 15. 12:25
+-- Létrehozás ideje: 2025. Ápr 15. 13:23
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -62,7 +62,8 @@ CREATE TABLE `feltoltot_recept` (
 
 INSERT INTO `feltoltot_recept` (`profil_id`, `feltoltot_recept_id`) VALUES
 (1, 68),
-(1, 69);
+(1, 69),
+(1, 70);
 
 -- --------------------------------------------------------
 
@@ -373,7 +374,10 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 ('langyos tej', 450),
 ('tojássárgája', 451),
 ('vaníliakivonat', 452),
-('étkezési keményítő', 453);
+('étkezési keményítő', 453),
+('fehér káposzta', 454),
+('főtt rizs', 455),
+('kömény', 456);
 
 -- --------------------------------------------------------
 
@@ -478,7 +482,17 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 (1, 'db', 230),
 (50, 'ml', 231),
 (1, 'teáskanál', 232),
-(3, 'teáskanál', 233);
+(3, 'teáskanál', 233),
+(1, 'fej', 234),
+(1, 'evőkanál', 235),
+(1, 'csésze', 236),
+(1, 'db', 237),
+(2, 'evőkanál', 238),
+(2, 'evőkanál', 239),
+(1, 'teáskanál', 240),
+(2, 'csipet', 241),
+(1, 'csipet', 242),
+(1, 'teáskanál', 243);
 
 -- --------------------------------------------------------
 
@@ -584,7 +598,17 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 (451, 69, 1, 230, 0, 0),
 (165, 69, 1, 231, 0, 0),
 (453, 69, 1, 232, 0, 0),
-(452, 69, 1, 233, 0, 0);
+(452, 69, 1, 233, 0, 0),
+(454, 70, 2, 234, 3, 0),
+(287, 70, 2, 235, 3, 0),
+(455, 70, 2, 236, 3, 0),
+(163, 70, 2, 237, 3, 0),
+(233, 70, 2, 238, 3, 0),
+(179, 70, 2, 239, 3, 0),
+(417, 70, 2, 240, 3, 0),
+(161, 70, 2, 241, 3, 0),
+(201, 70, 2, 242, 3, 0),
+(456, 70, 2, 243, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -635,7 +659,8 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 ('Zöldségek előkészítése: A krumplit és karfiolt apróra vágd fel.\r\nFűszeres alap elkészítése: Egy serpenyőben hevítsd az olajat. Add hozzá a hagymát és pirítsd 5 percig.\r\nFokhagyma és gyömbér: Add hozzá a fokhagymát és gyömbért, pirítsd tovább 2-3 percig.\r\nFűszerek: Keverd hozzá a kurkumát, koriandert, köményt, és chili port. Pirítsd 1 percig.\r\nZöldségek hozzáadása: Add hozzá a felkockázott krumplit és karfiolt, és keverd össze. Öntsd hozzá a paradicsompürét és főzd 15-20 percig, amíg a zöldségek megpuhulnak.', 47, 'Aloo Gobi', '1742894191050-423696743.jpg', 2, 3),
 ('Tészta főzése: Főzd meg a makarónit sós vízben a csomagolás utasítása szerint.\r\nSzósz készítése: Egy serpenyőben melegítsd fel a vajat, majd add hozzá a lisztet, és kevergetve pirítsd 1-2 percig. Lassan öntsd hozzá a tejet, folyamatos keverés mellett, hogy sima szószt kapj. Főzd 5 percig, amíg besűrűsödik.\r\nSajt hozzáadása: Add hozzá a reszelt sajtot, fokhagyma port, sót és borsot, és keverd, amíg a sajt teljesen felolvad.\r\nTészta összeállítása: A megfőtt makarónit keverd össze a sajtszósszal, és ha szükséges, egy kis vízzel hígíthatod a szószt.', 48, ' Mac and Cheese', '1742894613915-253614925.jpg', 3, 2),
 ('Rizs: A barna rizst először alaposan mosd meg, majd főzd puhára kb. 30–40 perc alatt enyhén sós vízben.\r\nA spenótot blansírozd (forró vízbe pár percre, majd jeges vízbe). Turmixold pürévé.\r\nGhee-ben/vajban pirítsd meg a hagymát, gyömbért, fokhagymát és chilit.\r\nAdd hozzá a fűszereket, majd a spenótpürét. Forrald pár percig.\r\nPaneer: Kockázd fel a paneert, enyhén pirítsd meg serpenyőben, majd add a curryhez.\r\nKeverj bele egy kis tejfölt vagy tejszínt a krémesebb állagért.', 68, 'Palak paneer barna rizzsel', '1744711819574-615427075.jpg', 2, 3),
-('Keverd össze a tészta alapanyagait, dagaszd ki, és keleszd 1 órát.\r\nNyújtsd ki háromszög alakokra, töltsd meg a vaníliakrémmel (amit előzőleg felfőzöl, majd kihűtöd).\r\nTekerd fel croissant formába, majd süsd 180°C-on kb. 15–20 percig', 69, 'Cornetto', '1744712515681-85171274.jpg', 5, 1);
+('Keverd össze a tészta alapanyagait, dagaszd ki, és keleszd 1 órát.\r\nNyújtsd ki háromszög alakokra, töltsd meg a vaníliakrémmel (amit előzőleg felfőzöl, majd kihűtöd).\r\nTekerd fel croissant formába, majd süsd 180°C-on kb. 15–20 percig', 69, 'Cornetto', '1744712515681-85171274.jpg', 5, 1),
+('A káposztát leveleire szedjük, a vastag eret eltávolítjuk. A leveleket röviden forrázzuk le forró vízben, hogy könnyebben hajtogathatók legyenek. Egy-két perc elég is hozzá. Ha a levelek nagyok, félbevágjuk őket.\r\nA rizst előzőleg megfőzzük (kb. 1/2 csésze száraz rizsből) és félretesszük.\r\nA túrót, a tojást, a tejfölt, a főtt rizst, a pirospaprikát, sót, borsot és a köményt egy tálban összekeverjük. A keveréknek krémes állagúnak kell lennie.\r\nEgy kisebb sütőedényt vékonyan kikenünk olajjal. A káposztaleveleket felváltva rakjuk az aljára, majd egy réteg tölteléket kenünk rá. Ezt ismételjük addig, amíg minden káposztalevél és töltelék el nem fogy.\r\nA rakott káposztát előmelegített 180 °C-os sütőben 25-30 percig sütjük, amíg a teteje szép aranybarna nem lesz.', 70, 'Rakott káposzta', '1744716162809-345712028.jpg', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -774,7 +799,7 @@ ALTER TABLE `erzekenysegek`
 -- AUTO_INCREMENT a táblához `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
-  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=454;
+  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=457;
 
 --
 -- AUTO_INCREMENT a táblához `konyha`
@@ -786,7 +811,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -798,7 +823,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
