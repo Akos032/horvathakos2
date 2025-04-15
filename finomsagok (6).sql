@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2025. Ápr 15. 09:10
--- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2025. Ápr 15. 12:25
+-- Kiszolgáló verziója: 10.4.28-MariaDB
+-- PHP verzió: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,6 +29,7 @@ USE `finomsagok`;
 -- Tábla szerkezet ehhez a táblához `erzekenysegek`
 --
 
+DROP TABLE IF EXISTS `erzekenysegek`;
 CREATE TABLE `erzekenysegek` (
   `erzekenyseg` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `erzekenyseg_id` int(10) NOT NULL
@@ -49,10 +50,19 @@ INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `feltoltot_recept`
 --
 
+DROP TABLE IF EXISTS `feltoltot_recept`;
 CREATE TABLE `feltoltot_recept` (
   `profil_id` int(11) NOT NULL,
   `feltoltot_recept_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `feltoltot_recept`
+--
+
+INSERT INTO `feltoltot_recept` (`profil_id`, `feltoltot_recept_id`) VALUES
+(1, 68),
+(1, 69);
 
 -- --------------------------------------------------------
 
@@ -60,6 +70,7 @@ CREATE TABLE `feltoltot_recept` (
 -- Tábla szerkezet ehhez a táblához `hozzavalok`
 --
 
+DROP TABLE IF EXISTS `hozzavalok`;
 CREATE TABLE `hozzavalok` (
   `hozzavalok_neve` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Hozzavalok_id` int(11) NOT NULL
@@ -349,7 +360,20 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 ('makaróni tészta', 437),
 ('cheddar sajt', 438),
 ('reszelt cheddar sajt', 439),
-('fokhagyma por', 440);
+('fokhagyma por', 440),
+('bébispenót', 441),
+('friss bébispenót', 442),
+('ghee', 443),
+('zöld chili', 444),
+('garam masala', 445),
+('rizs', 446),
+('barna rizs', 447),
+('paneer sajt', 448),
+('szárított élesztő', 449),
+('langyos tej', 450),
+('tojássárgája', 451),
+('vaníliakivonat', 452),
+('étkezési keményítő', 453);
 
 -- --------------------------------------------------------
 
@@ -357,6 +381,7 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `konyha`
 --
 
+DROP TABLE IF EXISTS `konyha`;
 CREATE TABLE `konyha` (
   `nemzetiseg` varchar(30) NOT NULL,
   `konyha_id` int(11) NOT NULL
@@ -379,6 +404,7 @@ INSERT INTO `konyha` (`nemzetiseg`, `konyha_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `mertekegyseg`
 --
 
+DROP TABLE IF EXISTS `mertekegyseg`;
 CREATE TABLE `mertekegyseg` (
   `mennyiseg` int(20) NOT NULL,
   `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -429,7 +455,30 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 (2, 'csipet', 185),
 (1, 'csipet', 186),
 (1, 'evőkanál', 187),
-(2, 'csésze', 188);
+(2, 'csésze', 188),
+(100, 'g', 211),
+(70, 'g', 212),
+(1, 'evőkanál', 213),
+(2, 'fej', 214),
+(1, 'gerezd', 215),
+(1, 'teáskanál', 216),
+(2, 'db', 217),
+(3, 'teáskanál', 218),
+(2, 'teáskanál', 219),
+(2, 'csipet', 220),
+(2, 'evőkanál', 221),
+(60, 'g', 222),
+(150, 'ml', 223),
+(60, 'g', 224),
+(10, 'g', 225),
+(1, 'g', 226),
+(1, 'csipet', 227),
+(20, 'g', 228),
+(30, 'ml', 229),
+(1, 'db', 230),
+(50, 'ml', 231),
+(1, 'teáskanál', 232),
+(3, 'teáskanál', 233);
 
 -- --------------------------------------------------------
 
@@ -437,6 +486,7 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 -- Tábla szerkezet ehhez a táblához `napszak`
 --
 
+DROP TABLE IF EXISTS `napszak`;
 CREATE TABLE `napszak` (
   `idoszak` varchar(20) NOT NULL,
   `napszak_id` int(11) NOT NULL
@@ -457,6 +507,7 @@ INSERT INTO `napszak` (`idoszak`, `napszak_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `osszekoto`
 --
 
+DROP TABLE IF EXISTS `osszekoto`;
 CREATE TABLE `osszekoto` (
   `hozzavalok_id` int(11) DEFAULT NULL,
   `receptek_id` int(11) DEFAULT NULL,
@@ -510,7 +561,30 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 (161, 48, 1, 185, 4, 0),
 (201, 48, 1, 186, 4, 0),
 (164, 48, 1, 187, 4, 0),
-(418, 48, 1, 188, 4, 0);
+(418, 48, 1, 188, 4, 0),
+(442, 68, 1, 211, 1, 0),
+(448, 68, 1, 212, 1, 0),
+(443, 68, 1, 213, 1, 0),
+(382, 68, 1, 214, 1, 0),
+(169, 68, 1, 215, 1, 0),
+(196, 68, 1, 216, 1, 0),
+(444, 68, 1, 217, 1, 0),
+(445, 68, 1, 218, 1, 0),
+(431, 68, 1, 219, 1, 0),
+(161, 68, 1, 220, 1, 0),
+(179, 68, 1, 221, 1, 0),
+(447, 68, 1, 222, 1, 0),
+(418, 68, 1, 223, 1, 0),
+(419, 69, 1, 224, 0, 0),
+(162, 69, 1, 225, 0, 0),
+(449, 69, 1, 226, 0, 0),
+(161, 69, 1, 227, 0, 0),
+(166, 69, 1, 228, 0, 0),
+(450, 69, 1, 229, 0, 0),
+(451, 69, 1, 230, 0, 0),
+(165, 69, 1, 231, 0, 0),
+(453, 69, 1, 232, 0, 0),
+(452, 69, 1, 233, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -518,6 +592,7 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 -- Tábla szerkezet ehhez a táblához `preferencia`
 --
 
+DROP TABLE IF EXISTS `preferencia`;
 CREATE TABLE `preferencia` (
   `etkezes` varchar(30) NOT NULL,
   `etkezes_id` int(11) NOT NULL
@@ -540,6 +615,7 @@ INSERT INTO `preferencia` (`etkezes`, `etkezes_id`) VALUES
 -- Tábla szerkezet ehhez a táblához `receptek`
 --
 
+DROP TABLE IF EXISTS `receptek`;
 CREATE TABLE `receptek` (
   `keszites` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Receptek_id` int(11) NOT NULL,
@@ -557,7 +633,9 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 ('Pörkölt készítése\r\nElőkészítés: A húst apró kockákra vágjuk. A paradicsomnak lehúzzuk a héját, és felkockázzuk. A hagymákat és a paprikát szintén apróra vágjuk.\r\nA hagymát üvegesre pároljuk kevés olajon, majd hozzáadjuk a fűszerpaprikát.\r\nA kockákra vágott sertéshúst a hagymához adjuk, és addig pirítjuk, amíg kissé megpirul.\r\nA felkockázott paprikát és paradicsomot hozzáadjuk, összekeverjük.\r\nFelöntjük annyi vízzel, hogy ellepje a húst, majd ízlés szerint fűszerezzük.\r\nLassú tűzön főzöm, időnként megkeverjük. Amikor besűrűsödik a szaft (kb 1 óra) elkészült a pörkölt.\r\nNokedli készítése\r\nA nokedli tésztájához összekeverjük a lisztet, tojást, vizet és sót egy tálban, hogy sűrű, ragacsos tésztát kapjak.\r\nForrásban lévő vízbe szaggatjuk a tésztát egy nokedli szaggatóval, majd amint feljönnek a víz tetejére leszűrjük.', 45, 'Sertéspörkölt nokedlivel', '1742293089622-223025598.jpg', 1, 2),
 ('Főzd meg a tésztát sós vízben, majd szűrd le.\r\nEgy serpenyőben olvaszd fel a vajat, és pirítsd meg a hagymát (ha használod).\r\nA leszűrt tésztát keverd össze a túróval, a pirított hagymával és a tejföllel.\r\nSóval, borssal ízesítsd.', 46, ' Túrós Csusza', '1742893134573-52071968.jpg', 1, 1),
 ('Zöldségek előkészítése: A krumplit és karfiolt apróra vágd fel.\r\nFűszeres alap elkészítése: Egy serpenyőben hevítsd az olajat. Add hozzá a hagymát és pirítsd 5 percig.\r\nFokhagyma és gyömbér: Add hozzá a fokhagymát és gyömbért, pirítsd tovább 2-3 percig.\r\nFűszerek: Keverd hozzá a kurkumát, koriandert, köményt, és chili port. Pirítsd 1 percig.\r\nZöldségek hozzáadása: Add hozzá a felkockázott krumplit és karfiolt, és keverd össze. Öntsd hozzá a paradicsompürét és főzd 15-20 percig, amíg a zöldségek megpuhulnak.', 47, 'Aloo Gobi', '1742894191050-423696743.jpg', 2, 3),
-('Tészta főzése: Főzd meg a makarónit sós vízben a csomagolás utasítása szerint.\r\nSzósz készítése: Egy serpenyőben melegítsd fel a vajat, majd add hozzá a lisztet, és kevergetve pirítsd 1-2 percig. Lassan öntsd hozzá a tejet, folyamatos keverés mellett, hogy sima szószt kapj. Főzd 5 percig, amíg besűrűsödik.\r\nSajt hozzáadása: Add hozzá a reszelt sajtot, fokhagyma port, sót és borsot, és keverd, amíg a sajt teljesen felolvad.\r\nTészta összeállítása: A megfőtt makarónit keverd össze a sajtszósszal, és ha szükséges, egy kis vízzel hígíthatod a szószt.', 48, ' Mac and Cheese', '1742894613915-253614925.jpg', 3, 2);
+('Tészta főzése: Főzd meg a makarónit sós vízben a csomagolás utasítása szerint.\r\nSzósz készítése: Egy serpenyőben melegítsd fel a vajat, majd add hozzá a lisztet, és kevergetve pirítsd 1-2 percig. Lassan öntsd hozzá a tejet, folyamatos keverés mellett, hogy sima szószt kapj. Főzd 5 percig, amíg besűrűsödik.\r\nSajt hozzáadása: Add hozzá a reszelt sajtot, fokhagyma port, sót és borsot, és keverd, amíg a sajt teljesen felolvad.\r\nTészta összeállítása: A megfőtt makarónit keverd össze a sajtszósszal, és ha szükséges, egy kis vízzel hígíthatod a szószt.', 48, ' Mac and Cheese', '1742894613915-253614925.jpg', 3, 2),
+('Rizs: A barna rizst először alaposan mosd meg, majd főzd puhára kb. 30–40 perc alatt enyhén sós vízben.\r\nA spenótot blansírozd (forró vízbe pár percre, majd jeges vízbe). Turmixold pürévé.\r\nGhee-ben/vajban pirítsd meg a hagymát, gyömbért, fokhagymát és chilit.\r\nAdd hozzá a fűszereket, majd a spenótpürét. Forrald pár percig.\r\nPaneer: Kockázd fel a paneert, enyhén pirítsd meg serpenyőben, majd add a curryhez.\r\nKeverj bele egy kis tejfölt vagy tejszínt a krémesebb állagért.', 68, 'Palak paneer barna rizzsel', '1744711819574-615427075.jpg', 2, 3),
+('Keverd össze a tészta alapanyagait, dagaszd ki, és keleszd 1 órát.\r\nNyújtsd ki háromszög alakokra, töltsd meg a vaníliakrémmel (amit előzőleg felfőzöl, majd kihűtöd).\r\nTekerd fel croissant formába, majd süsd 180°C-on kb. 15–20 percig', 69, 'Cornetto', '1744712515681-85171274.jpg', 5, 1);
 
 -- --------------------------------------------------------
 
@@ -565,6 +643,7 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 -- Tábla szerkezet ehhez a táblához `regisztracio`
 --
 
+DROP TABLE IF EXISTS `regisztracio`;
 CREATE TABLE `regisztracio` (
   `admin` int(1) NOT NULL,
   `felhasznalo_id` int(11) NOT NULL,
@@ -588,6 +667,7 @@ INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felha
 -- Tábla szerkezet ehhez a táblához `sajat_receptek`
 --
 
+DROP TABLE IF EXISTS `sajat_receptek`;
 CREATE TABLE `sajat_receptek` (
   `recept` int(10) NOT NULL,
   `profil` int(10) NOT NULL
@@ -694,7 +774,7 @@ ALTER TABLE `erzekenysegek`
 -- AUTO_INCREMENT a táblához `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
-  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=441;
+  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=454;
 
 --
 -- AUTO_INCREMENT a táblához `konyha`
@@ -706,7 +786,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -718,7 +798,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
