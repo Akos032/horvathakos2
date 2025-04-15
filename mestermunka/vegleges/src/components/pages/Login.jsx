@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 import { motion, AnimatePresence } from "framer-motion";
 import BackgroundBubbles from "./BackgroundBubbles";
- 
+
 const RulesModal = ({ onAccept, onDecline }) => (
   <motion.div
     className="rules-modal"
@@ -38,38 +38,32 @@ const RulesModal = ({ onAccept, onDecline }) => (
     </div>
   </motion.div>
 );
- 
+
 export const Login = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
-  const [rulesAccepted, setRulesAccepted] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
- 
+
   const navigate = useNavigate();
- 
+
   const handleAuth = (event, isRegister) => {
     event.preventDefault();
- 
-    if (!rulesAccepted) {
-      alert("Előbb el kell fogadnod a szabályzatot!");
-      return;
-    }
- 
+
     const endpoint = isRegister ? "register" : "login";
     const userData = {
       felhasznalonev: username.trim(),
       email: email.trim(),
       password: password.trim(),
     };
- 
+
     if (!userData.email || !userData.password || (isRegister && !userData.felhasznalonev)) {
       alert("Minden mezőt ki kell tölteni!");
       return;
     }
- 
+
     axios.post(`http://localhost:3001/${endpoint}`, userData, {
       headers: { "Content-Type": "application/json" }
     })
@@ -85,9 +79,19 @@ export const Login = ({ setIsLoggedIn }) => {
           setTransitioning(false);
         }, 1000);
       } else {
+        const user = response.data.user;
+
+        if (user.szabalyzat === 0) {
+          localStorage.setItem("pendingUserId", user.felhasznalo_id);
+          localStorage.setItem("user", JSON.stringify(user)); // store temporarily
+          setShowRulesModal(true);
+          return;
+        }
+
         alert("Sikeres bejelentkezés!");
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("admin", JSON.stringify(response.data.admin));
+        localStorage.removeItem("pendingUserId");
         setIsLoggedIn(true);
         navigate("/");
       }
@@ -96,7 +100,37 @@ export const Login = ({ setIsLoggedIn }) => {
       alert(error.response?.data?.error || "Hiba történt!");
     });
   };
- 
+
+  const acceptRules = () => {
+    const userId = localStorage.getItem("pendingUserId");
+    if (!userId) {
+      alert("Nem található felhasználói azonosító.");
+      return;
+    }
+
+    axios.post("http://localhost:3001/api/accept-rules", { userId })
+      .then(() => {
+        alert("Szabályzat elfogadva!");
+        setShowRulesModal(false);
+
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        storedUser.szabalyzat = 1;
+        localStorage.setItem("user", JSON.stringify(storedUser));
+
+        localStorage.removeItem("pendingUserId");
+        setIsLoggedIn(true);
+        navigate("/");
+      })
+      .catch(() => {
+        alert("Hiba történt a szabályzat elfogadásakor.");
+      });
+  };
+
+  const declineRules = () => {
+    alert("A szabályzat elfogadása szükséges a folytatáshoz.");
+    setShowRulesModal(false);
+  };
+
   return (
     <motion.div
       id="auth-container"
@@ -157,6 +191,7 @@ export const Login = ({ setIsLoggedIn }) => {
                 {isRegistering ? "Regisztráció" : "Bejelentkezés"}
               </motion.button>
             </form>
+
             <motion.button
               id="toggle-auth"
               onClick={() => setIsRegistering(!isRegistering)}
@@ -165,31 +200,15 @@ export const Login = ({ setIsLoggedIn }) => {
             >
               {isRegistering ? "Már van fiókod? Bejelentkezés" : "Nincs fiókod? Regisztráció"}
             </motion.button>
- 
-            <motion.button
-              id="rules-button"
-              onClick={() => setShowRulesModal(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Szabályzat megtekintése
-            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
- 
+
       <AnimatePresence>
         {showRulesModal && (
           <RulesModal
-            onAccept={() => {
-              setRulesAccepted(true);
-              setShowRulesModal(false);
-            }}
-            onDecline={() => {
-              setRulesAccepted(false);
-              setShowRulesModal(false);
-              alert("A szabályzat elfogadása szükséges a folytatáshoz.");
-            }}
+            onAccept={acceptRules}
+            onDecline={declineRules}
           />
         )}
       </AnimatePresence>

@@ -550,10 +550,23 @@ app.post('/login', (req, res) => {
     });
 });
 
-
-
-
-
+app.post('/api/accept-rules', (req, res) => {
+    const { userId } = req.body;
+  
+    if (!userId) {
+      return res.status(400).json({ error: "Hiányzó felhasználói azonosító!" });
+    }
+  
+    const sql = "UPDATE regisztracio SET szabalyzat = 1 WHERE felhasznalo_id = ?";
+    db.query(sql, [userId], (err, result) => {
+      if (err) {
+        console.error("Hiba a szabályzat elfogadásakor:", err);
+        return res.status(500).json({ error: "Nem sikerült frissíteni a szabályzat állapotát." });
+      }
+      res.json({ success: "Szabályzat elfogadva." });
+    });
+});
+  
 app.post('/register', (req, res) => {
     console.log("📥 Beérkező adatok:", req.body);
 
