@@ -24,7 +24,7 @@ const NavBar = ({ isLoggedIn, onLogout, setKereses }) => {
       <div id="navbar-header">
         <div id="logo-title-container">
           <img src={'Mediapng2.png'} alt="Logo" id="navbar-logo" />
-          <Link to="/" id="navbar-title">Receptek</Link>
+          <Link to="/home" id="navbar-title">Receptek</Link>
         </div>
         {location.pathname === '/home' && (
           <div id="navbar-search-container">

@@ -36,7 +36,7 @@ const LandingPage = () => {
   }, [loading, navigate]);
   
   return (
-    <div
+    <div className="landing-page"
       style={{
         height: "100vh",
         width: "100%",

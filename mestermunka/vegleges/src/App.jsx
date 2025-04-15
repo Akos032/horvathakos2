@@ -25,6 +25,15 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      document.body.classList.add("with-navbar");
+    } else {
+      document.body.classList.remove("with-navbar");
+    }
+  }, [location.pathname]);
+
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
