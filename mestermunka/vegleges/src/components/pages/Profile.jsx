@@ -11,14 +11,6 @@ export default function Profile() {
   const [expandedRecipeId, setExpandedRecipeId] = useState(null);
   const [expandedInfoRecipeId, setExpandedInfoRecipeId] = useState(null);
   const [description, setDescription] = useState([]);
-  const [newUsername, setNewUsername] = useState("");
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
-
-  const toggleEditUsername = () => {
-    setIsEditingUsername(!isEditingUsername);
-    setNewUsername(user.felhasznalonev);
-  };
-
 
   useEffect(() => {
     try {
@@ -101,60 +93,11 @@ export default function Profile() {
       });
   };
 
-  const saveUsername = () => {
-    if (!newUsername.trim()) {
-      alert("Adj meg egy új felhasználónevet!");
-      return;
-    }
-  
-    axios.post("http://localhost:3001/api/update-username", {
-      userId: user.felhasznalo_id,
-      newUsername: newUsername
-    })
-      .then(response => {
-        alert("Felhasználónév frissítve!");
-        const updatedUser = { ...user, felhasznalonev: newUsername };
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        setIsEditingUsername(false);
-      })
-      .catch(error => {
-        if (error.response?.data?.error === "Ez a felhasználó név már foglalt") {
-          alert("Ez a felhasználó név már foglalt");
-        } else {
-          console.error("Hiba:", error);
-          alert("Hiba történt a név frissítésekor!");
-        }
-      });
-  };
-  
-
   if (!user) return <p>Betöltés...</p>;
 
   return (
     <div id="profile-container" className="max-w-lg mx-auto mt-10 p-5 shadow-lg rounded-2xl bg-gradient-to-r from-black to-gray-900 text-white text-center">
-      <div className="flex flex-col items-center space-y-2">
-        {isEditingUsername ? (
-          <>
-            <input
-              type="text"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              className="text-black p-2 rounded"
-            />
-            <button onClick={saveUsername} className="profile-button">
-              Mentés
-            </button>
-          </>
-        ) : (
-          <>
-            <h1>{user.felhasznalonev} profilja</h1>
-            <button onClick={toggleEditUsername} className="profile-button">
-              Profil név frissítése
-            </button>
-          </>
-        )}
-      </div>
+      <h1>{user.felhasznalonev} profilja</h1>
       <p className="text-gray-400">{user.email}</p>
       <h2 className="mt-4 text-xl font-semibold">Mentett receptek</h2>
       {savedRecipes.length === 0 ? (

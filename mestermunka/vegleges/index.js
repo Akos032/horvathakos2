@@ -606,34 +606,6 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.post('/api/update-username', (req, res) => {
-    const { userId, newUsername } = req.body;
-
-    if (!userId || !newUsername) {
-        return res.status(400).json({ error: "Hiányzó adatok!" });
-    }
-
-    const checkQuery = "SELECT * FROM regisztracio WHERE felhasznalonev = ?";
-    db.query(checkQuery, [newUsername], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: "Adatbázis hiba!" });
-        }
-
-        if (result.length > 0) {
-            return res.status(400).json({ error: "Ez a felhasználó név már foglalt" });
-        }
-
-        const updateQuery = "UPDATE regisztracio SET felhasznalonev = ? WHERE felhasznalo_id = ?";
-        db.query(updateQuery, [newUsername, userId], (err) => {
-            if (err) {
-                return res.status(500).json({ error: "Nem sikerült frissíteni a felhasználónevet." });
-            }
-            res.json({ success: "Felhasználónév frissítve!" });
-        });
-    });
-});
-
-
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
     const getImageQuery = `SELECT kep FROM receptek WHERE Receptek_id = ?`;
