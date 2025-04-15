@@ -5,7 +5,7 @@ import BackgroundBubbles from "./BackgroundBubbles"; // Mivel ugyanabban a mapp�
 import logo from "/Mediapng2.png"; // Itt változtathatod a logó elérési útját
 
 const phrases = [
-  "Üdvözöl a Média Receptvilág!",
+  "Üdvözöl a Receptek4You oldala!",
   "Főzzünk valami jót!",
   "Indulhat az ízutazás!",
 ];
