@@ -19,16 +19,16 @@ const RulesModal = ({ onAccept, onDecline }) => (
         Ez a főzős oldal egy közösségi recept- és élménymegosztó platform, ahol:
         <ul>
           <li>Megoszthatod kedvenc receptjeidet</li>
-          <li>Értékelheted mások ételeit</li>
-          <li>Feltölthetsz képeket, főzési tippeket</li>
+          <li>Tetszés szerint kipróbálhatod mások ételeit</li>
+          <li>Feltölthetsz recepteket és kategorizálhatod őket</li>
         </ul>
         <strong>Tilos:</strong>
         <ul>
-          <li>Trágár, bántó vagy nem odaillő tartalom feltöltése</li>
+          <li>Nem odaillő recept, olyan hozzávalókkal, amik nem alkalmazhatóak együtt, egy recept spamelése</li>
           <li>Mások receptjeinek plagizálása</li>
-          <li>Spam, reklám vagy ártó szándékú viselkedés</li>
+          <li>Spam, ártó szándékú viselkedés</li>
         </ul>
-        A regisztrációval elfogadod ezeket a szabályokat.
+        A regisztráció sroán a továbbiakban tudomásul vetted és elfogadod ezeket a szabályokat.
       </p>
       <div className="rules-buttons">
         <button className="accept-btn" onClick={onAccept}>Elfogadom</button>

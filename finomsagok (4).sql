@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 15. 21:24
+-- Létrehozás ideje: 2025. Ápr 16. 08:16
 -- Kiszolgáló verziója: 10.4.25-MariaDB
 -- PHP verzió: 8.1.10
 
@@ -47,20 +47,20 @@ INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `feltoltot_recept`
+-- Tábla szerkezet ehhez a táblához `feltoltott_recept`
 --
 
-DROP TABLE IF EXISTS `feltoltot_recept`;
-CREATE TABLE `feltoltot_recept` (
+DROP TABLE IF EXISTS `feltoltott_recept`;
+CREATE TABLE `feltoltott_recept` (
   `profil_id` int(11) NOT NULL,
-  `feltoltot_recept_id` int(11) NOT NULL
+  `feltoltott_recept_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `feltoltot_recept`
+-- A tábla adatainak kiíratása `feltoltott_recept`
 --
 
-INSERT INTO `feltoltot_recept` (`profil_id`, `feltoltot_recept_id`) VALUES
+INSERT INTO `feltoltott_recept` (`profil_id`, `feltoltott_recept_id`) VALUES
 (1, 68),
 (1, 69),
 (1, 70),
@@ -71,7 +71,10 @@ INSERT INTO `feltoltot_recept` (`profil_id`, `feltoltot_recept_id`) VALUES
 (1, 75),
 (1, 76),
 (1, 77),
-(1, 78);
+(1, 78),
+(2, 79),
+(2, 80),
+(2, 81);
 
 -- --------------------------------------------------------
 
@@ -416,7 +419,14 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 ('balzsamecet', 484),
 ('őrölt fekete bors', 485),
 (' teljes kiőrlésű kenyér', 486),
-('chili pelyhes', 487);
+('chili pelyhes', 487),
+('paneer', 488),
+('őrölt chili', 489),
+('ghí', 490),
+('chapati', 491),
+('sonka', 492),
+('karika paprika', 493),
+('aprított hagyma', 494);
 
 -- --------------------------------------------------------
 
@@ -603,7 +613,33 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 (2, 'csipet', 312),
 (2, 'teáskanál', 313),
 (1, 'db', 314),
-(1, 'evőkanál', 315);
+(1, 'evőkanál', 315),
+(2, 'db', 316),
+(1, 'db', 317),
+(2, 'db', 318),
+(1, 'db', 319),
+(1, 'teáskanál', 320),
+(2, 'csipet', 321),
+(1, 'csipet', 322),
+(1, 'db', 323),
+(1, 'db', 324),
+(100, 'g', 325),
+(2, 'db', 326),
+(3, 'db', 327),
+(1, 'gerezd', 328),
+(1, 'cm', 329),
+(2, 'teáskanál', 330),
+(2, 'teáskanál', 331),
+(1, 'teáskanál', 332),
+(1, 'db', 333),
+(2, 'db', 334),
+(3, 'szelet', 335),
+(1, 'teáskanál', 336),
+(1, 'szelet', 337),
+(2, 'db', 338),
+(1, 'evőkanál', 339),
+(1, 'csipet', 340),
+(2, 'csipet', 341);
 
 -- --------------------------------------------------------
 
@@ -791,7 +827,33 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 (201, 78, 2, 312, 3, 0),
 (487, 78, 2, 313, 3, 0),
 (204, 78, 2, 314, 3, 0),
-(287, 78, 2, 315, 3, 0);
+(287, 78, 2, 315, 3, 0),
+(163, 79, 2, 316, 0, 1),
+(170, 79, 2, 317, 0, 1),
+(382, 79, 2, 318, 0, 1),
+(467, 79, 2, 319, 0, 1),
+(287, 79, 2, 320, 0, 1),
+(161, 79, 2, 321, 0, 1),
+(201, 79, 2, 322, 0, 1),
+(466, 79, 2, 323, 0, 1),
+(463, 79, 2, 324, 0, 1),
+(488, 80, 1, 325, 1, 1),
+(170, 80, 1, 326, 1, 1),
+(382, 80, 1, 327, 1, 1),
+(169, 80, 1, 328, 1, 1),
+(196, 80, 1, 329, 1, 1),
+(445, 80, 1, 330, 1, 1),
+(489, 80, 1, 331, 1, 1),
+(490, 80, 1, 332, 1, 1),
+(491, 80, 1, 333, 1, 1),
+(163, 81, 2, 334, 0, 1),
+(492, 81, 2, 335, 0, 1),
+(477, 81, 2, 336, 0, 1),
+(420, 81, 2, 337, 0, 1),
+(493, 81, 2, 338, 0, 1),
+(494, 81, 2, 339, 0, 1),
+(161, 81, 2, 340, 0, 1),
+(201, 81, 2, 341, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -851,7 +913,10 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 ('A burgonyát héjában megfőzöd, majd meghámozod és felkarikázod.\r\nA tojást keményre főzöd, lehűtöd, felkarikázod.\r\nA brokkolit enyhén sós vízben 2-3 percig blansírozod (vagy párolod).\r\nEgy kis tűzálló edényt kiolajozol/vajazol, majd rétegezed:\r\nburgonya – brokkoli – tojás – tejföl – és így tovább, a tetejére sajt kerüljön.\r\n180°C-on sütöd kb. 15-20 percig, amíg a sajt megpirul.', 75, 'Rakott brokkolis krumpli tejföllel és tojással', '1744743804275-230758102.jpg', 1, 3),
 ('Egy serpenyőben kevés olajon megpirítod a zöldségeket 5-7 perc alatt, amíg megpuhulnak és enyhén karamellizálódnak.\r\nA tortilla egyik felére szórsz sajtot, ráteszed a zöldségeket, majd újra sajtot – és félbehajtod.\r\nUgyanabban a serpenyőben mindkét oldalát megsütöd közepes lángon, míg a sajt megolvad, és a tortilla aranybarna lesz.\r\nFelszeleteled, és tálalhatod tejföllel vagy salsával.', 76, ' Quesadilla grillezett zöldségekkel és sajttal', '1744744183334-508500025.jpg', 3, 3),
 ('A paradicsomot és a mozzarella sajtot szeleteld fel.\r\nEgy tányérra rendezd el a paradicsom és mozzarella szeleteket váltakozva, közben egy-egy bazsalikom levelet is tegyél közéjük.\r\nLocsold meg az olívaolajjal és (ha szeretnéd) egy kevés balzsamecettel.\r\nÍzesítsd sóval és frissen őrölt fekete borssal.\r\nTálald friss, ropogós kenyérrel, ha szeretnéd.', 77, 'Caprese saláta', '1744744647306-268563985.jpg', 5, 3),
-('Pirítsd meg a kenyérszeletet egy serpenyőben vagy kenyérpirítóban.\r\nMiközben a kenyér pirul, vágd fel az avokádót, távolítsd el a magját, és kanalazd ki a húsát. Egy villával törd össze, és ízesítsd sóval, borssal, valamint chili pelyhekkel, ha szeretnéd.\r\nEgy serpenyőben, kevés olívaolajon vagy vajon süss egy tojást (tükörtojás vagy buggyantott tojás is lehet, ahogy szereted).\r\nHa kész a pirítós, kend meg az avokádó péppel.\r\nTedd rá a sült tojást, és díszítsd friss petrezselyemmel vagy bazsalikommal.\r\nTálald frissen, egy pohár friss narancslével, ha szeretnéd.', 78, 'Avokádós tojásos pirítós', '1744745028949-567078154.jpg', 3, 1);
+('Pirítsd meg a kenyérszeletet egy serpenyőben vagy kenyérpirítóban.\r\nMiközben a kenyér pirul, vágd fel az avokádót, távolítsd el a magját, és kanalazd ki a húsát. Egy villával törd össze, és ízesítsd sóval, borssal, valamint chili pelyhekkel, ha szeretnéd.\r\nEgy serpenyőben, kevés olívaolajon vagy vajon süss egy tojást (tükörtojás vagy buggyantott tojás is lehet, ahogy szereted).\r\nHa kész a pirítós, kend meg az avokádó péppel.\r\nTedd rá a sült tojást, és díszítsd friss petrezselyemmel vagy bazsalikommal.\r\nTálald frissen, egy pohár friss narancslével, ha szeretnéd.', 78, 'Avokádós tojásos pirítós', '1744745028949-567078154.jpg', 3, 1),
+('Egy serpenyőben hevítsd fel az olívaolajat.\r\nDobd rá a hagymát, dinszteld, majd add hozzá a paradicsomot és a jalapeñót.\r\nMikor kicsit megpuhultak, üsd rá a tojásokat, sózd-borsozd, és keverd össze rántottaszerűen.\r\nPirítsd meg a tortillát egy másik serpenyőben, vagy melegítsd mikrohullámú sütőben.\r\nTálald a tojásos keveréket a tortillán, díszítsd friss korianderrel, reszelt sajttal vagy szeletelt avokádóval.', 79, 'Mexikói tojásos tortilla', '1744779874093-46305055.jpg', 4, 1),
+('Egy serpenyőben melegítsd fel a ghít vagy olajat.\r\nPirítsd meg a hagymát, majd add hozzá a fokhagymát és gyömbért.\r\nDobd bele a paradicsomot, majd fűszerezd (kurkuma, garam masala, chili, só).\r\nFőzd, míg a paradicsom szétfő, és sűrű szósz állagú lesz.\r\nAdd hozzá a lereszelt paneert, keverd össze, és főzd 2-3 percig.\r\nTálald friss korianderrel, chapatival vagy egy adag főtt rizzsel.', 80, 'Paneer Bhurji', '1744780281095-359822032.jpg', 2, 2),
+('Serpenyőben melegítsd fel az olajat vagy vajat.\r\nDobd rá a felcsíkozott sonkát, pirítsd meg egy kicsit.\r\nHa teszel bele hagymát/paprikát, dobd rá azt is, dinszteld meg.\r\nÜsd rá a tojásokat, sózd, borsozd, majd keverd, míg jól átsül.\r\nFriss kenyérrel, zöldségekkel tálald.', 81, 'Ham and eggs', '1744780612778-2845686.jpg', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -875,7 +940,7 @@ CREATE TABLE `regisztracio` (
 
 INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felhasznalonev`, `szabalyzat`) VALUES
 (1, 1, 'horvath0akos@gmail.com', '$2b$10$UADHvTcUBgNN57Z5yDUEm.2fDLULGJsxALCMK4KMAVDvVG.oRdMBW', 'Akos', 1),
-(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'varjuricsi', 0);
+(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'Ricskó kapitány', 1);
 
 -- --------------------------------------------------------
 
@@ -908,10 +973,10 @@ ALTER TABLE `erzekenysegek`
   ADD PRIMARY KEY (`erzekenyseg_id`);
 
 --
--- A tábla indexei `feltoltot_recept`
+-- A tábla indexei `feltoltott_recept`
 --
-ALTER TABLE `feltoltot_recept`
-  ADD KEY `feltoltot_recept_id` (`feltoltot_recept_id`),
+ALTER TABLE `feltoltott_recept`
+  ADD KEY `feltoltot_recept_id` (`feltoltott_recept_id`),
   ADD KEY `profil_id` (`profil_id`);
 
 --
@@ -990,7 +1055,7 @@ ALTER TABLE `erzekenysegek`
 -- AUTO_INCREMENT a táblához `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
-  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=488;
+  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=495;
 
 --
 -- AUTO_INCREMENT a táblához `konyha`
@@ -1002,7 +1067,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=342;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -1014,7 +1079,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
@@ -1027,11 +1092,11 @@ ALTER TABLE `regisztracio`
 --
 
 --
--- Megkötések a táblához `feltoltot_recept`
+-- Megkötések a táblához `feltoltott_recept`
 --
-ALTER TABLE `feltoltot_recept`
-  ADD CONSTRAINT `feltoltot_recept_ibfk_1` FOREIGN KEY (`feltoltot_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `feltoltot_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `feltoltott_recept`
+  ADD CONSTRAINT `feltoltott_recept_ibfk_1` FOREIGN KEY (`feltoltott_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feltoltott_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Megkötések a táblához `osszekoto`
