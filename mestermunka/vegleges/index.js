@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -78,8 +78,8 @@ app.get("/api/osszes", (req, res) => {
       INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
       INNER JOIN konyha ON receptek.konyha_osszekoto = konyha.konyha_id
       INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
-      LEFT JOIN feltoltot_recept ON receptek.Receptek_id = feltoltot_recept.feltoltot_recept_id
-      LEFT JOIN regisztracio ON feltoltot_recept.profil_id = regisztracio.felhasznalo_id
+      LEFT JOIN feltoltott_recept ON receptek.Receptek_id = feltoltott_recept.feltoltott_recept_id
+      LEFT JOIN regisztracio ON feltoltott_recept.profil_id = regisztracio.felhasznalo_id
     `;
 
     if (keres) {
@@ -103,7 +103,7 @@ app.get('/api/user-stats', (req, res) => {
         regisztracio.felhasznalo_id, 
         regisztracio.felhasznalonev, 
         regisztracio.email, 
-        COUNT(feltoltot_recept.feltoltot_recept_id) AS receptek_szama,
+        COUNT(DISTINCT feltoltott_recept.feltoltott_recept_id) AS receptek_szama,
         receptek.Receptek_id, 
         receptek.receptek_neve, 
         receptek.keszites, 
@@ -120,8 +120,8 @@ app.get('/api/user-stats', (req, res) => {
         osszekoto.receptek_id, 
         regisztracio.felhasznalonev AS feltolto_nev
         FROM regisztracio
-        LEFT JOIN feltoltot_recept ON regisztracio.felhasznalo_id = feltoltot_recept.profil_id
-        LEFT JOIN receptek ON feltoltot_recept.feltoltot_recept_id = receptek.Receptek_id
+        LEFT JOIN feltoltott_recept ON regisztracio.felhasznalo_id = feltoltott_recept.profil_id
+        LEFT JOIN receptek ON feltoltott_recept.feltoltott_recept_id = receptek.Receptek_id
         LEFT JOIN osszekoto ON receptek.Receptek_id = osszekoto.receptek_id
         LEFT JOIN mertekegyseg ON osszekoto.mertekegyseg_id = mertekegyseg.Mertekegyseg_id
         LEFT JOIN hozzavalok ON osszekoto.hozzavalok_id = hozzavalok.Hozzavalok_id
@@ -300,8 +300,8 @@ app.get('/api/recipes/user/:userId', (req, res) => {
         konyha.nemzetiseg
     FROM receptek
     INNER join osszekoto on receptek.Receptek_id = osszekoto.receptek_id
-    INNER JOIN feltoltot_recept ON receptek.Receptek_id = feltoltot_recept.feltoltot_recept_id
-    INNER JOIN regisztracio ON feltoltot_recept.profil_id = regisztracio.felhasznalo_id
+    INNER JOIN feltoltott_recept ON receptek.Receptek_id = feltoltott_recept.feltoltott_recept_id
+    INNER JOIN regisztracio ON feltoltott_recept.profil_id = regisztracio.felhasznalo_id
     INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
     INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
     INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
@@ -448,10 +448,10 @@ function insertUserRecipeRelation(db, userId, recipeId) {
                 return reject(new Error(`User with ID ${userId} does not exist in regisztracio table`));
             }
 
-            const query = 'INSERT INTO feltoltot_recept (profil_id, feltoltot_recept_id) VALUES (?, ?)';
+            const query = 'INSERT INTO feltoltott_recept (profil_id, feltoltott_recept_id) VALUES (?, ?)';
             db.query(query, [userId, recipeId], (err, result) => {
                 if (err) {
-                    console.error("Error inserting into feltoltot_recept:", err);
+                    console.error("Error inserting into feltoltott_recept:", err);
                     return reject(err);
                 }
                 resolve(result);
