@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 16. 08:16
--- Kiszolgáló verziója: 10.4.25-MariaDB
--- PHP verzió: 8.1.10
+-- Host: 127.0.0.1:3307
+-- Generation Time: Apr 16, 2025 at 08:55 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `finomsagok`
+-- Database: `finomsagok`
 --
 CREATE DATABASE IF NOT EXISTS `finomsagok` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `finomsagok`;
@@ -26,17 +26,16 @@ USE `finomsagok`;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `erzekenysegek`
+-- Table structure for table `erzekenysegek`
 --
 
-DROP TABLE IF EXISTS `erzekenysegek`;
 CREATE TABLE `erzekenysegek` (
   `erzekenyseg` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `erzekenyseg_id` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `erzekenysegek`
+-- Dumping data for table `erzekenysegek`
 --
 
 INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
@@ -47,49 +46,27 @@ INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `feltoltott_recept`
+-- Table structure for table `feltoltott_recept`
 --
 
-DROP TABLE IF EXISTS `feltoltott_recept`;
 CREATE TABLE `feltoltott_recept` (
   `profil_id` int(11) NOT NULL,
   `feltoltott_recept_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- A tábla adatainak kiíratása `feltoltott_recept`
---
-
-INSERT INTO `feltoltott_recept` (`profil_id`, `feltoltott_recept_id`) VALUES
-(1, 68),
-(1, 69),
-(1, 70),
-(1, 71),
-(1, 72),
-(1, 73),
-(1, 74),
-(1, 75),
-(1, 76),
-(1, 77),
-(1, 78),
-(2, 79),
-(2, 80),
-(2, 81);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `hozzavalok`
+-- Table structure for table `hozzavalok`
 --
 
-DROP TABLE IF EXISTS `hozzavalok`;
 CREATE TABLE `hozzavalok` (
   `hozzavalok_neve` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Hozzavalok_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `hozzavalok`
+-- Dumping data for table `hozzavalok`
 --
 
 INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
@@ -431,17 +408,16 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `konyha`
+-- Table structure for table `konyha`
 --
 
-DROP TABLE IF EXISTS `konyha`;
 CREATE TABLE `konyha` (
   `nemzetiseg` varchar(30) NOT NULL,
   `konyha_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `konyha`
+-- Dumping data for table `konyha`
 --
 
 INSERT INTO `konyha` (`nemzetiseg`, `konyha_id`) VALUES
@@ -454,18 +430,17 @@ INSERT INTO `konyha` (`nemzetiseg`, `konyha_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `mertekegyseg`
+-- Table structure for table `mertekegyseg`
 --
 
-DROP TABLE IF EXISTS `mertekegyseg`;
 CREATE TABLE `mertekegyseg` (
   `mennyiseg` int(20) NOT NULL,
-  `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 NOT NULL,
+  `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Mertekegyseg_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `mertekegyseg`
+-- Dumping data for table `mertekegyseg`
 --
 
 INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALUES
@@ -644,17 +619,16 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `napszak`
+-- Table structure for table `napszak`
 --
 
-DROP TABLE IF EXISTS `napszak`;
 CREATE TABLE `napszak` (
   `idoszak` varchar(20) NOT NULL,
   `napszak_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `napszak`
+-- Dumping data for table `napszak`
 --
 
 INSERT INTO `napszak` (`idoszak`, `napszak_id`) VALUES
@@ -665,10 +639,9 @@ INSERT INTO `napszak` (`idoszak`, `napszak_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `osszekoto`
+-- Table structure for table `osszekoto`
 --
 
-DROP TABLE IF EXISTS `osszekoto`;
 CREATE TABLE `osszekoto` (
   `hozzavalok_id` int(11) DEFAULT NULL,
   `receptek_id` int(11) DEFAULT NULL,
@@ -679,7 +652,7 @@ CREATE TABLE `osszekoto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `osszekoto`
+-- Dumping data for table `osszekoto`
 --
 
 INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegyseg_id`, `preferencia_id`, `ervenyes`) VALUES
@@ -828,47 +801,46 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 (487, 78, 2, 313, 3, 0),
 (204, 78, 2, 314, 3, 0),
 (287, 78, 2, 315, 3, 0),
-(163, 79, 2, 316, 0, 1),
-(170, 79, 2, 317, 0, 1),
-(382, 79, 2, 318, 0, 1),
-(467, 79, 2, 319, 0, 1),
-(287, 79, 2, 320, 0, 1),
-(161, 79, 2, 321, 0, 1),
-(201, 79, 2, 322, 0, 1),
-(466, 79, 2, 323, 0, 1),
-(463, 79, 2, 324, 0, 1),
-(488, 80, 1, 325, 1, 1),
-(170, 80, 1, 326, 1, 1),
-(382, 80, 1, 327, 1, 1),
-(169, 80, 1, 328, 1, 1),
-(196, 80, 1, 329, 1, 1),
-(445, 80, 1, 330, 1, 1),
-(489, 80, 1, 331, 1, 1),
-(490, 80, 1, 332, 1, 1),
-(491, 80, 1, 333, 1, 1),
-(163, 81, 2, 334, 0, 1),
-(492, 81, 2, 335, 0, 1),
-(477, 81, 2, 336, 0, 1),
-(420, 81, 2, 337, 0, 1),
-(493, 81, 2, 338, 0, 1),
-(494, 81, 2, 339, 0, 1),
-(161, 81, 2, 340, 0, 1),
-(201, 81, 2, 341, 0, 1);
+(163, 79, 2, 316, 0, 0),
+(170, 79, 2, 317, 0, 0),
+(382, 79, 2, 318, 0, 0),
+(467, 79, 2, 319, 0, 0),
+(287, 79, 2, 320, 0, 0),
+(161, 79, 2, 321, 0, 0),
+(201, 79, 2, 322, 0, 0),
+(466, 79, 2, 323, 0, 0),
+(463, 79, 2, 324, 0, 0),
+(488, 80, 1, 325, 1, 0),
+(170, 80, 1, 326, 1, 0),
+(382, 80, 1, 327, 1, 0),
+(169, 80, 1, 328, 1, 0),
+(196, 80, 1, 329, 1, 0),
+(445, 80, 1, 330, 1, 0),
+(489, 80, 1, 331, 1, 0),
+(490, 80, 1, 332, 1, 0),
+(491, 80, 1, 333, 1, 0),
+(163, 81, 2, 334, 0, 0),
+(492, 81, 2, 335, 0, 0),
+(477, 81, 2, 336, 0, 0),
+(420, 81, 2, 337, 0, 0),
+(493, 81, 2, 338, 0, 0),
+(494, 81, 2, 339, 0, 0),
+(161, 81, 2, 340, 0, 0),
+(201, 81, 2, 341, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `preferencia`
+-- Table structure for table `preferencia`
 --
 
-DROP TABLE IF EXISTS `preferencia`;
 CREATE TABLE `preferencia` (
   `etkezes` varchar(30) NOT NULL,
   `etkezes_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `preferencia`
+-- Dumping data for table `preferencia`
 --
 
 INSERT INTO `preferencia` (`etkezes`, `etkezes_id`) VALUES
@@ -881,21 +853,20 @@ INSERT INTO `preferencia` (`etkezes`, `etkezes_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `receptek`
+-- Table structure for table `receptek`
 --
 
-DROP TABLE IF EXISTS `receptek`;
 CREATE TABLE `receptek` (
   `keszites` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Receptek_id` int(11) NOT NULL,
   `receptek_neve` varchar(100) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `kep` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
+  `kep` varchar(50) DEFAULT NULL,
   `konyha_osszekoto` int(10) NOT NULL,
   `napszak_osszekoto` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `receptek`
+-- Dumping data for table `receptek`
 --
 
 INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `konyha_osszekoto`, `napszak_osszekoto`) VALUES
@@ -921,10 +892,9 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `regisztracio`
+-- Table structure for table `regisztracio`
 --
 
-DROP TABLE IF EXISTS `regisztracio`;
 CREATE TABLE `regisztracio` (
   `admin` int(1) NOT NULL,
   `felhasznalo_id` int(11) NOT NULL,
@@ -935,7 +905,7 @@ CREATE TABLE `regisztracio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `regisztracio`
+-- Dumping data for table `regisztracio`
 --
 
 INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felhasznalonev`, `szabalyzat`) VALUES
@@ -945,17 +915,16 @@ INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felha
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `sajat_receptek`
+-- Table structure for table `sajat_receptek`
 --
 
-DROP TABLE IF EXISTS `sajat_receptek`;
 CREATE TABLE `sajat_receptek` (
   `recept` int(10) NOT NULL,
   `profil` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- A tábla adatainak kiíratása `sajat_receptek`
+-- Dumping data for table `sajat_receptek`
 --
 
 INSERT INTO `sajat_receptek` (`recept`, `profil`) VALUES
@@ -963,48 +932,48 @@ INSERT INTO `sajat_receptek` (`recept`, `profil`) VALUES
 (48, 1);
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `erzekenysegek`
+-- Indexes for table `erzekenysegek`
 --
 ALTER TABLE `erzekenysegek`
   ADD PRIMARY KEY (`erzekenyseg_id`);
 
 --
--- A tábla indexei `feltoltott_recept`
+-- Indexes for table `feltoltott_recept`
 --
 ALTER TABLE `feltoltott_recept`
   ADD KEY `feltoltot_recept_id` (`feltoltott_recept_id`),
   ADD KEY `profil_id` (`profil_id`);
 
 --
--- A tábla indexei `hozzavalok`
+-- Indexes for table `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
   ADD PRIMARY KEY (`Hozzavalok_id`);
 
 --
--- A tábla indexei `konyha`
+-- Indexes for table `konyha`
 --
 ALTER TABLE `konyha`
   ADD PRIMARY KEY (`konyha_id`);
 
 --
--- A tábla indexei `mertekegyseg`
+-- Indexes for table `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
   ADD PRIMARY KEY (`Mertekegyseg_id`);
 
 --
--- A tábla indexei `napszak`
+-- Indexes for table `napszak`
 --
 ALTER TABLE `napszak`
   ADD PRIMARY KEY (`napszak_id`);
 
 --
--- A tábla indexei `osszekoto`
+-- Indexes for table `osszekoto`
 --
 ALTER TABLE `osszekoto`
   ADD KEY `hozzavalok_id` (`hozzavalok_id`,`receptek_id`),
@@ -1014,13 +983,13 @@ ALTER TABLE `osszekoto`
   ADD KEY `etrend_id` (`etrend_id`);
 
 --
--- A tábla indexei `preferencia`
+-- Indexes for table `preferencia`
 --
 ALTER TABLE `preferencia`
   ADD PRIMARY KEY (`etkezes_id`);
 
 --
--- A tábla indexei `receptek`
+-- Indexes for table `receptek`
 --
 ALTER TABLE `receptek`
   ADD PRIMARY KEY (`Receptek_id`),
@@ -1028,78 +997,78 @@ ALTER TABLE `receptek`
   ADD KEY `napszak_oszekoto` (`napszak_osszekoto`);
 
 --
--- A tábla indexei `regisztracio`
+-- Indexes for table `regisztracio`
 --
 ALTER TABLE `regisztracio`
   ADD PRIMARY KEY (`felhasznalo_id`),
   ADD UNIQUE KEY `Email` (`email`,`felhasznalonev`);
 
 --
--- A tábla indexei `sajat_receptek`
+-- Indexes for table `sajat_receptek`
 --
 ALTER TABLE `sajat_receptek`
   ADD KEY `Recept` (`recept`,`profil`),
   ADD KEY `Profil` (`profil`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `erzekenysegek`
+-- AUTO_INCREMENT for table `erzekenysegek`
 --
 ALTER TABLE `erzekenysegek`
   MODIFY `erzekenyseg_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT a táblához `hozzavalok`
+-- AUTO_INCREMENT for table `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
   MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=495;
 
 --
--- AUTO_INCREMENT a táblához `konyha`
+-- AUTO_INCREMENT for table `konyha`
 --
 ALTER TABLE `konyha`
   MODIFY `konyha_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT a táblához `mertekegyseg`
+-- AUTO_INCREMENT for table `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
   MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=342;
 
 --
--- AUTO_INCREMENT a táblához `napszak`
+-- AUTO_INCREMENT for table `napszak`
 --
 ALTER TABLE `napszak`
   MODIFY `napszak_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT a táblához `receptek`
+-- AUTO_INCREMENT for table `receptek`
 --
 ALTER TABLE `receptek`
   MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
--- AUTO_INCREMENT a táblához `regisztracio`
+-- AUTO_INCREMENT for table `regisztracio`
 --
 ALTER TABLE `regisztracio`
   MODIFY `felhasznalo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `feltoltott_recept`
+-- Constraints for table `feltoltott_recept`
 --
 ALTER TABLE `feltoltott_recept`
   ADD CONSTRAINT `feltoltott_recept_ibfk_1` FOREIGN KEY (`feltoltott_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `feltoltott_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Megkötések a táblához `osszekoto`
+-- Constraints for table `osszekoto`
 --
 ALTER TABLE `osszekoto`
   ADD CONSTRAINT `osszekoto_ibfk_1` FOREIGN KEY (`preferencia_id`) REFERENCES `preferencia` (`etkezes_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
@@ -1109,14 +1078,14 @@ ALTER TABLE `osszekoto`
   ADD CONSTRAINT `osszekoto_ibfk_7` FOREIGN KEY (`mertekegyseg_id`) REFERENCES `mertekegyseg` (`Mertekegyseg_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Megkötések a táblához `receptek`
+-- Constraints for table `receptek`
 --
 ALTER TABLE `receptek`
   ADD CONSTRAINT `receptek_ibfk_1` FOREIGN KEY (`napszak_osszekoto`) REFERENCES `napszak` (`napszak_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `receptek_ibfk_2` FOREIGN KEY (`konyha_osszekoto`) REFERENCES `konyha` (`konyha_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Megkötések a táblához `sajat_receptek`
+-- Constraints for table `sajat_receptek`
 --
 ALTER TABLE `sajat_receptek`
   ADD CONSTRAINT `sajat_receptek_ibfk_1` FOREIGN KEY (`recept`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
