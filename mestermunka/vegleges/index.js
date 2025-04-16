@@ -14,7 +14,7 @@ app.use(express.json())
 const db = mysql.createPool({
     user: "root",
     host: "127.0.0.1",
-    port: 3306,
+    port: 3307,
     password: "",
     database: "finomsagok"
 
@@ -315,8 +315,8 @@ app.get('/api/recipes/user/:userId', (req, res) => {
         konyha.nemzetiseg
     FROM receptek
     INNER join osszekoto on receptek.Receptek_id = osszekoto.receptek_id
-    INNER JOIN feltoltot_recept ON receptek.Receptek_id = feltoltot_recept.feltoltot_recept_id
-    INNER JOIN regisztracio ON feltoltot_recept.profil_id = regisztracio.felhasznalo_id
+    INNER JOIN feltoltott_recept ON receptek.Receptek_id = feltoltott_recept.feltoltott_recept_id
+    INNER JOIN regisztracio ON feltoltott_recept.profil_id = regisztracio.felhasznalo_id
     INNER JOIN preferencia ON osszekoto.preferencia_id = preferencia.etkezes_id
     INNER JOIN erzekenysegek ON osszekoto.etrend_id = erzekenysegek.erzekenyseg_id
     INNER JOIN napszak ON receptek.napszak_osszekoto = napszak.napszak_id
