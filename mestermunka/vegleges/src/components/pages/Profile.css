@@ -76,43 +76,37 @@
   margin-top: 16px;
   padding: 20px;
   border-radius: 12px;
-  background-color: #f1f8f6;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  color: black;
+  background-color: transparent;
+  box-shadow: none;
+  color: white;
 }
 
-#profile-ingredients-wrapper {
-  max-width: 600px;
-  margin: 0 auto 20px auto;
+
+#profile-info-box p {
+  color: white;
 }
 
 .profile-ingredient-row {
   display: flex;
   justify-content: space-between;
   padding: 12px;
-  border-bottom: 1px solid #ddd;
-  background-color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: transparent;
 }
 
 .profile-ingredient-row:nth-child(even) {
-  background-color: #f7f7f7;
+  background-color: transparent;
 }
 
-.profile-ingredient-name {
-  font-weight: bold;
-  color: #333;
-  font-size: 14px;
+.profile-ingredient-name, .profile-ingredient-amount {
+  color: white;
 }
 
-.profile-ingredient-amount {
-  font-style: italic;
-  color: #555;
-  font-size: 14px;
-}
+
 
 
 #profile-info-box p {
-  color: #222;
+  color: white;
   margin: 8px 0;
 }
 
