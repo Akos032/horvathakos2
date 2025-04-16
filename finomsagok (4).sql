@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 15. 13:23
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Létrehozás ideje: 2025. Ápr 16. 08:16
+-- Kiszolgáló verziója: 10.4.25-MariaDB
+-- PHP verzió: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `erzekenysegek`;
 CREATE TABLE `erzekenysegek` (
   `erzekenyseg` varchar(30) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `erzekenyseg_id` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `erzekenysegek`
@@ -47,23 +47,34 @@ INSERT INTO `erzekenysegek` (`erzekenyseg`, `erzekenyseg_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `feltoltot_recept`
+-- Tábla szerkezet ehhez a táblához `feltoltott_recept`
 --
 
-DROP TABLE IF EXISTS `feltoltot_recept`;
-CREATE TABLE `feltoltot_recept` (
+DROP TABLE IF EXISTS `feltoltott_recept`;
+CREATE TABLE `feltoltott_recept` (
   `profil_id` int(11) NOT NULL,
-  `feltoltot_recept_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `feltoltott_recept_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `feltoltot_recept`
+-- A tábla adatainak kiíratása `feltoltott_recept`
 --
 
-INSERT INTO `feltoltot_recept` (`profil_id`, `feltoltot_recept_id`) VALUES
+INSERT INTO `feltoltott_recept` (`profil_id`, `feltoltott_recept_id`) VALUES
 (1, 68),
 (1, 69),
-(1, 70);
+(1, 70),
+(1, 71),
+(1, 72),
+(1, 73),
+(1, 74),
+(1, 75),
+(1, 76),
+(1, 77),
+(1, 78),
+(2, 79),
+(2, 80),
+(2, 81);
 
 -- --------------------------------------------------------
 
@@ -377,7 +388,45 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 ('étkezési keményítő', 453),
 ('fehér káposzta', 454),
 ('főtt rizs', 455),
-('kömény', 456);
+('kömény', 456),
+('sűrített paradicsom', 457),
+('füstölt paprika', 458),
+('juharszirup', 459),
+('almaecet', 460),
+('hamburgerzsemle', 461),
+('avokádókrém', 462),
+('avokádó', 463),
+('uborka', 464),
+('lilahagyma', 465),
+('kukoricatortilla', 466),
+('jalapeño paprika', 467),
+('mozzarella sajt', 468),
+('guacamole', 469),
+('durum', 470),
+('padlizsán', 471),
+('cukkini', 472),
+('besan', 473),
+('reszelt répa', 474),
+('répa', 475),
+('őrölt kurkuma', 476),
+('olaj', 477),
+('reszelt trappista sajt', 478),
+('tortilla lap', 479),
+('kaliforniai paprika', 480),
+('friss mozzarella sajt', 481),
+('bazsalikom levelek', 482),
+('extra szűz olívaolaj', 483),
+('balzsamecet', 484),
+('őrölt fekete bors', 485),
+(' teljes kiőrlésű kenyér', 486),
+('chili pelyhes', 487),
+('paneer', 488),
+('őrölt chili', 489),
+('ghí', 490),
+('chapati', 491),
+('sonka', 492),
+('karika paprika', 493),
+('aprított hagyma', 494);
 
 -- --------------------------------------------------------
 
@@ -389,7 +438,7 @@ DROP TABLE IF EXISTS `konyha`;
 CREATE TABLE `konyha` (
   `nemzetiseg` varchar(30) NOT NULL,
   `konyha_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `konyha`
@@ -411,7 +460,7 @@ INSERT INTO `konyha` (`nemzetiseg`, `konyha_id`) VALUES
 DROP TABLE IF EXISTS `mertekegyseg`;
 CREATE TABLE `mertekegyseg` (
   `mennyiseg` int(20) NOT NULL,
-  `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mertekegyseg` varchar(30) CHARACTER SET utf8mb4 NOT NULL,
   `Mertekegyseg_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -492,7 +541,105 @@ INSERT INTO `mertekegyseg` (`mennyiseg`, `mertekegyseg`, `Mertekegyseg_id`) VALU
 (1, 'teáskanál', 240),
 (2, 'csipet', 241),
 (1, 'csipet', 242),
-(1, 'teáskanál', 243);
+(1, 'teáskanál', 243),
+(100, 'g', 244),
+(1, 'evőkanál', 245),
+(1, 'evőkanál', 246),
+(1, 'kiskanál', 247),
+(2, 'kiskanál', 248),
+(1, 'kiskanál', 249),
+(2, 'evőkanál', 250),
+(2, 'teáskanál', 251),
+(1, 'teáskanál', 252),
+(3, 'teáskanál', 253),
+(1, 'db', 254),
+(25, 'dkg', 255),
+(2, 'db', 256),
+(1, 'db', 257),
+(1, 'db', 258),
+(2, 'fej', 259),
+(2, 'gerezd', 260),
+(2, 'db', 261),
+(1, 'evőkanál', 262),
+(1, 'evőkanál', 263),
+(1, 'csipet', 264),
+(1, 'csipet', 265),
+(2, 'db', 266),
+(100, 'g', 267),
+(1, 'db', 268),
+(2, 'db', 269),
+(1, 'db', 270),
+(3, 'evőkanál', 271),
+(1, 'gerezd', 272),
+(1, 'evőkanál', 273),
+(2, 'teáskanál', 274),
+(2, 'csipet', 275),
+(1, 'g', 276),
+(40, 'g', 277),
+(2, 'csésze', 278),
+(2, 'fej', 279),
+(1, 'evőkanál', 280),
+(1, 'evőkanál', 281),
+(2, 'teáskanál', 282),
+(1, 'csipet', 283),
+(2, 'csipet', 284),
+(1, 'teáskanál', 285),
+(2, 'db', 286),
+(2, 'fej', 287),
+(1, 'db', 288),
+(2, 'evőkanál', 289),
+(1, 'evőkanál', 290),
+(1, 'csipet', 291),
+(1, 'csipet', 292),
+(1, 'evőkanál', 293),
+(1, 'db', 294),
+(2, 'db', 295),
+(3, 'db', 296),
+(2, 'db', 297),
+(1, 'teáskanál', 298),
+(2, 'csipet', 299),
+(1, 'csipet', 300),
+(1, 'db', 301),
+(1, 'golyó', 302),
+(1, 'g', 303),
+(2, 'evőkanál', 304),
+(1, 'teáskanál', 305),
+(1, 'csipet', 306),
+(2, 'csipet', 307),
+(1, 'szelet', 308),
+(1, 'db', 309),
+(1, 'db', 310),
+(2, 'csipet', 311),
+(2, 'csipet', 312),
+(2, 'teáskanál', 313),
+(1, 'db', 314),
+(1, 'evőkanál', 315),
+(2, 'db', 316),
+(1, 'db', 317),
+(2, 'db', 318),
+(1, 'db', 319),
+(1, 'teáskanál', 320),
+(2, 'csipet', 321),
+(1, 'csipet', 322),
+(1, 'db', 323),
+(1, 'db', 324),
+(100, 'g', 325),
+(2, 'db', 326),
+(3, 'db', 327),
+(1, 'gerezd', 328),
+(1, 'cm', 329),
+(2, 'teáskanál', 330),
+(2, 'teáskanál', 331),
+(1, 'teáskanál', 332),
+(1, 'db', 333),
+(2, 'db', 334),
+(3, 'szelet', 335),
+(1, 'teáskanál', 336),
+(1, 'szelet', 337),
+(2, 'db', 338),
+(1, 'evőkanál', 339),
+(1, 'csipet', 340),
+(2, 'csipet', 341);
 
 -- --------------------------------------------------------
 
@@ -504,7 +651,7 @@ DROP TABLE IF EXISTS `napszak`;
 CREATE TABLE `napszak` (
   `idoszak` varchar(20) NOT NULL,
   `napszak_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `napszak`
@@ -608,7 +755,105 @@ INSERT INTO `osszekoto` (`hozzavalok_id`, `receptek_id`, `etrend_id`, `mertekegy
 (417, 70, 2, 240, 3, 0),
 (161, 70, 2, 241, 3, 0),
 (201, 70, 2, 242, 3, 0),
-(456, 70, 2, 243, 3, 0);
+(456, 70, 2, 243, 3, 0),
+(311, 71, 2, 244, 2, 0),
+(275, 71, 2, 245, 2, 0),
+(457, 71, 2, 246, 2, 0),
+(458, 71, 2, 247, 2, 0),
+(423, 71, 2, 248, 2, 0),
+(161, 71, 2, 249, 2, 0),
+(287, 71, 2, 250, 2, 0),
+(460, 71, 2, 251, 2, 0),
+(459, 71, 2, 252, 2, 0),
+(458, 71, 2, 253, 2, 0),
+(461, 71, 2, 254, 2, 0),
+(347, 71, 2, 255, 2, 0),
+(163, 72, 1, 256, 4, 0),
+(466, 72, 1, 257, 4, 0),
+(170, 72, 1, 258, 4, 0),
+(382, 72, 1, 259, 4, 0),
+(169, 72, 1, 260, 4, 0),
+(467, 72, 1, 261, 4, 0),
+(439, 72, 1, 262, 4, 0),
+(287, 72, 1, 263, 4, 0),
+(161, 72, 1, 264, 4, 0),
+(201, 72, 1, 265, 4, 0),
+(463, 72, 1, 266, 4, 0),
+(470, 73, 2, 267, 2, 0),
+(471, 73, 2, 268, 2, 0),
+(472, 73, 2, 269, 2, 0),
+(170, 73, 2, 270, 2, 0),
+(457, 73, 2, 271, 2, 0),
+(169, 73, 2, 272, 2, 0),
+(287, 73, 2, 273, 2, 0),
+(203, 73, 2, 274, 2, 0),
+(161, 73, 2, 275, 2, 0),
+(204, 73, 2, 276, 2, 0),
+(473, 74, 0, 277, 0, 0),
+(418, 74, 0, 278, 0, 0),
+(382, 74, 0, 279, 0, 0),
+(474, 74, 0, 280, 0, 0),
+(221, 74, 0, 281, 0, 0),
+(476, 74, 0, 282, 0, 0),
+(161, 74, 0, 283, 0, 0),
+(201, 74, 0, 284, 0, 0),
+(477, 74, 0, 285, 0, 0),
+(167, 75, 1, 286, 4, 0),
+(361, 75, 1, 287, 4, 0),
+(163, 75, 1, 288, 4, 0),
+(179, 75, 1, 289, 4, 0),
+(478, 75, 1, 290, 4, 0),
+(161, 75, 1, 291, 4, 0),
+(201, 75, 1, 292, 4, 0),
+(477, 75, 1, 293, 4, 0),
+(479, 76, 2, 294, 4, 0),
+(439, 76, 2, 295, 4, 0),
+(465, 76, 2, 296, 4, 0),
+(472, 76, 2, 297, 4, 0),
+(287, 76, 2, 298, 4, 0),
+(161, 76, 2, 299, 4, 0),
+(201, 76, 2, 300, 4, 0),
+(170, 77, 1, 301, 0, 0),
+(481, 77, 1, 302, 0, 0),
+(482, 77, 1, 303, 0, 0),
+(483, 77, 1, 304, 0, 0),
+(484, 77, 1, 305, 0, 0),
+(161, 77, 1, 306, 0, 0),
+(485, 77, 1, 307, 0, 0),
+(486, 78, 2, 308, 3, 0),
+(463, 78, 2, 309, 3, 0),
+(163, 78, 2, 310, 3, 0),
+(161, 78, 2, 311, 3, 0),
+(201, 78, 2, 312, 3, 0),
+(487, 78, 2, 313, 3, 0),
+(204, 78, 2, 314, 3, 0),
+(287, 78, 2, 315, 3, 0),
+(163, 79, 2, 316, 0, 1),
+(170, 79, 2, 317, 0, 1),
+(382, 79, 2, 318, 0, 1),
+(467, 79, 2, 319, 0, 1),
+(287, 79, 2, 320, 0, 1),
+(161, 79, 2, 321, 0, 1),
+(201, 79, 2, 322, 0, 1),
+(466, 79, 2, 323, 0, 1),
+(463, 79, 2, 324, 0, 1),
+(488, 80, 1, 325, 1, 1),
+(170, 80, 1, 326, 1, 1),
+(382, 80, 1, 327, 1, 1),
+(169, 80, 1, 328, 1, 1),
+(196, 80, 1, 329, 1, 1),
+(445, 80, 1, 330, 1, 1),
+(489, 80, 1, 331, 1, 1),
+(490, 80, 1, 332, 1, 1),
+(491, 80, 1, 333, 1, 1),
+(163, 81, 2, 334, 0, 1),
+(492, 81, 2, 335, 0, 1),
+(477, 81, 2, 336, 0, 1),
+(420, 81, 2, 337, 0, 1),
+(493, 81, 2, 338, 0, 1),
+(494, 81, 2, 339, 0, 1),
+(161, 81, 2, 340, 0, 1),
+(201, 81, 2, 341, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -620,7 +865,7 @@ DROP TABLE IF EXISTS `preferencia`;
 CREATE TABLE `preferencia` (
   `etkezes` varchar(30) NOT NULL,
   `etkezes_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `preferencia`
@@ -644,7 +889,7 @@ CREATE TABLE `receptek` (
   `keszites` text CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
   `Receptek_id` int(11) NOT NULL,
   `receptek_neve` varchar(100) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL,
-  `kep` varchar(50) DEFAULT NULL,
+  `kep` varchar(50) COLLATE utf8mb4_hungarian_ci DEFAULT NULL,
   `konyha_osszekoto` int(10) NOT NULL,
   `napszak_osszekoto` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
@@ -660,7 +905,18 @@ INSERT INTO `receptek` (`keszites`, `Receptek_id`, `receptek_neve`, `kep`, `kony
 ('Tészta főzése: Főzd meg a makarónit sós vízben a csomagolás utasítása szerint.\r\nSzósz készítése: Egy serpenyőben melegítsd fel a vajat, majd add hozzá a lisztet, és kevergetve pirítsd 1-2 percig. Lassan öntsd hozzá a tejet, folyamatos keverés mellett, hogy sima szószt kapj. Főzd 5 percig, amíg besűrűsödik.\r\nSajt hozzáadása: Add hozzá a reszelt sajtot, fokhagyma port, sót és borsot, és keverd, amíg a sajt teljesen felolvad.\r\nTészta összeállítása: A megfőtt makarónit keverd össze a sajtszósszal, és ha szükséges, egy kis vízzel hígíthatod a szószt.', 48, ' Mac and Cheese', '1742894613915-253614925.jpg', 3, 2),
 ('Rizs: A barna rizst először alaposan mosd meg, majd főzd puhára kb. 30–40 perc alatt enyhén sós vízben.\r\nA spenótot blansírozd (forró vízbe pár percre, majd jeges vízbe). Turmixold pürévé.\r\nGhee-ben/vajban pirítsd meg a hagymát, gyömbért, fokhagymát és chilit.\r\nAdd hozzá a fűszereket, majd a spenótpürét. Forrald pár percig.\r\nPaneer: Kockázd fel a paneert, enyhén pirítsd meg serpenyőben, majd add a curryhez.\r\nKeverj bele egy kis tejfölt vagy tejszínt a krémesebb állagért.', 68, 'Palak paneer barna rizzsel', '1744711819574-615427075.jpg', 2, 3),
 ('Keverd össze a tészta alapanyagait, dagaszd ki, és keleszd 1 órát.\r\nNyújtsd ki háromszög alakokra, töltsd meg a vaníliakrémmel (amit előzőleg felfőzöl, majd kihűtöd).\r\nTekerd fel croissant formába, majd süsd 180°C-on kb. 15–20 percig', 69, 'Cornetto', '1744712515681-85171274.jpg', 5, 1),
-('A káposztát leveleire szedjük, a vastag eret eltávolítjuk. A leveleket röviden forrázzuk le forró vízben, hogy könnyebben hajtogathatók legyenek. Egy-két perc elég is hozzá. Ha a levelek nagyok, félbevágjuk őket.\r\nA rizst előzőleg megfőzzük (kb. 1/2 csésze száraz rizsből) és félretesszük.\r\nA túrót, a tojást, a tejfölt, a főtt rizst, a pirospaprikát, sót, borsot és a köményt egy tálban összekeverjük. A keveréknek krémes állagúnak kell lennie.\r\nEgy kisebb sütőedényt vékonyan kikenünk olajjal. A káposztaleveleket felváltva rakjuk az aljára, majd egy réteg tölteléket kenünk rá. Ezt ismételjük addig, amíg minden káposztalevél és töltelék el nem fogy.\r\nA rakott káposztát előmelegített 180 °C-os sütőben 25-30 percig sütjük, amíg a teteje szép aranybarna nem lesz.', 70, 'Rakott káposzta', '1744716162809-345712028.jpg', 1, 2);
+('A káposztát leveleire szedjük, a vastag eret eltávolítjuk. A leveleket röviden forrázzuk le forró vízben, hogy könnyebben hajtogathatók legyenek. Egy-két perc elég is hozzá. Ha a levelek nagyok, félbevágjuk őket.\r\nA rizst előzőleg megfőzzük (kb. 1/2 csésze száraz rizsből) és félretesszük.\r\nA túrót, a tojást, a tejfölt, a főtt rizst, a pirospaprikát, sót, borsot és a köményt egy tálban összekeverjük. A keveréknek krémes állagúnak kell lennie.\r\nEgy kisebb sütőedényt vékonyan kikenünk olajjal. A káposztaleveleket felváltva rakjuk az aljára, majd egy réteg tölteléket kenünk rá. Ezt ismételjük addig, amíg minden káposztalevél és töltelék el nem fogy.\r\nA rakott káposztát előmelegített 180 °C-os sütőben 25-30 percig sütjük, amíg a teteje szép aranybarna nem lesz.', 70, 'Rakott káposzta', '1744716162809-345712028.jpg', 1, 2),
+('A lencsét törd össze villával vagy turmixold durvára, majd keverd össze a zabpehellyel, paradicsommal és fűszerekkel. Formázz belőle pogácsát, és süsd meg közepes lángon olajon kb. 3-4 percig oldalanként.\r\nKeverd össze a hozzávalókat egy kis tálban.\r\nAz édesburgonyát forgasd össze olajjal, fűszerekkel, és süsd sütőben 200°C-on kb. 20-25 percig, amíg ropogós.\r\nPirítsd meg a zsemlét, kend meg BBQ szósszal, tedd rá a pogácsát, zöldségeket, krémet. Tálald a hasábokkal.', 71, 'BBQ lencsés hamburger édesburgonya hasábokkal', '1744742087405-912873316.png', 3, 2),
+('Egy kis serpenyőben melegítsd az olajat, dinszteld meg a hagymát és fokhagymát, majd add hozzá a paradicsomot és a jalapeñót. Sózd, borsozd, főzd 5-6 percig, míg kissé sűrűsödik.\r\nEgy másik serpenyőben süsd meg a tojásokat tükörtojásként (vagy buggyantva is lehet).\r\nA tortillát száraz serpenyőben pirítsd meg, míg kissé ropogós lesz.\r\nTedd a tortillát a tányérra, kanalazd rá a szószt, tedd rá a tojásokat, szórd meg sajttal, korianderrel, és kínáld avokádóval vagy guacamoléval.', 72, 'Huevos rancheros', '1744742553993-793981659.jpg', 4, 1),
+('Tésztát főzz sós vízben „al dente”-re, majd szűrd le.\r\nEgy serpenyőben melegítsd az olajat, dobd rá a fokhagymát, majd a padlizsánt és a cukkinit. Süsd kb. 8-10 percig, amíg szépen megpirulnak.\r\nAdd hozzá a paradicsomot és a sűrített paradicsomot, oregánót, sót, borsot. Főzd még 5 percig, hogy összeérjenek az ízek.\r\nA leszűrt tésztát forgasd bele a szószos zöldségekbe.\r\nSzórd meg friss bazsalikommal, esetleg táplálkozási élesztőpehellyel.', 73, 'Spagetti paradicsomos sült zöldséggel', '1744742965649-27941960.jpg', 5, 2),
+('Keverd össze a lisztet, vizet, fűszereket és zöldségeket egy tálban, míg sima palacsintatésztát nem kapsz.\r\nForrósíts fel egy tapadásmentes serpenyőt, kend ki olajjal.\r\nÖntsd bele a tésztát, és lapítsd el palacsinta formára. Süsd 2-3 percig, majd fordítsd meg, és süsd a másik oldalát is aranybarnára.', 74, 'Masala chilla', '1744743485155-846386723.jpg', 2, 1),
+('A burgonyát héjában megfőzöd, majd meghámozod és felkarikázod.\r\nA tojást keményre főzöd, lehűtöd, felkarikázod.\r\nA brokkolit enyhén sós vízben 2-3 percig blansírozod (vagy párolod).\r\nEgy kis tűzálló edényt kiolajozol/vajazol, majd rétegezed:\r\nburgonya – brokkoli – tojás – tejföl – és így tovább, a tetejére sajt kerüljön.\r\n180°C-on sütöd kb. 15-20 percig, amíg a sajt megpirul.', 75, 'Rakott brokkolis krumpli tejföllel és tojással', '1744743804275-230758102.jpg', 1, 3),
+('Egy serpenyőben kevés olajon megpirítod a zöldségeket 5-7 perc alatt, amíg megpuhulnak és enyhén karamellizálódnak.\r\nA tortilla egyik felére szórsz sajtot, ráteszed a zöldségeket, majd újra sajtot – és félbehajtod.\r\nUgyanabban a serpenyőben mindkét oldalát megsütöd közepes lángon, míg a sajt megolvad, és a tortilla aranybarna lesz.\r\nFelszeleteled, és tálalhatod tejföllel vagy salsával.', 76, ' Quesadilla grillezett zöldségekkel és sajttal', '1744744183334-508500025.jpg', 3, 3),
+('A paradicsomot és a mozzarella sajtot szeleteld fel.\r\nEgy tányérra rendezd el a paradicsom és mozzarella szeleteket váltakozva, közben egy-egy bazsalikom levelet is tegyél közéjük.\r\nLocsold meg az olívaolajjal és (ha szeretnéd) egy kevés balzsamecettel.\r\nÍzesítsd sóval és frissen őrölt fekete borssal.\r\nTálald friss, ropogós kenyérrel, ha szeretnéd.', 77, 'Caprese saláta', '1744744647306-268563985.jpg', 5, 3),
+('Pirítsd meg a kenyérszeletet egy serpenyőben vagy kenyérpirítóban.\r\nMiközben a kenyér pirul, vágd fel az avokádót, távolítsd el a magját, és kanalazd ki a húsát. Egy villával törd össze, és ízesítsd sóval, borssal, valamint chili pelyhekkel, ha szeretnéd.\r\nEgy serpenyőben, kevés olívaolajon vagy vajon süss egy tojást (tükörtojás vagy buggyantott tojás is lehet, ahogy szereted).\r\nHa kész a pirítós, kend meg az avokádó péppel.\r\nTedd rá a sült tojást, és díszítsd friss petrezselyemmel vagy bazsalikommal.\r\nTálald frissen, egy pohár friss narancslével, ha szeretnéd.', 78, 'Avokádós tojásos pirítós', '1744745028949-567078154.jpg', 3, 1),
+('Egy serpenyőben hevítsd fel az olívaolajat.\r\nDobd rá a hagymát, dinszteld, majd add hozzá a paradicsomot és a jalapeñót.\r\nMikor kicsit megpuhultak, üsd rá a tojásokat, sózd-borsozd, és keverd össze rántottaszerűen.\r\nPirítsd meg a tortillát egy másik serpenyőben, vagy melegítsd mikrohullámú sütőben.\r\nTálald a tojásos keveréket a tortillán, díszítsd friss korianderrel, reszelt sajttal vagy szeletelt avokádóval.', 79, 'Mexikói tojásos tortilla', '1744779874093-46305055.jpg', 4, 1),
+('Egy serpenyőben melegítsd fel a ghít vagy olajat.\r\nPirítsd meg a hagymát, majd add hozzá a fokhagymát és gyömbért.\r\nDobd bele a paradicsomot, majd fűszerezd (kurkuma, garam masala, chili, só).\r\nFőzd, míg a paradicsom szétfő, és sűrű szósz állagú lesz.\r\nAdd hozzá a lereszelt paneert, keverd össze, és főzd 2-3 percig.\r\nTálald friss korianderrel, chapatival vagy egy adag főtt rizzsel.', 80, 'Paneer Bhurji', '1744780281095-359822032.jpg', 2, 2),
+('Serpenyőben melegítsd fel az olajat vagy vajat.\r\nDobd rá a felcsíkozott sonkát, pirítsd meg egy kicsit.\r\nHa teszel bele hagymát/paprikát, dobd rá azt is, dinszteld meg.\r\nÜsd rá a tojásokat, sózd, borsozd, majd keverd, míg jól átsül.\r\nFriss kenyérrel, zöldségekkel tálald.', 81, 'Ham and eggs', '1744780612778-2845686.jpg', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -684,7 +940,7 @@ CREATE TABLE `regisztracio` (
 
 INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felhasznalonev`, `szabalyzat`) VALUES
 (1, 1, 'horvath0akos@gmail.com', '$2b$10$UADHvTcUBgNN57Z5yDUEm.2fDLULGJsxALCMK4KMAVDvVG.oRdMBW', 'Akos', 1),
-(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'varjuricsi', 0);
+(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'Ricskó kapitány', 1);
 
 -- --------------------------------------------------------
 
@@ -696,7 +952,7 @@ DROP TABLE IF EXISTS `sajat_receptek`;
 CREATE TABLE `sajat_receptek` (
   `recept` int(10) NOT NULL,
   `profil` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `sajat_receptek`
@@ -717,10 +973,10 @@ ALTER TABLE `erzekenysegek`
   ADD PRIMARY KEY (`erzekenyseg_id`);
 
 --
--- A tábla indexei `feltoltot_recept`
+-- A tábla indexei `feltoltott_recept`
 --
-ALTER TABLE `feltoltot_recept`
-  ADD KEY `feltoltot_recept_id` (`feltoltot_recept_id`),
+ALTER TABLE `feltoltott_recept`
+  ADD KEY `feltoltot_recept_id` (`feltoltott_recept_id`),
   ADD KEY `profil_id` (`profil_id`);
 
 --
@@ -799,7 +1055,7 @@ ALTER TABLE `erzekenysegek`
 -- AUTO_INCREMENT a táblához `hozzavalok`
 --
 ALTER TABLE `hozzavalok`
-  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=457;
+  MODIFY `Hozzavalok_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=495;
 
 --
 -- AUTO_INCREMENT a táblához `konyha`
@@ -811,7 +1067,7 @@ ALTER TABLE `konyha`
 -- AUTO_INCREMENT a táblához `mertekegyseg`
 --
 ALTER TABLE `mertekegyseg`
-  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
+  MODIFY `Mertekegyseg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=342;
 
 --
 -- AUTO_INCREMENT a táblához `napszak`
@@ -823,7 +1079,7 @@ ALTER TABLE `napszak`
 -- AUTO_INCREMENT a táblához `receptek`
 --
 ALTER TABLE `receptek`
-  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `Receptek_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT a táblához `regisztracio`
@@ -836,11 +1092,11 @@ ALTER TABLE `regisztracio`
 --
 
 --
--- Megkötések a táblához `feltoltot_recept`
+-- Megkötések a táblához `feltoltott_recept`
 --
-ALTER TABLE `feltoltot_recept`
-  ADD CONSTRAINT `feltoltot_recept_ibfk_1` FOREIGN KEY (`feltoltot_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `feltoltot_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `feltoltott_recept`
+  ADD CONSTRAINT `feltoltott_recept_ibfk_1` FOREIGN KEY (`feltoltott_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feltoltott_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Megkötések a táblához `osszekoto`
