@@ -118,7 +118,7 @@ app.get('/api/user-stats', (req, res) => {
         regisztracio.felhasznalo_id, 
         regisztracio.felhasznalonev, 
         regisztracio.email, 
-        COUNT(feltoltott_recept.feltoltott_recept_id) AS receptek_szama,
+        COUNT(DISTINCT feltoltott_recept.feltoltott_recept_id) AS receptek_szama,
         receptek.Receptek_id, 
         receptek.receptek_neve, 
         receptek.keszites, 
