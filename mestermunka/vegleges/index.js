@@ -22,21 +22,6 @@ const db = mysql.createPool({
 
 const jwt = require('jsonwebtoken');
 
-
-const checkAdmin = (req, res, next) => {
-    const user = req.user;
-  
-    if (!user || user.admin !== 1) {
-      return res.status(403).json({ error: 'You do not have admin rights!' });
-    }
-  
-    next();
-  };
-
-  app.get('/api/admin', checkAdmin, (req, res) => {
-    res.json({ message: 'Welcome to the Admin page!' });
-});
-
 const uploadDir = path.join(__dirname, 'public');
 
 if (!fs.existsSync(uploadDir)) {
