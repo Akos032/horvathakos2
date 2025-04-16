@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import './Aboutus.css';
+import axios from "axios";
+
 
 export const AboutSection = () => {
   const [showAbout, setShowAbout] = useState(false);
@@ -7,6 +9,8 @@ export const AboutSection = () => {
   const [feedback, setFeedback] = useState("");
   const [submittedFeedback, setSubmittedFeedback] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [userLiked, setUserLiked] = useState(false);
+
 
   const toggleAboutText = () => {
     setShowAbout((prevState) => !prevState);
@@ -16,10 +20,46 @@ export const AboutSection = () => {
     setShowAbout(false);
   };
 
-  const handleLike = () => {
-    setLikes((prevLikes) => prevLikes + 1);
-  };
+  useEffect(() => {
+    if (showAbout) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        axios.get(`http://localhost:3001/api/user-like/${user.felhasznalo_id}`)
+          .then((res) => setUserLiked(res.data.like === 1))
+          .catch(() => console.error("Nem sikerült lekérni a felhasználó státuszát."));
+      }
+  
+      axios.get("http://localhost:3001/api/total-likes")
+        .then((res) => setLikes(res.data.totalLikes))
+        .catch(() => console.error("Nem sikerült lekérni a kedvelések számát."));
+    }
+  }, [showAbout]);
+  
 
+  const handleLike = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("Jelentkezz be a kedveléshez!");
+      return;
+    }
+  
+    axios.post("http://localhost:3001/api/toggle-like", { userId: user.felhasznalo_id })
+      .then((response) => {
+        const newLikeValue = response.data.newLikeValue;
+        setUserLiked(newLikeValue === 1);
+        axios.get("http://localhost:3001/api/total-likes")
+          .then((res) => setLikes(res.data.totalLikes));
+  
+        if (newLikeValue === 1) {
+          alert("Köszönjük a kedvelést!");
+        } else {
+          alert("Kedvelés visszavonva!");
+        }
+      })
+      .catch((err) => alert(err.response?.data?.error || "Hiba történt!"));
+  };
+  
+  
   const handleFeedbackChange = (e) => {
     setFeedback(e.target.value);
   };
@@ -43,6 +83,8 @@ export const AboutSection = () => {
       setSelectedRating(0);
     }
   };
+
+  
 
   return (
     <div className="about-container full-footer">
@@ -86,7 +128,8 @@ export const AboutSection = () => {
 
             <div className="about-actions">
               <button className="close-btn" onClick={closePopup}>Kilépés</button>
-              <button className="like-btn" onClick={handleLike}>❤️ Like ({likes})</button>
+              <button className="like-btn" onClick={handleLike}>{userLiked ? "💔 Kedvelés visszavonása" : "❤️ Kedvelés"}</button>
+              <p id="like-count">Weboldal kedvelések száma: <strong>{likes}</strong></p>
             </div>
 
             <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
@@ -98,7 +141,6 @@ export const AboutSection = () => {
                 placeholder="Írd le, mi tetszett vagy min javítanál..."
                 required
               ></textarea>
-
               <div className="star-rating">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
@@ -110,8 +152,6 @@ export const AboutSection = () => {
                   </span>
                 ))}
               </div>
-
-
               <button type="submit" className="submit-feedback">Vélemény elküldése</button>
             </form>
 

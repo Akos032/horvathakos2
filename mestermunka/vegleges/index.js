@@ -653,8 +653,54 @@ app.post('/api/update-username', (req, res) => {
         });
     });
 });
+
+app.post("/api/toggle-like", (req, res) => {
+    const { userId } = req.body;
   
+    if (!userId) {
+      return res.status(400).json({ error: "Hiányzó felhasználói azonosító." });
+    }
   
+    db.query("SELECT `like` FROM regisztracio WHERE felhasznalo_id = ?", [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+  
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Felhasználó nem található." });
+      }
+  
+      const currentLike = results[0].like;
+      const newLikeValue = currentLike === 1 ? 0 : 1;
+  
+      db.query("UPDATE regisztracio SET `like` = ? WHERE felhasznalo_id = ?", [newLikeValue, userId], (err2) => {
+        if (err2) return res.status(500).json({ error: "Nem sikerült frissíteni." });
+  
+        res.json({ message: "Sikeres frissítés!", newLikeValue });
+      });
+    });
+  });
+
+
+app.get("/api/total-likes", (req, res) => {
+    db.query("SELECT SUM(`like`) AS totalLikes FROM regisztracio", (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+      res.json({ totalLikes: results[0].totalLikes || 0 });
+    });
+});
+  
+app.get("/api/user-like/:userId", (req, res) => {
+    const userId = req.params.userId;
+  
+    db.query("SELECT `like` FROM regisztracio WHERE felhasznalo_id = ?", [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+  
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Felhasználó nem található." });
+      }
+  
+      res.json({ like: results[0].like });
+    });
+});
+
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
