@@ -1,48 +1,80 @@
-import React, { useState } from "react";
-import './Aboutus.css';
+import React, { useState, useEffect } from "react";
+import "./Aboutus.css";
+import axios from "axios";
 
 export const AboutSection = () => {
   const [showAbout, setShowAbout] = useState(false);
   const [likes, setLikes] = useState(0);
   const [feedback, setFeedback] = useState("");
-  const [submittedFeedback, setSubmittedFeedback] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [user, setUser] = useState(null);
+  const [userLiked, setUserLiked] = useState(false);
 
-  const toggleAboutText = () => {
-    setShowAbout((prevState) => !prevState);
+  const toggleAboutText = () => setShowAbout((prev) => !prev);
+  const closePopup = () => setShowAbout(false);
+
+  const fetchData = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+
+    if (storedUser) {
+      axios.get(`http://localhost:3001/api/user-like/${storedUser.felhasznalo_id}`)
+        .then((res) => setUserLiked(res.data.like === 1));
+    }
+
+    axios.get("http://localhost:3001/api/total-likes")
+      .then((res) => setLikes(res.data.totalLikes));
+
+    axios.get("http://localhost:3001/api/all-comments")
+      .then((res) => {
+        if (storedUser) {
+          const userComments = res.data.filter(c => c.user_id === storedUser.felhasznalo_id);
+          const others = res.data.filter(c => c.user_id !== storedUser.felhasznalo_id);
+          setComments([...userComments, ...others]);
+        } else {
+          setComments(res.data);
+        }
+      });
   };
 
-  const closePopup = () => {
-    setShowAbout(false);
-  };
+  useEffect(() => {
+    if (showAbout) {
+      fetchData();
+    }
+  }, [showAbout]);
 
   const handleLike = () => {
-    setLikes((prevLikes) => prevLikes + 1);
+    if (!user) return alert("Jelentkezz be a kedveléshez!");
+    axios.post("http://localhost:3001/api/toggle-like", { userId: user.felhasznalo_id })
+      .then(() => fetchData());
   };
 
-  const handleFeedbackChange = (e) => {
-    setFeedback(e.target.value);
-  };
+  const handleFeedbackChange = (e) => setFeedback(e.target.value);
 
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
+    if (!user) return alert("Jelentkezz be a kommenteléshez!");
     if (feedback.trim()) {
-      const newFeedback = {
-        text: feedback.trim(),
-        rating: selectedRating,
-        date: new Date().toLocaleString("hu-HU", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        })
-      };
-      setSubmittedFeedback([...submittedFeedback, newFeedback]);
-      setFeedback("");
-      setSelectedRating(0);
+      axios.post("http://localhost:3001/api/add-comment", {
+        userId: user.felhasznalo_id,
+        komment: feedback.trim()
+      }).then(() => {
+        setFeedback("");
+        fetchData();
+        alert("Vélemény elmentve!");
+      });
     }
   };
+
+  const handleDeleteComment = () => {
+    axios.delete(`http://localhost:3001/api/delete-comment/${user.felhasznalo_id}`)
+      .then(() => {
+        fetchData();
+        alert("Komment törölve.");
+      });
+  };
+
+  const hasUserComment = comments.some(c => user && c.user_id === user.felhasznalo_id);
 
   return (
     <div className="about-container full-footer">
@@ -56,12 +88,11 @@ export const AboutSection = () => {
             <li><strong>Instagram:</strong> <a href="https://www.instagram.com/fozomester" target="_blank" rel="noopener noreferrer">@fozomester</a></li>
           </ul>
         </div>
+
         <div className="advertisement-box">
           <h3 className="advertisement-title">Ne hagyd ki!</h3>
           <p className="advertisement-text">
-                   Üdvözlünk a Finomságok oldalán! Fedezd fel receptjeinket, és hozd el a konyhába a szenvedélyt!
-                      Mondj véleményt!
-                      Kíváncsiak vagyunk a visszajelzésedre! Hogyan találtad az oldalunkat? Mi tetszett, min változtatnál? Oszd meg velünk, és segíts, hogy még jobbá váljunk!
+            Üdvözlünk a Finomságok oldalán! Fedezd fel receptjeinket, és oszd meg véleményed!
           </p>
           <button className="about-btn" onClick={toggleAboutText}>
             Rólunk
@@ -74,58 +105,43 @@ export const AboutSection = () => {
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h2>Rólunk</h2>
             <img src="public/Média.png" alt="Rólunk" className="about-image" />
-            <p>
-              Mi egy szenvedélyes és kreatív csapat vagyunk, akik elkötelezettek amellett, hogy a főzés mindenki számára elérhető és élvezetes legyen.
-            </p>
-            <p>
-              Célunk, hogy változatos, könnyen követhető és inspiráló recepteket kínáljunk, amelyek segítségével bárki magabiztosan alkothat a konyhában.
-            </p>
-            <p>
-              Emellett közösségépítő szerepünk is fontos számunkra. Csatlakozz hozzánk, és tapasztald meg, hogy a főzés nem csupán egy napi rutin, hanem egy igazi kreatív kaland!
-            </p>
+            <p>Kreatív csapat, finom receptek, lelkes közösség. Csatlakozz hozzánk!</p>
 
             <div className="about-actions">
               <button className="close-btn" onClick={closePopup}>Kilépés</button>
-              <button className="like-btn" onClick={handleLike}>❤️ Like ({likes})</button>
+              <button className="like-btn" onClick={handleLike}>
+                {userLiked ? "💔 Visszavonás" : "❤️ Kedvelés"}
+              </button>
             </div>
 
-            <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
-              <label htmlFor="feedback">Oszd meg velünk a véleményed:</label>
-              <textarea
-                id="feedback"
-                value={feedback}
-                onChange={handleFeedbackChange}
-                placeholder="Írd le, mi tetszett vagy min javítanál..."
-                required
-              ></textarea>
+            <p id="like-count">Kedvelések: <strong>{likes}</strong></p>
 
-              <div className="star-rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={star <= selectedRating ? "star selected" : "star"}
-                    onClick={() => setSelectedRating(star)}
-                  >
-                    ⭐
-                  </span>
-                ))}
-              </div>
+            <div className="comment-section">
+              <h3>Vélemények</h3>
 
+              {!hasUserComment && user && (
+                <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
+                  <textarea
+                    value={feedback}
+                    onChange={handleFeedbackChange}
+                    placeholder="Írd le a véleményed..."
+                    required
+                  ></textarea>
+                  <button type="submit" className="submit-feedback">Elküld</button>
+                </form>
+              )}
 
-              <button type="submit" className="submit-feedback">Vélemény elküldése</button>
-            </form>
+              {comments.map(c => (
+                <div key={c.komment_id} className="feedback-entry fade-in">
+                  <p className="feedback-text">💬 <strong>{c.komment}</strong></p>
+                  <p className="feedback-meta">– {c.felhasznalonev}</p>
+                  {user && c.user_id === user.felhasznalo_id && (
+                    <button onClick={() => handleDeleteComment(c.komment_id)} className="delete-btn">🗑️ Törlés</button>
+                  )}
+                </div>
+              ))}
 
-            {submittedFeedback.length > 0 && (
-              <div className="feedback-list">
-                <h4>Így látták mások:</h4>
-                {submittedFeedback.map((item, index) => (
-                  <div key={index} className="feedback-entry fade-in">
-                    <p className="feedback-text">💬 <strong>{item.text}</strong></p>
-                    <p className="feedback-meta">Értékelés: {item.rating} ⭐ – {item.date}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
         </div>
       )}

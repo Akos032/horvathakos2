@@ -653,8 +653,93 @@ app.post('/api/update-username', (req, res) => {
         });
     });
 });
+
+app.post("/api/toggle-like", (req, res) => {
+    const { userId } = req.body;
+  
+    if (!userId) {
+      return res.status(400).json({ error: "Hiányzó felhasználói azonosító." });
+    }
+  
+    db.query("SELECT `like` FROM regisztracio WHERE felhasznalo_id = ?", [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+  
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Felhasználó nem található." });
+      }
+  
+      const currentLike = results[0].like;
+      const newLikeValue = currentLike === 1 ? 0 : 1;
+  
+      db.query("UPDATE regisztracio SET `like` = ? WHERE felhasznalo_id = ?", [newLikeValue, userId], (err2) => {
+        if (err2) return res.status(500).json({ error: "Nem sikerült frissíteni." });
+  
+        res.json({ message: "Sikeres frissítés!", newLikeValue });
+      });
+    });
+  });
+
+
+app.get("/api/total-likes", (req, res) => {
+    db.query("SELECT SUM(`like`) AS totalLikes FROM regisztracio", (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+      res.json({ totalLikes: results[0].totalLikes || 0 });
+    });
+});
+  
+app.get("/api/user-like/:userId", (req, res) => {
+    const userId = req.params.userId;
+  
+    db.query("SELECT `like` FROM regisztracio WHERE felhasznalo_id = ?", [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "Adatbázis hiba." });
+  
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Felhasználó nem található." });
+      }
+  
+      res.json({ like: results[0].like });
+    });
+});
+
+app.get("/api/user-comment/:userId", (req, res) => {
+    const { userId } = req.params;
+    db.query("SELECT * FROM kommentek WHERE user_id = ?", [userId], (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.json(result[0] || null);
+    });
+});
+  
+  app.post("/api/add-comment", (req, res) => {
+    const { userId, komment } = req.body;
+    db.query("INSERT INTO kommentek (user_id, komment) VALUES (?, ?) ON DUPLICATE KEY UPDATE komment = VALUES(komment)", [userId, komment], (err) => {
+      if (err) return res.status(500).send(err);
+      res.send("Sikeres mentés");
+    });
+});
+
+app.delete("/api/delete-comment/:userId", (req, res) => {
+    const { userId } = req.params;
+    db.query("DELETE FROM kommentek WHERE user_id = ?", [userId], (err) => {
+      if (err) return res.status(500).send(err);
+      res.send("Komment törölve.");
+    });
+});
+  
+
+app.get("/api/all-comments", (req, res) => {
+    db.query(
+      `SELECT kommentek.user_id, kommentek.komment, regisztracio.felhasznalonev
+       FROM kommentek
+       JOIN regisztracio ON kommentek.user_id = regisztracio.felhasznalo_id`,
+      (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.json(results);
+      }
+    );
+});
   
   
+
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
