@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Apr 17, 2025 at 09:50 AM
+-- Generation Time: Apr 17, 2025 at 02:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -404,6 +404,25 @@ INSERT INTO `hozzavalok` (`hozzavalok_neve`, `Hozzavalok_id`) VALUES
 ('sonka', 492),
 ('karika paprika', 493),
 ('aprított hagyma', 494);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `kommentek`
+--
+
+CREATE TABLE `kommentek` (
+  `komment` text NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `kommentek`
+--
+
+INSERT INTO `kommentek` (`komment`, `user_id`) VALUES
+('nice', 1),
+('nice', 2);
 
 -- --------------------------------------------------------
 
@@ -911,7 +930,7 @@ CREATE TABLE `regisztracio` (
 
 INSERT INTO `regisztracio` (`admin`, `felhasznalo_id`, `email`, `jelszo`, `felhasznalonev`, `szabalyzat`, `like`) VALUES
 (1, 1, 'horvath0akos@gmail.com', '$2b$10$UADHvTcUBgNN57Z5yDUEm.2fDLULGJsxALCMK4KMAVDvVG.oRdMBW', 'Akos', 1, 1),
-(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'Ricskó kapitány', 1, 0);
+(0, 2, 'ricsi0varju@gmail.com', '$2b$10$O1DJeZ2r4AxHE7jgUfj6yucmJmzevKG1bpaUEb.YNLG7LYkUwhKjC', 'Ricskó kapitány', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -954,6 +973,12 @@ ALTER TABLE `feltoltott_recept`
 --
 ALTER TABLE `hozzavalok`
   ADD PRIMARY KEY (`Hozzavalok_id`);
+
+--
+-- Indexes for table `kommentek`
+--
+ALTER TABLE `kommentek`
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `konyha`
@@ -1067,6 +1092,12 @@ ALTER TABLE `regisztracio`
 ALTER TABLE `feltoltott_recept`
   ADD CONSTRAINT `feltoltott_recept_ibfk_1` FOREIGN KEY (`feltoltott_recept_id`) REFERENCES `receptek` (`Receptek_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `feltoltott_recept_ibfk_2` FOREIGN KEY (`profil_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `kommentek`
+--
+ALTER TABLE `kommentek`
+  ADD CONSTRAINT `kommentek_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `regisztracio` (`felhasznalo_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `osszekoto`

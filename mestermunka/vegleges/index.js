@@ -701,6 +701,45 @@ app.get("/api/user-like/:userId", (req, res) => {
     });
 });
 
+app.get("/api/user-comment/:userId", (req, res) => {
+    const { userId } = req.params;
+    db.query("SELECT * FROM kommentek WHERE user_id = ?", [userId], (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.json(result[0] || null);
+    });
+});
+  
+  app.post("/api/add-comment", (req, res) => {
+    const { userId, komment } = req.body;
+    db.query("INSERT INTO kommentek (user_id, komment) VALUES (?, ?) ON DUPLICATE KEY UPDATE komment = VALUES(komment)", [userId, komment], (err) => {
+      if (err) return res.status(500).send(err);
+      res.send("Sikeres mentés");
+    });
+});
+
+app.delete("/api/delete-comment/:userId", (req, res) => {
+    const { userId } = req.params;
+    db.query("DELETE FROM kommentek WHERE user_id = ?", [userId], (err) => {
+      if (err) return res.status(500).send(err);
+      res.send("Komment törölve.");
+    });
+});
+  
+
+app.get("/api/all-comments", (req, res) => {
+    db.query(
+      `SELECT kommentek.user_id, kommentek.komment, regisztracio.felhasznalonev
+       FROM kommentek
+       JOIN regisztracio ON kommentek.user_id = regisztracio.felhasznalo_id`,
+      (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.json(results);
+      }
+    );
+});
+  
+  
+
 
 app.delete('/api/delete-recipe/:id', (req, res) => {
     const recipeId = req.params.id;
