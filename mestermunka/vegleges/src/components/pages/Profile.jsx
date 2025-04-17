@@ -150,7 +150,7 @@ export default function Profile() {
           <>
             <h1>{user.felhasznalonev} profilja</h1>
             <button onClick={toggleEditUsername} className="profile-button">
-              Profil név frissítése
+              Felhasználónév frissítése
             </button>
           </>
         )}
